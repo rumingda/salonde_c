@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "1023646961703",
+    "project_id": "salonde-c-fada9",
+    "storage_bucket": "salonde-c-fada9.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1023646961703:android:69d8a9b3b91315f8417e02",
+        "android_client_info": {
+          "package_name": "com.guruguru.salondc"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1023646961703-ie8a8jor8uiei2c1qi30n8l7j7l56eq3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBs1EjJ0mqSsbmw8qgTB9Qli1EJYuKS3CY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1023646961703-ie8a8jor8uiei2c1qi30n8l7j7l56eq3.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1023646961703-3jog8efsnocgulolphnpslbhvs5bhmim.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.ruming.salondec"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
