@@ -55,7 +55,7 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyBs1EjJ0mqSsbmw8qgTB9Qli1EJYuKS3CY',
-    appId: '1:1023646961703:android:69d8a9b3b91315f8417e02',
+    appId: '1:1023646961703:android:d37fdc283de57b71417e02',
     messagingSenderId: '1023646961703',
     projectId: 'salonde-c-fada9',
     storageBucket: 'salonde-c-fada9.appspot.com',
@@ -63,21 +63,21 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyBJVBU5i_Db_1CxURGMIP1Kne24FBMev3Q',
-    appId: '1:1023646961703:ios:f9ca0d8e3ff5adad417e02',
+    appId: '1:1023646961703:ios:581e37a96fae5785417e02',
     messagingSenderId: '1023646961703',
     projectId: 'salonde-c-fada9',
     storageBucket: 'salonde-c-fada9.appspot.com',
-    iosClientId: '1023646961703-3jog8efsnocgulolphnpslbhvs5bhmim.apps.googleusercontent.com',
-    iosBundleId: 'com.ruming.salondec',
+    iosClientId: '1023646961703-48m38c5co3pld67h73cl411o4fch81ot.apps.googleusercontent.com',
+    iosBundleId: 'com.example.salondec',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
     apiKey: 'AIzaSyBJVBU5i_Db_1CxURGMIP1Kne24FBMev3Q',
-    appId: '1:1023646961703:ios:3ec876cf226f36df417e02',
+    appId: '1:1023646961703:ios:581e37a96fae5785417e02',
     messagingSenderId: '1023646961703',
     projectId: 'salonde-c-fada9',
     storageBucket: 'salonde-c-fada9.appspot.com',
-    iosClientId: '1023646961703-v464k4l5f678vvdih25r317lpqv9uivd.apps.googleusercontent.com',
-    iosBundleId: 'com.guruguru.salondc',
+    iosClientId: '1023646961703-48m38c5co3pld67h73cl411o4fch81ot.apps.googleusercontent.com',
+    iosBundleId: 'com.example.salondec',
   );
 }

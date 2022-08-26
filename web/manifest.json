@@ -1,6 +1,6 @@
 {
-    "name": "salonde_c",
-    "short_name": "salonde_c",
+    "name": "salondec",
+    "short_name": "salondec",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

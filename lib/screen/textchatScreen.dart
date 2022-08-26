@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'textchat_detail.dart';
-import 'data/chat.dart';
+import 'package:salondec/data/chat.dart';
 
 class TextchatScreen extends StatelessWidget {
   TextchatScreen({Key? key}) : super(key: key);

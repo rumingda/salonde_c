@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'today_detail.dart';
-import 'data/person.dart';
+import 'today_detail2.dart';
+import 'package:salondec/data/person2.dart';
  
 class PassawayScreen extends StatelessWidget {
   PassawayScreen({Key? key}) : super(key: key);
+
 
   final List<Note> _noteList = [
     Note(
@@ -46,7 +47,7 @@ class PassawayScreen extends StatelessWidget {
                 onTap: () => Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => todaydetail(_noteList[index]),
+                    builder: (context) => todaydetail2(_noteList[index]),
                  )),
                 child: Container(
                   child: Column(

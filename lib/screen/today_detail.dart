@@ -1,10 +1,10 @@
 // ignore_for_file: deprecated_member_use
 
 import 'package:flutter/material.dart';
-import 'data/person.dart';
+import 'package:salondec/data/person2.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import 'custom_alert_dialog.dart';
-import 'custom_love_letter.dart';
+import 'package:salondec/alert/custom_alert_dialog.dart';
+import 'package:salondec/alert/custom_love_letter.dart';
 
 class todaydetail extends StatefulWidget {
   final Note note;
@@ -16,6 +16,7 @@ class todaydetail extends StatefulWidget {
 }
 
 class _todaydetailState extends State<todaydetail> {
+  // ignore: non_constant_identifier_names
   double update_rating = 0.0;
 
   @override

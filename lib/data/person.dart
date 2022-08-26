@@ -1,7 +1,8 @@
 class Note {
   final String title;
-  final String content;
-  final String image;
-  Note({required this.title, required this.content,required this.image});
+  final String age;
+  final String job;
+  final String mbti;
+  final String userPhotoUrl;
+  Note({required this.title, required this.age,required this.job,required this.mbti, required this.userPhotoUrl});
 }
-

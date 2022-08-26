@@ -1,7 +1,12 @@
+import 'package:salondec/data/agora_setting.dart';
+import 'package:agora_rtm/agora_rtm.dart';
 import 'package:flutter/material.dart';
-import 'today_detail.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:salondec/menu/lobby.dart';
 
 class VoicechatScreen extends StatefulWidget {
+  const VoicechatScreen({Key? key}) : super(key: key);
+
   @override
   _VoicechatScreenState createState() => _VoicechatScreenState();
 }
@@ -15,33 +20,28 @@ class _VoicechatScreenState extends State<VoicechatScreen>{
   ];
   final icons = [Icons.ac_unit, Icons.access_alarm, Icons.access_time, Icons.access_time];
   final times = ["1분전", "2분전", "4분전"];
+  final TextEditingController _username = TextEditingController();
 
   @override
   Widget build(BuildContext context){
-   return ListView.builder(
-    
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: Scaffold(
+        body: ListView.builder(    
         itemCount: titles.length,
         itemBuilder: (context, index) {
           
           return Card(
               margin: EdgeInsets.fromLTRB(10, 5, 10, 5),
-              elevation: 0.0, 
-
-                         
-              child: ListTile(  
-                  
+              elevation: 0.0,       
+              child: ListTile(    
                   onTap: () {
                   setState(() {
-   
                     titles.add('List' + (titles.length+1).toString());
-                    
-
                     subtitles.add('Here is list' + (titles.length+1).toString() + ' subtitle');
                     times.add('times');
                     });
-                    Scaffold.of(context).showSnackBar(SnackBar(
-                      content: Text(titles[index] + ' pressed!'),
-                    ));
+                    Scaffold.of(context).showSnackBar(SnackBar(content: Text(titles[index] + ' pressed!'), ));
                   },
 
                   leading: Icon(Icons.call),// appbar leading icon.
@@ -50,6 +50,19 @@ class _VoicechatScreenState extends State<VoicechatScreen>{
                   subtitle: Text(subtitles[index]),
                   trailing: Text(times[index])
                   ));
-        });
+        }),
+        floatingActionButton: FloatingActionButton(
+          child: Icon(Icons.add),
+          onPressed:(){
+            Navigator.push(
+              context,
+              MaterialPageRoute (
+                builder : (context) => LobbyPage()
+              )
+            );
+          }
+        )
+      ),
+   );
   }
 }

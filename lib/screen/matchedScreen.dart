@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'today_detail.dart';
-import 'data/person.dart';
- 
+import 'today_detail2.dart';
+import 'package:salondec/data/person2.dart';
+
 class MatchedScreen extends StatelessWidget {
   MatchedScreen({Key? key}) : super(key: key);
 
@@ -37,7 +37,7 @@ class MatchedScreen extends StatelessWidget {
                 onTap: () => Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => todaydetail(_matchedList[index]),
+                    builder: (context) => todaydetail2(_matchedList[index]),
                  )),
                 child: Container(
                   color: Colors.white,

@@ -1,23 +1,28 @@
 import 'package:flutter/material.dart';
-import 'package:salonde_c/textchatScreen.dart';
-import 'package:salonde_c/voicechatScreen.dart';
+
+
+import 'textchatScreen.dart';
+import 'voicechatScreen.dart';
 
 class ChatScreen extends StatefulWidget {
-  int pageIndex = 0;
-  List<Widget> pageList = <Widget>[
-    TextchatScreen(),
-    VoicechatScreen(),
-  ];
+  
+  const ChatScreen({Key? key}) : super(key: key);
   @override
   ChatScreenState createState() => ChatScreenState();
 }
 
 class ChatScreenState extends State<ChatScreen>{
   int pageIndex = 0;
+  final TextEditingController _username = TextEditingController();
+
   List<Widget> pageList = <Widget>[
+    
     TextchatScreen(),
     VoicechatScreen(),
+    
   ];
+  
+
 
   @override
   Widget build(BuildContext context){
@@ -38,9 +43,11 @@ class ChatScreenState extends State<ChatScreen>{
                 Tab(text: "음성살롱"),
               ],
           ),
+          
           body: TabBarView(
             children: [TextchatScreen(), VoicechatScreen(),]
           ),
+          
         ),
       ),
     );

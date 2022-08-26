@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:salonde_c/matchedScreen.dart';
-import 'package:salonde_c/matchingScreen.dart';
-import 'package:salonde_c/passawayScreen.dart';
+
+import 'package:salondec/screen/matchedScreen.dart';
+import 'package:salondec/screen/matchingScreen.dart';
+import 'package:salondec/screen/passawayScreen.dart';
 
 class FavoriteScreen extends StatefulWidget {
   @override
@@ -11,9 +12,11 @@ class FavoriteScreen extends StatefulWidget {
 class _FavoriteScreenState extends State<FavoriteScreen>{
   int pageIndex = 0;
   List<Widget> pageList = <Widget>[
+    
     MatchingScreen(),
     MatchedScreen(),
     PassawayScreen(),
+    
   ];
   
   @override
@@ -33,9 +36,11 @@ class _FavoriteScreenState extends State<FavoriteScreen>{
                 Tab(text: "지나간이성")
               ],
           ),
+          
           body: TabBarView(
             children: [MatchedScreen(), MatchingScreen(),PassawayScreen(),]
           ),
+          
         ),
       ),
     );

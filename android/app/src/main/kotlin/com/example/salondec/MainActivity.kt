@@ -1,4 +1,4 @@
-package com.example.salonde_c
+package com.example.salondec
 
 import io.flutter.embedding.android.FlutterActivity
 

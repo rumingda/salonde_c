@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.salonde_c">
+    package="com.example.salondec">
    <application
-        android:label="salonde_c"
+        android:label="salondec"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

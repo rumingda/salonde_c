@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'data/chat.dart';
+import 'package:salondec/data/chat.dart';
 
 // ignore: must_be_immutable
 class TextchatDetail extends StatefulWidget {

@@ -3,9 +3,9 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>1023646961703-v464k4l5f678vvdih25r317lpqv9uivd.apps.googleusercontent.com</string>
+	<string>1023646961703-48m38c5co3pld67h73cl411o4fch81ot.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.1023646961703-v464k4l5f678vvdih25r317lpqv9uivd</string>
+	<string>com.googleusercontent.apps.1023646961703-48m38c5co3pld67h73cl411o4fch81ot</string>
 	<key>API_KEY</key>
 	<string>AIzaSyBJVBU5i_Db_1CxURGMIP1Kne24FBMev3Q</string>
 	<key>GCM_SENDER_ID</key>
@@ -13,7 +13,7 @@
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.guruguru.salondc</string>
+	<string>com.example.salondec</string>
 	<key>PROJECT_ID</key>
 	<string>salonde-c-fada9</string>
 	<key>STORAGE_BUCKET</key>
@@ -29,6 +29,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:1023646961703:ios:3ec876cf226f36df417e02</string>
+	<string>1:1023646961703:ios:581e37a96fae5785417e02</string>
 </dict>
 </plist>

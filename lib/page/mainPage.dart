@@ -1,92 +1,121 @@
 import 'package:flutter/material.dart';
-//import 'package:firebase_core/firebase_core.dart';
-//import 'firebase_options.dart';
-
-import 'page/chatScreen.dart';
-import 'page/favoriteScreen.dart';
-import 'page/mainScreen.dart'; 
-import 'page/loveletterScreen2.dart';
-import 'page/discoveryScreen.dart';
-import 'page/createpostpage.dart';
-
-Future<void> main() async {
-  /*WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-      options: DefaultFirebaseOptions.currentPlatform,
-  );*/
-  runApp(const HomeScreen());
-}
-
-class HomeScreen extends StatefulWidget {
-  const HomeScreen({Key? key}) : super(key: key);
-
-  @override
-  _HomeScreen createState() => _HomeScreen();
-
-}
+import 'package:salondec/menu/Test.dart';
+import 'package:salondec/menu/lobby.dart';
+import 'package:salondec/menu/imageUpload.dart';
+import 'package:salondec/screen/homeScreen.dart';
+import 'package:salondec/screen/chatScreen.dart';
+import 'package:salondec/screen/discoveryScreen.dart';
+import 'package:salondec/screen/favoriteScreen.dart';
+import 'package:salondec/screen/loveletterScreen.dart';
+import 'package:salondec/menu/lobby_list.dart';
 
 String title_string = "Home";
 
+class MainPage extends StatefulWidget{
+  const MainPage({Key? key, required this.title}) : super(key: key);
+  final String title;
+  
+  @override
+  _MainPageState createState() => _MainPageState();
+}
 
-class _HomeScreen extends State<HomeScreen> {  
-  int pageIndex = 0;
-  List<Widget> pageList = <Widget>[
-    MainScreen(),
+class _MainPageState extends State<MainPage> {  
+
+int pageIndex = 0;
+List<Widget> pageList = <Widget>[
+    HomeScreen(),
     FavoriteScreen(),
     ChatScreen(),
     LoveletternewScreen(),
-    DiscoveryScreen(),
-  ];  
+    DiscoveryScreen()
+];  
 
-  @override  
-  Widget build(BuildContext context) {  
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: Scaffold(  
+final TextEditingController _username = TextEditingController();
+
+
+@override
+  Widget build(BuildContext context){
+
+    return Scaffold(  
         appBar: AppBar(
           centerTitle: true,
           toolbarHeight: 60, 
-          title: Text((title_string),style: const TextStyle(fontFamily: 'Abhaya Libre', fontWeight : FontWeight.w700, fontSize: 36.0)),
+          title: Text((widget.title),style: const TextStyle(fontFamily: 'Abhaya Libre', fontWeight : FontWeight.w700, fontSize: 36.0)),
           elevation: 0.5,
           backgroundColor: Colors.white,
           foregroundColor: Colors.black,
         ), 
-        drawer: Drawer(
-          child: ListView(
+        
+        drawer: Drawer(child: ListView(
             padding: EdgeInsets.zero,
+            
             children: [
               const DrawerHeader(
                 decoration: BoxDecoration(
                   color: Colors.blue,
                 ),
-                child: Text('Drawer Header'),
+                child: Text("header"),
               ),
               ListTile(
                 leading: const Icon(
                   Icons.home,
                 ),
-                title: const Text('업로드'),
+                title: const Text('나의 프로필'),
                 onTap: () {
                   Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => CreatePostPage()),
-                  );            
+                    context,
+                    MaterialPageRoute (
+                      builder : (context) => ImageUploads()
+                      )
+                  );
                 },
               ),
               ListTile(
                 leading: const Icon(
-                  Icons.train,
+                  Icons.home,
                 ),
-                title: const Text('Page 2'),
+                title: const Text('음성채팅방만들기'),
                 onTap: () {
-                  Navigator.pop(context);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute (
+                      builder : (context) => LobbyPage()
+                      )
+                  );
+                },
+              ),
+              ListTile(
+                leading: const Icon(
+                  Icons.home,
+                ),
+                title: const Text('음성채팅리스트'),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute (
+                      builder : (context) => LobbyList(username: _username.text)
+                      )
+                  );
+                },
+              ),
+              ListTile(
+                leading: const Icon(
+                  Icons.home,
+                ),
+                title: const Text('테스트'),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute (
+                      builder : (context) => Test()
+                      )
+                  );
                 },
               ),
             ],
           ),
         ), 
-        
-        body: pageList[pageIndex], 
+        body: pageList[pageIndex],
         bottomNavigationBar: BottomNavigationBar(    
           currentIndex: pageIndex,  
           onTap: (value){
@@ -134,8 +163,9 @@ class _HomeScreen extends State<HomeScreen> {
                   ],
                   selectedItemColor: Colors.amber[200],
                 ),
-      )
-    );
+      );
   }
 }
+
+
 
