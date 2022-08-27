@@ -10,28 +10,23 @@ class LoginScreen extends StatelessWidget {
 
   // This widget is the root of your application.
   @override
-  Widget build(BuildContext context)
-  {
+  Widget build(BuildContext context) {
     return StreamBuilder<User?>(
-      stream: FirebaseAuth.instance.authStateChanges(),
-      builder: (context, snapshot){
-            if(snapshot.connectionState == ConnectionState.waiting){
-              print("가는중");
-              return Center(child: CircularProgressIndicator());
-            }
-            else if (snapshot.hasError){
-              print("문제있어용");
-              return Center(child: Text("something went wrong"));
-            }
-            else if (snapshot.hasData){
-              print("로그인되어있어용");
-              return MainPage(title: "Home");
-            }
-            else{
-              print("로그인하러가용");
-              return LoginPage();
-            }
+        stream: FirebaseAuth.instance.authStateChanges(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            print("가는중");
+            return Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            print("문제있어용");
+            return Center(child: Text("something went wrong"));
+          } else if (snapshot.hasData) {
+            print("로그인되어있어용");
+            return MainPage(title: "Home");
+          } else {
+            print("로그인하러가용");
+            return LoginPage();
           }
-    ); 
+        });
   }
 }

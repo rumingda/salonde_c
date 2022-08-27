@@ -20,7 +20,6 @@ class _LobbyPageState extends State<LobbyPage> {
   final _channelFieldController = TextEditingController();
   String myChannel = '';
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -38,18 +37,22 @@ class _LobbyPageState extends State<LobbyPage> {
                   labelText: '제목',
                   hintText: '무엇을 이야기하고 싶은가요?',
                   validator: (textValue) {
-                    if(textValue == null || textValue.isEmpty) {
+                    if (textValue == null || textValue.isEmpty) {
                       return '제목을 넣어주세요';
                     }
                     return null;
                   },
                 ),
-                const SizedBox(height: 20,),
-                CustomFormButton(innerText: '입장하기', onPressed :(){
-                  if(_title.text.isNotEmpty){
-                    onJoin();
-                 }}
+                const SizedBox(
+                  height: 20,
                 ),
+                CustomFormButton(
+                    innerText: '입장하기',
+                    onPressed: () {
+                      if (_title.text.isNotEmpty) {
+                        onJoin();
+                      }
+                    }),
               ],
             ),
           ),
@@ -59,21 +62,19 @@ class _LobbyPageState extends State<LobbyPage> {
   }
 
   Future<void> onJoin() async {
-
-  await _handleCameraAndMic(Permission.camera);
-  await _handleCameraAndMic(Permission.microphone);
+    await _handleCameraAndMic(Permission.camera);
+    await _handleCameraAndMic(Permission.microphone);
   }
 
   Future<void> _handleCameraAndMic(Permission permission) async {
     final status = await permission.request();
     print("어덯게 됐는데?");
     print(status);
-      
+
     Navigator.push(
         context,
         MaterialPageRoute(
           builder: (context) => CallPage(channelName: _title.text),
-        )
-      );
+        ));
   }
 }

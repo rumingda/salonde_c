@@ -9,14 +9,13 @@ import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-
 class ImageUploads extends StatefulWidget {
   const ImageUploads({Key? key}) : super(key: key);
 
   @override
   _ImageUploadsState createState() => _ImageUploadsState();
 }
-  
+
 class _ImageUploadsState extends State<ImageUploads> {
   //firebase_storage.FirebaseStorage storage = firebase_storage.FirebaseStorage.instance;
 
@@ -26,22 +25,20 @@ class _ImageUploadsState extends State<ImageUploads> {
   TextEditingController _mbti = TextEditingController();
   File? _photo;
   final ImagePicker _picker = ImagePicker();
-  final String _chars = "AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890";
+  final String _chars =
+      "AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890";
   final Random _rnd = Random();
   final user = FirebaseAuth.instance.currentUser!;
 
   String getRandomString(int length) => String.fromCharCodes(Iterable.generate(
-    length, (_) => _chars.codeUnitAt(_rnd.nextInt(_chars.length))));
-
+      length, (_) => _chars.codeUnitAt(_rnd.nextInt(_chars.length))));
 
   Future imgFromGallery() async {
     final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
-     
 
     setState(() {
       if (pickedFile != null) {
         _photo = File(pickedFile.path);
-        
       } else {
         print('No image selected.');
       }
@@ -54,52 +51,46 @@ class _ImageUploadsState extends State<ImageUploads> {
     setState(() {
       if (pickedFile != null) {
         _photo = File(pickedFile.path);
-        
       } else {
         print('No image selected.');
       }
     });
   }
 
+  Future uploadFile(BuildContext context) async {
+    try {
+      // 스토리지에 업로드할 파일 경로
+      final firebaseStorageRef = FirebaseStorage.instance
+          .ref()
+          .child('file') //'post'라는 folder를 만들고
+          .child('${DateTime.now().millisecondsSinceEpoch}.png');
 
-Future uploadFile(BuildContext context) async {
-  try {
-    // 스토리지에 업로드할 파일 경로
-    final firebaseStorageRef = FirebaseStorage.instance
-        .ref()
-        .child('file')   //'post'라는 folder를 만들고 
-        .child('${DateTime.now().millisecondsSinceEpoch}.png');
-    
+      final UploadTask task = firebaseStorageRef.putFile(
+          _photo!, SettableMetadata(contentType: 'image/png'));
+      // 완료까지 기다림
+      print("완료를 기다리는 중");
+      await task.whenComplete(() => null);
 
-    final UploadTask task = firebaseStorageRef.putFile(
-      _photo!, SettableMetadata(contentType: 'image/png'));
-    // 완료까지 기다림
-    print("완료를 기다리는 중");
-    await task.whenComplete(() => null);
-    
-    // 업로드 완료 후 url
-    final downloadUrl = await firebaseStorageRef.getDownloadURL();
+      // 업로드 완료 후 url
+      final downloadUrl = await firebaseStorageRef.getDownloadURL();
 
-    // 문서 작성
-    String postKey = getRandomString(16);
-    FirebaseFirestore firestore = FirebaseFirestore.instance;
+      // 문서 작성
+      String postKey = getRandomString(16);
+      FirebaseFirestore firestore = FirebaseFirestore.instance;
 
-
-    await firestore.collection('woman').doc(postKey).set({
-      'title': _title.text,
-      'age': _age.text,
-      'job': _job.text,
-      'mbti': _mbti.text,
-      'userPhotoUrl': downloadUrl,
-    });
-  } catch (e) {
-    print(e);
+      await firestore.collection('woman').doc(postKey).set({
+        'title': _title.text,
+        'age': _age.text,
+        'job': _job.text,
+        'mbti': _mbti.text,
+        'userPhotoUrl': downloadUrl,
+      });
+    } catch (e) {
+      print(e);
+    }
+    Navigator.pop(context);
+    print("완료");
   }
-  Navigator.pop(context);
-  print("완료");
-  }
-
-  
 
   @override
   Widget build(BuildContext context) {
@@ -138,7 +129,6 @@ Future uploadFile(BuildContext context) async {
                           color: Colors.grey[800],
                         ),
                       ),
-                      
               ),
             ),
           ),
@@ -149,53 +139,51 @@ Future uploadFile(BuildContext context) async {
           Container(
             child: TextField(
               controller: _title,
-
               decoration: InputDecoration(
-                 hintText: '이름',
-                contentPadding: EdgeInsets.all(20),    
-            ),            
+                hintText: '이름',
+                contentPadding: EdgeInsets.all(20),
+              ),
             ),
           ),
           Container(
             child: TextField(
               keyboardType: TextInputType.numberWithOptions(signed: true),
               inputFormatters: [
-                  FilteringTextInputFormatter.digitsOnly,
+                FilteringTextInputFormatter.digitsOnly,
               ],
               controller: _age,
               decoration: InputDecoration(
                 hintText: '나이',
-                contentPadding: EdgeInsets.all(20),    
-            ),            
+                contentPadding: EdgeInsets.all(20),
+              ),
             ),
           ),
           Container(
             child: TextField(
-            controller: _job,
-            decoration: InputDecoration(
+              controller: _job,
+              decoration: InputDecoration(
                 hintText: '직업',
-                contentPadding: EdgeInsets.all(20),    
-            ),            
+                contentPadding: EdgeInsets.all(20),
+              ),
             ),
           ),
           Container(
             child: TextField(
-            controller: _mbti,
-            decoration: InputDecoration(
+              controller: _mbti,
+              decoration: InputDecoration(
                 hintText: 'MBTI',
-                contentPadding: EdgeInsets.all(20),    
-            ),            
+                contentPadding: EdgeInsets.all(20),
+              ),
             ),
           ),
           SizedBox(
             height: 32,
           ),
           ElevatedButton(
-            onPressed: (){
-              uploadFile(context);
-            } , 
-            child: const Text("저장하기")
-          ),
+              onPressed: () {
+                uploadFile(context);
+              },
+              child: const Text("저장하기")),
           SizedBox(
             height: 32,
           ),
@@ -204,26 +192,26 @@ Future uploadFile(BuildContext context) async {
                 minimumSize: Size.fromHeight(50),
               ),
               child: Text('로그아웃'),
-              onPressed:(){_handleLogoutUser();}
-          ),
+              onPressed: () {
+                _handleLogoutUser();
+              }),
         ],
       ),
     );
   }
 
   Future _handleLogoutUser() async {
-      try {
-        await FirebaseAuth.instance.signOut();
-        print("로그아웃되었나요?");
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('로그아웃 되었습니다.')),
-          );
-          Navigator.of(context).popUntil((route) => route.isFirst);
-
-      } on FirebaseAuthException catch (e) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(e.toString())),
-        );
+    try {
+      await FirebaseAuth.instance.signOut();
+      print("로그아웃되었나요?");
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('로그아웃 되었습니다.')),
+      );
+      Navigator.of(context).popUntil((route) => route.isFirst);
+    } on FirebaseAuthException catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(e.toString())),
+      );
     }
   }
 
@@ -256,5 +244,4 @@ Future uploadFile(BuildContext context) async {
           );
         });
   }
-  
 }
