@@ -4,11 +4,11 @@ import 'package:flutter/material.dart';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:flutter/services.dart';
-import 'package:get/get_state_manager/get_state_manager.dart';
-
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+
+import 'package:salondec/component/custom_form_buttom.dart';
+import 'package:salondec/component/custom_input_field.dart';
 
 
 class myProfileScreen extends StatefulWidget {
@@ -108,7 +108,7 @@ Future uploadFile(BuildContext context) async {
       appBar: AppBar(),
       body: SingleChildScrollView(
         child: Column(
-        children: <Widget>[
+        children: [
           SizedBox(
             height: 32,
           ),
@@ -145,34 +145,27 @@ Future uploadFile(BuildContext context) async {
               ),
             ),
           ),
-          SizedBox(
-            height: 10,
-          ),
+          const SizedBox(height: 10),
           Text(user.email!),
-          Container(
-            child: TextField(
-              controller: _title,
-
-              decoration: InputDecoration(
-                 hintText: '이름',
-                contentPadding: EdgeInsets.all(20),    
-            ),            
-            ),
-          ),
-          SizedBox(
-            height: 20,
-          ),
+          const SizedBox(height: 20),
+          CustomInputField(
+            controller: _title,
+            labelText: '이름',
+            hintText: '이름을 입력하세요',
+            validator: (textValue) {
+              if(textValue == null || textValue.isEmpty) {
+                return '이름을 넣어주세요!';}
+              return null;
+          }),
+          const SizedBox(height: 20),
           Card(
-            
+            margin: EdgeInsets.fromLTRB(20, 5, 20, 5),
+            elevation: 0.0, 
             child:Column(
             crossAxisAlignment: CrossAxisAlignment.stretch, // <- Add this
 
             children: <Widget>[
-              ListTile(
-                title: Padding(padding: EdgeInsets.fromLTRB(0, 15, 0, 10), child: Text("프로필 요약"))),
-              Padding(
-                  padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
-                  child:Container(
+              Container(
                   child: Row(
                   children: <Widget>[
                     Expanded(
@@ -196,11 +189,7 @@ Future uploadFile(BuildContext context) async {
                   ],
                 ),
               ),
-              ),
-              Padding(
-                  padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
-                  child:
-                Container(
+              Container(
                 child: Row(
                   children: <Widget>[
                     Expanded(
@@ -223,11 +212,7 @@ Future uploadFile(BuildContext context) async {
                     ),
                   ],
                 ),
-              ),
-              ),
-              Padding(
-                  padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
-                  child:              
+              ),            
               Container(
                 child: Row(
                   children: <Widget>[
@@ -251,20 +236,22 @@ Future uploadFile(BuildContext context) async {
                     ),
                   ],
                 ),
-              ),),
+              ),
             ],
           ),
           ),
           Card(
-            
+            margin: EdgeInsets.fromLTRB(20, 5, 20, 5),
+            elevation: 0.0, 
+
             child:Column(
             crossAxisAlignment: CrossAxisAlignment.stretch, // <- Add this
 
             children: <Widget>[
-              ListTile(
-              title: Padding(padding: EdgeInsets.fromLTRB(0, 15, 0, 10), child: Text("첫번째 사진"))),
+              Text("첫번째사진", style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
+              const SizedBox(height: 10),
               Center(
-            child: GestureDetector(
+              child: GestureDetector(
               onTap: () {
                 print("클릭");
                 _showPicker(context);
@@ -295,33 +282,26 @@ Future uploadFile(BuildContext context) async {
             ),
           ),
           ])),
-          SizedBox(
-            height: 20,
-          ),
+          const SizedBox(height: 20),
+          CustomInputField(
+            controller: _title,
+            labelText: '자기소개',
+            hintText: '자기소개를 해주세요',
+            validator: (textValue) {
+              if(textValue == null || textValue.isEmpty) {
+                return '자기소개를 넣어주세요!';}
+              return null;
+          }),
           Card(
+            margin: EdgeInsets.fromLTRB(20, 5, 20, 5),
+            elevation: 0.0, 
+
             child:Column(
             crossAxisAlignment: CrossAxisAlignment.stretch, // <- Add this
 
             children: <Widget>[
-              ListTile(
-                title: Padding(padding: EdgeInsets.fromLTRB(0, 15, 0, 10), child: Text("자기소개"))),
-              Container(
-                child: TextField(
-                controller: null,
-                decoration: InputDecoration(
-                    hintText: '자기소개를해주세요',
-                    contentPadding: EdgeInsets.all(20),    
-                ),            
-                ),
-          ),])),
-          Card(
-            
-            child:Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch, // <- Add this
-
-            children: <Widget>[
-              ListTile(
-              title: Padding(padding: EdgeInsets.fromLTRB(0, 15, 0, 10), child: Text("두번째 사진"))),
+              Text("두번째사진", style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
+              const SizedBox(height: 10),
               Center(
             child: GestureDetector(
               onTap: () {
@@ -353,27 +333,26 @@ Future uploadFile(BuildContext context) async {
               ),
             ),
           ),])),
-          SizedBox(
-            height: 20,
-          ),
-          Card(
+          const SizedBox(height: 20),
+          CustomInputField(
+            controller: _title,
+            labelText: '성격',
+            hintText: '자신의 성격을 설명해주세요',
+            validator: (textValue) {
+              if(textValue == null || textValue.isEmpty) {
+                return '성격을 넣어주세요!';}
+              return null;
+          }),
+            Card(
+            margin: EdgeInsets.fromLTRB(20, 5, 20, 5),
+            elevation: 0.0, 
+
             child:Column(
             crossAxisAlignment: CrossAxisAlignment.stretch, // <- Add this
 
             children: <Widget>[
               ListTile(
-                title: Padding(padding: EdgeInsets.fromLTRB(0, 15, 0, 10), child: Text("성격"))),
-              Container(
-                child: TextField(
-                controller: _job,
-                decoration: InputDecoration(
-                    hintText: '자기소개를해주세요',
-                    contentPadding: EdgeInsets.all(20),    
-                ),            
-                ),
-          ),])),
-          ListTile(
-              title: Padding(padding: EdgeInsets.fromLTRB(0, 15, 0, 10), child: Text("세번째 사진"))),
+              title: Padding(padding: EdgeInsets.fromLTRB(0, 15, 0, 10), child: Text("세ㅋ번째 사진"))),
               Center(
             child: GestureDetector(
               onTap: () {
@@ -404,25 +383,28 @@ Future uploadFile(BuildContext context) async {
                       
               ),
             ),
-          ),
-          Container(
-            child: TextField(
-            controller: null,
-            decoration: InputDecoration(
-                hintText: '관심분야',
-                contentPadding: EdgeInsets.all(20),    
-            ),            
-            ),
-          ),
+          ),])),
+          const SizedBox(height: 20),
+          CustomInputField(
+            controller: _title,
+            labelText: '관심사',
+            hintText: '최근 관심있는 것을 말해주세요',
+            validator: (textValue) {
+              if(textValue == null || textValue.isEmpty) {
+                return '관심사를 넣어주세요!';}
+              return null;
+          }),
           SizedBox(
             height: 32,
           ),
-          ElevatedButton(
+
+          CustomFormButton(
+            innerText: '저장하기',
             onPressed: (){
               uploadFile(context);
             } , 
-            child: const Text("저장하기")
           ),
+
           SizedBox(
             height: 32,
           ),
@@ -433,9 +415,10 @@ Future uploadFile(BuildContext context) async {
               child: Text('로그아웃'),
               onPressed:(){_handleLogoutUser();}
           ),
-        ],
-      ),
-      ),
+        
+        ]
+      )
+      )
     );
   }
 
