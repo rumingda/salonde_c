@@ -1,20 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:salondec/menu/Test.dart';
 import 'package:salondec/menu/lobby.dart';
-import 'package:salondec/menu/imageUpload.dart';
+import 'package:salondec/menu/myProfile.dart';
+import 'package:salondec/menu/myProfile2.dart';
 import 'package:salondec/screen/homeScreen.dart';
 import 'package:salondec/screen/chatScreen.dart';
 import 'package:salondec/screen/discoveryScreen.dart';
 import 'package:salondec/screen/favoriteScreen.dart';
 import 'package:salondec/screen/loveletterScreen.dart';
 import 'package:salondec/menu/lobby_list.dart';
+import 'package:salondec/widgets/agora-group-calling/GroupCall_Screen.dart';
+import 'package:salondec/widgets/broadcast_audio/broadAudioScreen.dart';
+import 'package:salondec/widgets/broadcast_video/broadVideoScreen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+
 
 String title_string = "Home";
 
 class MainPage extends StatefulWidget{
   const MainPage({Key? key, required this.title}) : super(key: key);
   final String title;
-  
   @override
   _MainPageState createState() => _MainPageState();
 }
@@ -31,6 +36,7 @@ List<Widget> pageList = <Widget>[
 ];  
 
 final TextEditingController _username = TextEditingController();
+final user = FirebaseAuth.instance.currentUser!;
 
 
 @override
@@ -65,7 +71,7 @@ final TextEditingController _username = TextEditingController();
                   Navigator.push(
                     context,
                     MaterialPageRoute (
-                      builder : (context) => ImageUploads()
+                      builder : (context) => myProfileScreen()
                       )
                   );
                 },
@@ -108,6 +114,48 @@ final TextEditingController _username = TextEditingController();
                     context,
                     MaterialPageRoute (
                       builder : (context) => Test()
+                      )
+                  );
+                },
+              ),
+              ListTile(
+                leading: const Icon(
+                  Icons.home,
+                ),
+                title: const Text('브로드캐스트'),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute (
+                      builder : (context) => BroadcastVideo(username: user.email! )
+                      )
+                  );
+                },
+              ),
+              ListTile(
+                leading: const Icon(
+                  Icons.home,
+                ),
+                title: const Text('오디오브로드캐스트'),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute (
+                      builder : (context) => BroadcastAudio()
+                      )
+                  );
+                },
+              ),
+              ListTile(
+                leading: const Icon(
+                  Icons.home,
+                ),
+                title: const Text('그룹콜'),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute (
+                      builder : (context) => GroupCall()
                       )
                   );
                 },

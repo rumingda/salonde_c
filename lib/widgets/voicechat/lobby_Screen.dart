@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'dart:async';
-import '../widgets/voicechat/CallPage.dart';
+import 'package:salondec/widgets/voicechat/CallPage.dart';
 import 'package:salondec/widgets/login/common/custom_form_buttom.dart';
 import 'package:salondec/widgets/login/common/custom_input_field.dart';
 
