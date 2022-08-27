@@ -13,6 +13,7 @@ import 'package:salondec/widgets/broadcast_audio/broadAudioScreen.dart';
 import 'package:salondec/widgets/broadcast_video/broadVideoScreen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:salondec/widgets/join_channel_video.dart';
+
 String title_string = "Home";
 
 class MainPage extends StatefulWidget {
@@ -68,16 +69,6 @@ class _MainPageState extends State<MainPage> {
               onTap: () {
                 Navigator.push(context,
                     MaterialPageRoute(builder: (context) => myProfileScreen()));
-              },
-            ),
-            ListTile(
-              leading: const Icon(
-                Icons.home,
-              ),
-              title: const Text('음성채팅방만들기'),
-              onTap: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => LobbyPage()));
               },
             ),
             ListTile(
