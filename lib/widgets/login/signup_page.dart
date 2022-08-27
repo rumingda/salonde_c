@@ -2,7 +2,11 @@ import 'dart:io';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:get/get.dart';
+import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:salondec/page/mainPage.dart';
+import 'package:salondec/page/viewmodel/auth_viewmodel.dart';
 import 'common/custom_form_buttom.dart';
 import 'common/custom_input_field.dart';
 import 'common/page_header.dart';
@@ -26,6 +30,11 @@ class _SignupPageState extends State<SignupPage> {
   final _signupFormKey = GlobalKey<FormState>();
   final navigatorKey = GlobalKey<NavigatorState>();
   String singup = "가입하기";
+
+  // String gender = '남';
+
+  int _value = 0;
+  AuthViewModel _authViewModel = Get.find<AuthViewModel>();
 
   Future _pickProfileImage() async {
     try {
@@ -157,6 +166,16 @@ class _SignupPageState extends State<SignupPage> {
                       const SizedBox(
                         height: 22,
                       ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: <Widget>[
+                          _genderWidget("남"),
+                          _genderWidget("여"),
+                        ],
+                      ),
+                      const SizedBox(
+                        height: 22,
+                      ),
                       CustomFormButton(
                         innerText: singup,
                         onPressed: _handleSignupUser,
@@ -209,22 +228,64 @@ class _SignupPageState extends State<SignupPage> {
     );
   }
 
+  GestureDetector _genderWidget(String gender) {
+    return GestureDetector(
+        behavior: HitTestBehavior.opaque,
+        onTap: () {
+          setState(() {
+            _authViewModel.gender = gender;
+          });
+        },
+        child: Row(
+          children: <Widget>[
+            _authViewModel.gender == gender
+                ? Image.asset(
+                    "assets/image/btn_radio_over.png", // 바꿔야함
+                    width: 23,
+                  )
+                : Image.asset(
+                    "assets/image/btn_radio_default.png",
+                    width: 23,
+                  ),
+            Container(
+                padding: const EdgeInsets.only(left: 7, top: 10, bottom: 10),
+                child: Text(gender,
+                    style: TextStyle(fontWeight: FontWeight.w400))),
+          ],
+        ));
+  }
+
   Future _handleSignupUser() async {
     if (_signupFormKey.currentState!.validate()) {
       try {
-        await FirebaseAuth.instance.createUserWithEmailAndPassword(
-            email: _email.text.trim(), password: _password.text.trim());
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('회원가입이 되었습니다. 로그인 해보세요!')),
-        );
-        try {
-          await FirebaseAuth.instance.signOut();
-          Navigator.of(context).popUntil((route) => route.isFirst);
-        } on FirebaseAuthException catch (e) {
+        // await FirebaseAuth.instance.createUserWithEmailAndPassword(
+        //     email: _email.text.trim(), password: _password.text.trim());
+        bool result = await _authViewModel.signUpWithEmail(
+            email: _email.text.trim(),
+            password: _password.text.trim(),
+            gender: _authViewModel.gender);
+        if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(e.toString())),
+            SnackBar(
+                content: result
+                    // ? Text('회원가입이 되었습니다. 로그인 해보세요!')
+                    ? Text('회원가입이 되었습니다.')
+                    : Text('가입에 실패했습니다.')),
           );
         }
+        if (result) {
+          await _authViewModel.signInWithEmail(
+              email: _email.text.trim(), password: _password.text.trim());
+          Get.toNamed(MainPage.routeName);
+        }
+        // try {
+        //   await FirebaseAuth.instance.signOut();
+        //   Navigator.of(context).popUntil((route) => route.isFirst);
+        // } on FirebaseAuthException catch (e) {
+        //   ScaffoldMessenger.of(context).showSnackBar(
+        //     SnackBar(content: Text(e.toString())),
+        //   );
+        // }
       } on FirebaseAuthException catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text(e.message.toString())),
