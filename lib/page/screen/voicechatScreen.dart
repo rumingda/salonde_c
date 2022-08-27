@@ -1,8 +1,5 @@
-import 'package:salondec/data/agora_setting.dart';
-import 'package:agora_rtm/agora_rtm.dart';
 import 'package:flutter/material.dart';
-import 'package:permission_handler/permission_handler.dart';
-import 'package:salondec/menu/lobby.dart';
+import 'package:salondec/widgets/voicechat/lobby_Screen.dart';
 
 class VoicechatScreen extends StatefulWidget {
   const VoicechatScreen({Key? key}) : super(key: key);
@@ -22,7 +19,7 @@ class _VoicechatScreenState extends State<VoicechatScreen> {
     Icons.ac_unit,
     Icons.access_alarm,
     Icons.access_time,
-    Icons.access_time,
+    Icons.access_time
   ];
   final times = ["1분전", "2분전", "4분전"];
   final TextEditingController _username = TextEditingController();
