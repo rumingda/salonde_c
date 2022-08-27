@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-import 'package:salondec/screen/matchedScreen.dart';
-import 'package:salondec/screen/matchingScreen.dart';
-import 'package:salondec/screen/passawayScreen.dart';
+import 'package:salondec/page/screen/matchedScreen.dart';
+import 'package:salondec/page/screen/matchingScreen.dart';
+import 'package:salondec/page/screen/passawayScreen.dart';
 
 class FavoriteScreen extends StatefulWidget {
   @override

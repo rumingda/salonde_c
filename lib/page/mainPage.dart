@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:salondec/menu/Test.dart';
 import 'package:salondec/menu/lobby.dart';
 import 'package:salondec/menu/imageUpload.dart';
-import 'package:salondec/screen/homeScreen.dart';
-import 'package:salondec/screen/chatScreen.dart';
-import 'package:salondec/screen/discoveryScreen.dart';
-import 'package:salondec/screen/favoriteScreen.dart';
-import 'package:salondec/screen/loveletterScreen.dart';
+import 'package:salondec/page/screen/homeScreen.dart';
+import 'package:salondec/page/screen/chatScreen.dart';
+import 'package:salondec/page/screen/discoveryScreen.dart';
+import 'package:salondec/page/screen/favoriteScreen.dart';
+import 'package:salondec/page/screen/loveletterScreen.dart';
 import 'package:salondec/menu/lobby_list.dart';
 
 String title_string = "Home";

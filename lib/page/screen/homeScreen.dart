@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../data/model/person2.dart';
+import 'package:salondec/data/model/person2.dart';
 import 'today_detail.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
