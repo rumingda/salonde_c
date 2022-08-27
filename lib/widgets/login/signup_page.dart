@@ -18,7 +18,6 @@ class SignupPage extends StatefulWidget {
 }
 
 class _SignupPageState extends State<SignupPage> {
-
   File? _profileImage;
   final _email = TextEditingController();
   final _password = TextEditingController();
@@ -31,7 +30,7 @@ class _SignupPageState extends State<SignupPage> {
   Future _pickProfileImage() async {
     try {
       final image = await ImagePicker().pickImage(source: ImageSource.gallery);
-      if(image == null) return;
+      if (image == null) return;
 
       final imageTemporary = File(image.path);
       setState(() => _profileImage = imageTemporary);
@@ -55,11 +54,15 @@ class _SignupPageState extends State<SignupPage> {
                 Container(
                   decoration: const BoxDecoration(
                     color: Colors.white,
-                    borderRadius: BorderRadius.vertical(top: Radius.circular(20),),
+                    borderRadius: BorderRadius.vertical(
+                      top: Radius.circular(20),
+                    ),
                   ),
                   child: Column(
                     children: [
-                      const PageHeading(title: 'Sign-up',),
+                      const PageHeading(
+                        title: 'Sign-up',
+                      ),
                       /*
                       SizedBox(
                         width: 130,
@@ -114,15 +117,14 @@ class _SignupPageState extends State<SignupPage> {
                           hintText: '이메일 주소',
                           isDense: true,
                           validator: (textValue) {
-                            if(textValue == null || textValue.isEmpty) {
+                            if (textValue == null || textValue.isEmpty) {
                               return '이메일이 필요합니다!';
                             }
-                            if(!EmailValidator.validate(textValue)) {
+                            if (!EmailValidator.validate(textValue)) {
                               return '유효한 이메일을 입력하세요';
                             }
                             return null;
-                          }
-                      ),
+                          }),
                       /*const SizedBox(height: 16,),
                       CustomInputField(
                           labelText: 'Contact no.',
@@ -135,7 +137,9 @@ class _SignupPageState extends State<SignupPage> {
                             return null;
                           }
                       ),*/
-                      const SizedBox(height: 16,),
+                      const SizedBox(
+                        height: 16,
+                      ),
                       CustomInputField(
                         controller: _password,
                         labelText: '비밀번호',
@@ -143,32 +147,57 @@ class _SignupPageState extends State<SignupPage> {
                         isDense: true,
                         obscureText: true,
                         validator: (textValue) {
-                          if(textValue == null || textValue.isEmpty) {
+                          if (textValue == null || textValue.isEmpty) {
                             return '비밀번호가 필요합니다';
                           }
                           return null;
                         },
                         suffixIcon: true,
                       ),
-                      const SizedBox(height: 22,),
-                      CustomFormButton(innerText: singup , onPressed: _handleSignupUser,),
-                      const SizedBox(height: 18,),
+                      const SizedBox(
+                        height: 22,
+                      ),
+                      CustomFormButton(
+                        innerText: singup,
+                        onPressed: _handleSignupUser,
+                      ),
+                      const SizedBox(
+                        height: 18,
+                      ),
                       SizedBox(
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            const Text('이미 계정이 있나요 ? ', style: TextStyle(fontSize: 13, color: Color(0xff939393), fontWeight: FontWeight.bold),),
+                            const Text(
+                              '이미 계정이 있나요 ? ',
+                              style: TextStyle(
+                                  fontSize: 13,
+                                  color: Color(0xff939393),
+                                  fontWeight: FontWeight.bold),
+                            ),
                             GestureDetector(
                               onTap: () => {
-                                Navigator.push(context, MaterialPageRoute(builder: (context) => const LoginPage()))
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            const LoginPage()))
                               },
-                              child: const Text('로그인하기', style: TextStyle(fontSize: 15, color: Color(0xff748288), fontWeight: FontWeight.bold),),
+                              child: const Text(
+                                '로그인하기',
+                                style: TextStyle(
+                                    fontSize: 15,
+                                    color: Color(0xff748288),
+                                    fontWeight: FontWeight.bold),
+                              ),
                             ),
                           ],
                         ),
                       ),
-                      const SizedBox(height: 30,),
+                      const SizedBox(
+                        height: 30,
+                      ),
                     ],
                   ),
                 ),
@@ -181,31 +210,26 @@ class _SignupPageState extends State<SignupPage> {
   }
 
   Future _handleSignupUser() async {
-
     if (_signupFormKey.currentState!.validate()) {
       try {
         await FirebaseAuth.instance.createUserWithEmailAndPassword(
-            email:_email.text.trim(), 
-            password:_password.text.trim()   
-          );
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('회원가입이 되었습니다. 로그인 해보세요!')),
-          );
-        try {
-        await FirebaseAuth.instance.signOut();
-        Navigator.of(context).popUntil((route) => route.isFirst);
-
-        } on FirebaseAuthException catch (e) {
+            email: _email.text.trim(), password: _password.text.trim());
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(e.toString())),
+          const SnackBar(content: Text('회원가입이 되었습니다. 로그인 해보세요!')),
         );
-      }   
-      }
-      on FirebaseAuthException catch(e) {
+        try {
+          await FirebaseAuth.instance.signOut();
+          Navigator.of(context).popUntil((route) => route.isFirst);
+        } on FirebaseAuthException catch (e) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(e.toString())),
+          );
+        }
+      } on FirebaseAuthException catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text(e.message.toString())),
-      );
+        );
+      }
     }
-  }
   }
 }

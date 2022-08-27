@@ -2,11 +2,10 @@ import 'package:flutter/material.dart';
 
 class DiscoveryScreen extends StatefulWidget {
   @override
-  _DiscoveryScreenState createState() =>  _DiscoveryScreenState();
+  _DiscoveryScreenState createState() => _DiscoveryScreenState();
 }
 
-
-class _DiscoveryScreenState extends State<DiscoveryScreen>{
+class _DiscoveryScreenState extends State<DiscoveryScreen> {
   @override
   Widget build(BuildContext context) {
     return const MaterialApp(
@@ -24,19 +23,24 @@ class TwoCardPageView extends StatefulWidget {
 }
 
 class _TwoCardPageViewState extends State<TwoCardPageView> {
-
-  final List<String> _images = [  
+  final List<String> _images = [
     "assets/image/discovery1.png",
-    "assets/image/discovery2.png",   
+    "assets/image/discovery2.png",
     "assets/image/discovery3.png",
-    "assets/image/discovery4.png", 
+    "assets/image/discovery4.png",
     "assets/image/discovery5.png",
     "assets/image/discovery6.png",
   ];
 
-  final List<String> titles = [  
-    "Basic info","Basic info","Introduction","Character","Character","Q&A"];
-    
+  final List<String> titles = [
+    "Basic info",
+    "Basic info",
+    "Introduction",
+    "Character",
+    "Character",
+    "Q&A"
+  ];
+
   final PageController _pageController =
       PageController(viewportFraction: 0.8, initialPage: 0);
   double _page = 0;
@@ -57,7 +61,6 @@ class _TwoCardPageViewState extends State<TwoCardPageView> {
     return Scaffold(
       body: Column(
         children: [
-          
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
@@ -78,7 +81,6 @@ class _TwoCardPageViewState extends State<TwoCardPageView> {
             ],
           ),
           SizedBox(
-            
             width: MediaQuery.of(context).size.width,
             height: 400,
             child: PageView.builder(
@@ -88,24 +90,38 @@ class _TwoCardPageViewState extends State<TwoCardPageView> {
                   return SizedBox(
                     child: Column(
                       children: [
-                        Expanded(
-                          child:Image.asset(_images[index])),
+                        Expanded(child: Image.asset(_images[index])),
                         Container(
-                          margin: EdgeInsets.fromLTRB(0, 15, 0, 10),
-                          child: Text(titles[index],style: TextStyle(fontFamily: 'Abhaya Libre', fontWeight : FontWeight.w700, fontSize: 30.0))),
-                        Card(      
-                          elevation: 0.0, 
-                          child: ListTile(
-                            title: Padding(padding: EdgeInsets.fromLTRB(0, 15, 0, 10), child: Text("강살롱, 24살", textAlign: TextAlign.center, style: TextStyle(color: Color(0xff365859), fontWeight : FontWeight.w800))),
-                            subtitle: Padding(padding: EdgeInsets.fromLTRB(0, 0, 0, 10), child: Text("배우 | 164cm |  마름", textAlign: TextAlign.center, style: TextStyle(color: Color(0xffC4C4C4)))),
-                          )),
+                            margin: EdgeInsets.fromLTRB(0, 15, 0, 10),
+                            child: Text(titles[index],
+                                style: TextStyle(
+                                    fontFamily: 'Abhaya Libre',
+                                    fontWeight: FontWeight.w700,
+                                    fontSize: 30.0))),
+                        Card(
+                            elevation: 0.0,
+                            child: ListTile(
+                              title: Padding(
+                                  padding: EdgeInsets.fromLTRB(0, 15, 0, 10),
+                                  child: Text("강살롱, 24살",
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                          color: Color(0xff365859),
+                                          fontWeight: FontWeight.w800))),
+                              subtitle: Padding(
+                                  padding: EdgeInsets.fromLTRB(0, 0, 0, 10),
+                                  child: Text("배우 | 164cm |  마름",
+                                      textAlign: TextAlign.center,
+                                      style:
+                                          TextStyle(color: Color(0xffC4C4C4)))),
+                            )),
                       ],
                     ),
                   );
                 }),
           ),
         ],
-      ),     
+      ),
     );
   }
 }
@@ -126,8 +142,7 @@ class ItemBuilder extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
       height: 200,
-      child: Center(
-          child: Text("")),
+      child: Center(child: Text("")),
     );
   }
 }
