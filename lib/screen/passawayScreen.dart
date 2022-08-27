@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'today_detail2.dart';
-import 'package:salondec/data/person2.dart';
- 
+import 'package:salondec/data/model/person2.dart';
+
 class PassawayScreen extends StatelessWidget {
   PassawayScreen({Key? key}) : super(key: key);
-
 
   final List<Note> _noteList = [
     Note(
@@ -24,52 +23,48 @@ class PassawayScreen extends StatelessWidget {
     )
   ];
 
-  List<String> images = [  
-    "assets/image/image1_mask.png",  "assets/image/image4_mask.png",   
+  List<String> images = [
+    "assets/image/image1_mask.png",
+    "assets/image/image4_mask.png",
   ];
 
   @override
-  Widget build(BuildContext context){
+  Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-       home: Scaffold(  
-        body: GridView.builder(  
-          itemCount: images.length,  
+      home: Scaffold(
+        body: GridView.builder(
+          itemCount: images.length,
           padding: EdgeInsets.all(15),
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2,  
-            childAspectRatio: 1/ 1.73,
-            crossAxisSpacing: 12.0,  
-            mainAxisSpacing: 12.0
-            ),
-            itemBuilder: (BuildContext context, int index)=>
-              GestureDetector(
-                onTap: () => Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => todaydetail2(_noteList[index]),
-                 )),
-                child: Container(
-                  child: Column(
-                   children: [
-                    
-                    Image.asset(images[index]),
-                    Flexible(
-                      flex: 1,
-                      fit: FlexFit.tight,
-                      child: Container(
-                        
-                        height: 60,
-                        alignment: Alignment.center,
-                      ),
+              crossAxisCount: 2,
+              childAspectRatio: 1 / 1.73,
+              crossAxisSpacing: 12.0,
+              mainAxisSpacing: 12.0),
+          itemBuilder: (BuildContext context, int index) => GestureDetector(
+            onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => todaydetail2(_noteList[index]),
+                )),
+            child: Container(
+              child: Column(
+                children: [
+                  Image.asset(images[index]),
+                  Flexible(
+                    flex: 1,
+                    fit: FlexFit.tight,
+                    child: Container(
+                      height: 60,
+                      alignment: Alignment.center,
                     ),
-                    
-                    ],
                   ),
-                ),
+                ],
               ),
-        ),   
-       ),
+            ),
+          ),
+        ),
+      ),
     );
   }
 }

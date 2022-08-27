@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'today_detail2.dart';
-import 'package:salondec/data/person2.dart';
+import 'package:salondec/data/model/person2.dart';
 
 class MatchedScreen extends StatelessWidget {
   MatchedScreen({Key? key}) : super(key: key);
@@ -19,54 +19,55 @@ class MatchedScreen extends StatelessWidget {
   ];
 
   @override
-  Widget build(BuildContext context){
+  Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-       home: Scaffold(  
-        body: GridView.builder(  
-          itemCount: _matchedList.length,  
+      home: Scaffold(
+        body: GridView.builder(
+          itemCount: _matchedList.length,
           padding: EdgeInsets.all(15),
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2,  
-            childAspectRatio: 1/ 1.73,
-            crossAxisSpacing: 12.0,  
-            mainAxisSpacing: 12.0
-            ),
-            itemBuilder: (BuildContext context, int index)=>
-              GestureDetector(
-                onTap: () => Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => todaydetail2(_matchedList[index]),
-                 )),
-                child: Container(
-                  color: Colors.white,
-                  child: Column(
-                   children: [
-                    
-                    Image.asset(_matchedList[index].image),
-                    Flexible(
-                      flex: 1,
-                      fit: FlexFit.tight,
-                      child: Row(
-                        children: <Widget>[
-                          Expanded(
-                            child: Padding(padding: EdgeInsets.fromLTRB(10, 0, 0, 0), child: Text(
-                              _matchedList[index].title,
-                              style: TextStyle(fontSize: 16.0, fontFamily: 'Gothic A1', fontWeight : FontWeight.w600)
-                            ))),
-                          Expanded(child: Text(
-                              _matchedList[index].content,
-                              style: TextStyle(fontSize: 10.0, fontFamily: 'Gothic A1', fontWeight : FontWeight.w400))),
-                        ]
-                      ),
-                      ),
-                    ],
+              crossAxisCount: 2,
+              childAspectRatio: 1 / 1.73,
+              crossAxisSpacing: 12.0,
+              mainAxisSpacing: 12.0),
+          itemBuilder: (BuildContext context, int index) => GestureDetector(
+            onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => todaydetail2(_matchedList[index]),
+                )),
+            child: Container(
+              color: Colors.white,
+              child: Column(
+                children: [
+                  Image.asset(_matchedList[index].image),
+                  Flexible(
+                    flex: 1,
+                    fit: FlexFit.tight,
+                    child: Row(children: <Widget>[
+                      Expanded(
+                          child: Padding(
+                              padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
+                              child: Text(_matchedList[index].title,
+                                  style: TextStyle(
+                                      fontSize: 16.0,
+                                      fontFamily: 'Gothic A1',
+                                      fontWeight: FontWeight.w600)))),
+                      Expanded(
+                          child: Text(_matchedList[index].content,
+                              style: TextStyle(
+                                  fontSize: 10.0,
+                                  fontFamily: 'Gothic A1',
+                                  fontWeight: FontWeight.w400))),
+                    ]),
                   ),
-                ),
+                ],
               ),
-        ),   
-       ),
+            ),
+          ),
+        ),
+      ),
     );
   }
 }

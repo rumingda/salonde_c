@@ -6,12 +6,12 @@ import 'package:agora_rtc_engine/rtc_remote_view.dart' as RtcRemoteView;
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:salondec/data/agora_setting.dart';
+
 const appId = APP_ID;
 const token = APP_TOKEN;
 const channel = "mina";
 
 class Test extends StatefulWidget {
-
   @override
   _TestState createState() => _TestState();
 }
@@ -79,8 +79,8 @@ class _TestState extends State<Test> {
               height: 150,
               child: Center(
                 child: _localUserJoined
-                  ? RtcLocalView.SurfaceView()
-                  : CircularProgressIndicator(),
+                    ? RtcLocalView.SurfaceView()
+                    : CircularProgressIndicator(),
               ),
             ),
           ),
