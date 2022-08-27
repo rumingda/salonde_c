@@ -17,7 +17,6 @@ class _LobbyListState extends State<LobbyList> {
   final _channelFieldController = TextEditingController();
   String myChannel = '';
 
-
   final Map<String, List<String>> _seniorMember = {};
   final Map<String, int> _channelList = {};
 
@@ -52,93 +51,91 @@ class _LobbyListState extends State<LobbyList> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Text('Select a channel'),
-        ),
-        body: SafeArea(
-          child: SingleChildScrollView(
-            physics: BouncingScrollPhysics(),
-            child: Container(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  _isChannelCreated
-                      ? Padding(
-                          padding: const EdgeInsets.all(20.0),
-                          child: Text(
-                            'Join an existing channel or create your own. Call will start when there are at least 2 users in your channel',
-                            textAlign: TextAlign.center,
-                          ),
-                        )
-                      : Container(),
-                  _isChannelCreated
-                      ? Container(
-                          height: MediaQuery.of(context).size.height * 0.7,
-                          width: MediaQuery.of(context).size.width,
-                          child: ListView.builder(
-                            itemBuilder: (context, index) {
-                              return ListTile(
-                                title: Text(_channelList.keys.toList()[index] +
-                                    '    -    ' +
-                                    _channelList.values
-                                        .toList()[index]
-                                        .toString() +
-                                    '/ 4'),
-                                onTap: () {
-                                  if (_channelList.values.toList()[index] <=
-                                      4) {
-                                    joinCall(_channelList.keys.toList()[index],
-                                        _channelList.values.toList()[index]);
-                                  } else {
-                                    print('Channel is full');
-                                  }
-                                },
-                              );
-                            },
-                            itemCount: _channelList.length,
-                          ),
-                        )
-                      : Center(child: Text('Please create a channel first')),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 20),
-                        child: Container(
-                          width: MediaQuery.of(context).size.width * 0.7,
-                          alignment: Alignment.bottomCenter,
-                          child: TextFormField(
-                            controller: _channelFieldController,
-                            decoration: InputDecoration(
-                              hintText: 'Channel Name',
-                              border: OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.blue),
-                                borderRadius: BorderRadius.circular(20),
-                              ),
+      appBar: AppBar(
+        title: Text('Select a channel'),
+      ),
+      body: SafeArea(
+        child: SingleChildScrollView(
+          physics: BouncingScrollPhysics(),
+          child: Container(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                _isChannelCreated
+                    ? Padding(
+                        padding: const EdgeInsets.all(20.0),
+                        child: Text(
+                          'Join an existing channel or create your own. Call will start when there are at least 2 users in your channel',
+                          textAlign: TextAlign.center,
+                        ),
+                      )
+                    : Container(),
+                _isChannelCreated
+                    ? Container(
+                        height: MediaQuery.of(context).size.height * 0.7,
+                        width: MediaQuery.of(context).size.width,
+                        child: ListView.builder(
+                          itemBuilder: (context, index) {
+                            return ListTile(
+                              title: Text(_channelList.keys.toList()[index] +
+                                  '    -    ' +
+                                  _channelList.values
+                                      .toList()[index]
+                                      .toString() +
+                                  '/ 4'),
+                              onTap: () {
+                                if (_channelList.values.toList()[index] <= 4) {
+                                  joinCall(_channelList.keys.toList()[index],
+                                      _channelList.values.toList()[index]);
+                                } else {
+                                  print('Channel is full');
+                                }
+                              },
+                            );
+                          },
+                          itemCount: _channelList.length,
+                        ),
+                      )
+                    : Center(child: Text('Please create a channel first')),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 20),
+                      child: Container(
+                        width: MediaQuery.of(context).size.width * 0.7,
+                        alignment: Alignment.bottomCenter,
+                        child: TextFormField(
+                          controller: _channelFieldController,
+                          decoration: InputDecoration(
+                            hintText: 'Channel Name',
+                            border: OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.blue),
+                              borderRadius: BorderRadius.circular(20),
                             ),
                           ),
                         ),
                       ),
-                      Container(
-                        color: Colors.blue,
-                        child: RawMaterialButton(
-                          child: Text(
-                            'Create',
-                            style: TextStyle(color: Colors.white),
-                          ),
-                          onPressed: () {
-                            _createChannels(_channelFieldController.text);
-                          },
+                    ),
+                    Container(
+                      color: Colors.blue,
+                      child: RawMaterialButton(
+                        child: Text(
+                          'Create',
+                          style: TextStyle(color: Colors.white),
                         ),
+                        onPressed: () {
+                          _createChannels(_channelFieldController.text);
+                        },
                       ),
-                    ],
-                  ),
-                ],
-              ),
+                    ),
+                  ],
+                ),
+              ],
             ),
-            
           ),
         ),
+      ),
     );
   }
 
@@ -333,4 +330,3 @@ class _LobbyListState extends State<LobbyList> {
     });
   }
 }
-

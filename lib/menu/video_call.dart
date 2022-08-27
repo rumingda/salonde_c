@@ -8,7 +8,6 @@ class CallPage extends StatefulWidget {
   final String channelName;
 
   const CallPage({Key? key, required this.channelName}) : super(key: key);
-  
 
   @override
   _CallPageState createState() => _CallPageState();
@@ -174,7 +173,8 @@ class _CallPageState extends State<CallPage> {
   List<Widget> _getRenderViews() {
     final List<StatefulWidget> list = [];
     list.add(RtcLocalView.SurfaceView());
-    _users.forEach((int uid) => list.add(RtcRemoteView.SurfaceView(channelId: widget.channelName, uid: uid)));
+    _users.forEach((int uid) => list.add(
+        RtcRemoteView.SurfaceView(channelId: widget.channelName, uid: uid)));
     return list;
   }
 
