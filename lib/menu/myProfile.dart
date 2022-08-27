@@ -240,8 +240,9 @@ Future uploadFile(BuildContext context) async {
             ],
           ),
           ),
+          const SizedBox(height: 20),
           Card(
-            margin: EdgeInsets.fromLTRB(20, 5, 20, 5),
+            margin: EdgeInsets.fromLTRB(30, 5, 30, 5),
             elevation: 0.0, 
 
             child:Column(
@@ -292,8 +293,9 @@ Future uploadFile(BuildContext context) async {
                 return '자기소개를 넣어주세요!';}
               return null;
           }),
+          const SizedBox(height: 20),
           Card(
-            margin: EdgeInsets.fromLTRB(20, 5, 20, 5),
+            margin: EdgeInsets.fromLTRB(30, 5, 30, 5),
             elevation: 0.0, 
 
             child:Column(
@@ -342,17 +344,19 @@ Future uploadFile(BuildContext context) async {
               if(textValue == null || textValue.isEmpty) {
                 return '성격을 넣어주세요!';}
               return null;
-          }),
-            Card(
-            margin: EdgeInsets.fromLTRB(20, 5, 20, 5),
+            }),
+            const SizedBox(height: 20),
+            const SizedBox(height: 20),
+          Card(
+            margin: EdgeInsets.fromLTRB(30, 5, 30, 5),
             elevation: 0.0, 
 
             child:Column(
             crossAxisAlignment: CrossAxisAlignment.stretch, // <- Add this
 
             children: <Widget>[
-              ListTile(
-              title: Padding(padding: EdgeInsets.fromLTRB(0, 15, 0, 10), child: Text("세ㅋ번째 사진"))),
+              Text("세번째사진", style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
+              const SizedBox(height: 10),
               Center(
             child: GestureDetector(
               onTap: () {
