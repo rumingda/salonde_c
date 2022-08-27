@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:salondec/data/agora_setting.dart';
 import 'package:salondec/menu/Test.dart';
 import 'package:salondec/widgets/broadcast_video/messaging.dart';
@@ -6,6 +7,7 @@ import 'package:agora_rtc_engine/rtc_engine.dart';
 import 'package:agora_rtc_engine/rtc_local_view.dart' as RtcLocalView;
 import 'package:agora_rtc_engine/rtc_remote_view.dart' as RtcRemoteView;
 import 'package:permission_handler/permission_handler.dart';
+import 'package:salondec/widgets/log_sink.dart';
 
 class BroadcastPage extends StatefulWidget {
   final String channelName;
@@ -21,7 +23,14 @@ class BroadcastPage extends StatefulWidget {
 class _BroadcastPageState extends State<BroadcastPage> {
   final _users = <int>[];
   final _infoStrings = <String>[];
-  late RtcEngine _engine;
+  late final RtcEngine _engine;
+  String channelId = channelName;
+  bool isJoined = false;
+  bool switchCamera = true;
+  TextEditingController? _channelIdController;
+  late TextEditingController _rtmpUrlController;
+  bool _isStreaming = false;
+  int _remoteUid = 0;
   bool muted = false;
 
   @override
@@ -36,35 +45,38 @@ class _BroadcastPageState extends State<BroadcastPage> {
   @override
   void initState() {
     super.initState();
-    // initialize agora sdk
+    _channelIdController = TextEditingController(text: channelId);
+    _rtmpUrlController = TextEditingController();
     initialize();
   }
 
   Future<void> initialize() async {
     // retrieve permissions
 
-    print('Client Role: ${widget.isBroadcaster}');
+    print('브로드캐서터 역할: ${widget.isBroadcaster}');
     if (APP_ID.isEmpty) {
       setState(() {
         _infoStrings.add(
-          'APP_ID missing, please provide your APP_ID in settings.dart',
+          '앱 아이디가 없어요. APP_ID를 넣어주세요',
         );
-        _infoStrings.add('Agora Engine is not starting');
+        _infoStrings.add('아고라 엔진이 시작되지 않았어요.');
       });
       return;
     }
     await _initAgoraRtcEngine();
-    await _engine.enableVideo();
-    _addAgoraEventHandlers();
-    await _engine.joinChannel(APP_TOKEN, widget.channelName, null, 0);
   }
 
   Future<void> _initAgoraRtcEngine() async {
     print("허락을 요청한다");
-    await [Permission.microphone, Permission.camera].request();
-    
+    _engine = await RtcEngine.createWithContext(RtcEngineContext(APP_ID));
+    _addAgoraEventHandlers();
+
+    await _engine.enableVideo();
+    await _engine.startPreview();
+    await _engine.setChannelProfile(ChannelProfile.LiveBroadcasting);
+    await _engine.setClientRole(ClientRole.Broadcaster);
+ 
     //create the engine
-    _engine = await RtcEngine.create(APP_ID);
     await _engine.setChannelProfile(ChannelProfile.LiveBroadcasting);
     if (widget.isBroadcaster) {
       await _engine.setClientRole(ClientRole.Broadcaster);
@@ -75,38 +87,62 @@ class _BroadcastPageState extends State<BroadcastPage> {
 
   /// Add agora event handlers
   void _addAgoraEventHandlers() {
-    _engine.setEventHandler(
-      RtcEngineEventHandler(
-      error: (code) {
-      setState(() {
-        final info = 'onError: $code';
-        _infoStrings.add(info);
-      });
-    },
-    joinChannelSuccess: (String channel, int uid, int elapsed) {
-      setState(() {
+    _engine.setEventHandler(RtcEngineEventHandler(
+      warning: (warningCode) {
+        logSink.log('warning $warningCode');
+      },
+      error: (errorCode) {
+        logSink.log('error $errorCode');
+      },
+      joinChannelSuccess: (channel, uid, elapsed) {
+        logSink.log('joinChannelSuccess $channel $uid $elapsed');
+        setState(() {
         final info = 'onJoinChannel: $channel, uid: $uid';
         _infoStrings.add(info);
+        isJoined = true;
       });
+      _startTranscoding();
     }, 
     leaveChannel: (stats) {
+      logSink.log('leaveChannel ${stats.toJson()}');
+
       setState(() {
         _infoStrings.add('onLeaveChannel');
         _users.clear();
+        isJoined = false;
       });
-    }, userJoined: (uid, elapsed) {
+    }, 
+    rtmpStreamingStateChanged: (String url, RtmpStreamingState state,
+          RtmpStreamingErrorCode errCode) {
+        logSink.log(
+            'rtmpStreamingStateChanged url: $url, state: $state, errCode: $errCode');
+    },
+    rtmpStreamingEvent: (String url, RtmpStreamingEvent eventCode) {
+        logSink.log(
+            'rtmpStreamingEvent url: $url, eventCode: ${eventCode.toString()}');
+    },
+    userJoined: (uid, elapsed) {
+      logSink.log('userJoined  $uid $elapsed');
+        if (_remoteUid == 0) {
+          setState(() {
+            _remoteUid = uid;
+          });
       setState(() {
         final info = 'userJoined: $uid';
         _infoStrings.add(info);
         _users.add(uid);
       });
-    }, userOffline: (uid, elapsed) {
+    }},
+    userOffline: (uid, reason) {
+      logSink.log('userOffline  $uid $reason');
       setState(() {
         final info = 'userOffline: $uid';
         _infoStrings.add(info);
         _users.remove(uid);
+        _remoteUid = 0;
       });
-    }, firstRemoteVideoFrame: (uid, width, height, elapsed) {
+    },
+    firstRemoteVideoFrame: (uid, width, height, elapsed) {
       setState(() {
         final info = 'firstRemoteVideo: $uid ${width}x $height';
         _infoStrings.add(info);
@@ -147,7 +183,7 @@ class _BroadcastPageState extends State<BroadcastPage> {
                   padding: const EdgeInsets.all(15.0),
                 ),
                 RawMaterialButton(
-                  onPressed: _onSwitchCamera,
+                  onPressed: _switchCamera,
                   child: Icon(
                     Icons.switch_camera,
                     color: Colors.blueAccent,
@@ -194,14 +230,12 @@ class _BroadcastPageState extends State<BroadcastPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: Stack(
-          children: <Widget>[
+      body: Stack(
+        children: <Widget>[
             _viewRows(),
             _toolbar(),
           ],
         ),
-      ),
     );
   }
 
@@ -277,15 +311,94 @@ class _BroadcastPageState extends State<BroadcastPage> {
     Navigator.pop(context);
   }
 
+  Future<void> _joinChannel() async {
+    if (defaultTargetPlatform == TargetPlatform.android) {
+      await [Permission.microphone, Permission.camera].request();
+    }
+    await _engine.joinChannel(APP_TOKEN, channelId, null, uid);
+  }
+
+  Future<void> _leaveChannel() async {
+    if (_isStreaming) {
+      await _engine.stopRtmpStream(_rtmpUrlController.text);
+      _isStreaming = false;
+    }
+
+    await _engine.leaveChannel();
+  }
+   Future<void> _startTranscoding({bool isRemoteUser = false}) async {
+    if (_isStreaming && !isRemoteUser) return;
+    final streamUrl = _rtmpUrlController.text;
+    if (_isStreaming && isRemoteUser) {
+      await _engine.removePublishStreamUrl(streamUrl);
+    }
+
+    _isStreaming = true;
+
+    final List<TranscodingUser> transcodingUsers = [
+      TranscodingUser(
+        0,
+        x: 0,
+        y: 0,
+        width: 360,
+        height: 640,
+        audioChannel: AudioChannel.Channel0,
+        alpha: 1.0,
+      )
+    ];
+
+    int width = 360;
+    int height = 640;
+
+    if (isRemoteUser) {
+      transcodingUsers.add(TranscodingUser(
+        _remoteUid,
+        x: 360,
+        y: 0,
+        width: 360,
+        height: 640,
+        audioChannel: AudioChannel.Channel0,
+        alpha: 1.0,
+      ));
+      width = 720;
+      height = 640;
+    }
+    final liveTranscoding = LiveTranscoding(
+      transcodingUsers,
+      width: width,
+      height: height,
+      videoBitrate: 400,
+      videoCodecProfile: VideoCodecProfileType.High,
+      videoGop: 30,
+      videoFramerate: VideoFrameRate.Fps24,
+      lowLatency: false,
+      audioSampleRate: AudioSampleRateType.Type44100,
+      audioBitrate: 48,
+      audioChannels: AudioChannel.Channel1,
+      audioCodecProfile: AudioCodecProfileType.LCAAC,
+    );
+    try {
+      await _engine.startRtmpStreamWithTranscoding(streamUrl, liveTranscoding);
+    } catch (e) {
+      logSink.log('startRtmpStreamWithTranscoding error: ${e.toString()}');
+    }
+  }
+
+  void _switchCamera() {
+    _engine.switchCamera().then((value) {
+      setState(() {
+        switchCamera = !switchCamera;
+      });
+    }).catchError((err) {
+      debugPrint('switchCamera $err');
+    });
+  }
+
   void _onToggleMute() {
     setState(() {
       muted = !muted;
     });
     _engine.muteLocalAudioStream(muted);
-  }
-
-  void _onSwitchCamera() {
-    _engine.switchCamera();
   }
 
   void _goToChatPage() {
