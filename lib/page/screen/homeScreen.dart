@@ -56,7 +56,8 @@ class HomeScreen extends StatelessWidget {
                               MaterialPageRoute(
                                 builder: (context) =>
                                     todaydetail(_noteList[index]),
-                              )),
+                              )
+                          ),
                           child: Card(
                             shadowColor: Colors.transparent,
                             child: Stack(

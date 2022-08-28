@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'common/custom_form_buttom.dart';
-import 'common/custom_input_field.dart';
-import 'common/page_header.dart';
-import 'common/page_heading.dart';
+import 'package:salondec/component/custom_input_field.dart';
+import 'package:salondec/component/custom_form_buttom.dart';
+import 'package:salondec/component/page_header.dart';
+import 'package:salondec/component/page_heading.dart';
 import 'signup_page.dart';
 import 'package:email_validator/email_validator.dart';
 import 'forget_password_page.dart';

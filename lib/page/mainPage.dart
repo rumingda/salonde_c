@@ -9,7 +9,8 @@ import 'package:salondec/page/screen/discoveryScreen.dart';
 import 'package:salondec/page/screen/favoriteScreen.dart';
 import 'package:salondec/page/screen/loveletterScreen.dart';
 import 'package:salondec/menu/lobby_list.dart';
-import 'package:salondec/widgets/agora-group-calling/GroupCall_Screen.dart';
+import 'package:salondec/page/screen/voiceChatRoomMaker.dart';
+import 'package:salondec/widgets/agora-group-calling/GroupCallPage.dart';
 import 'package:salondec/widgets/broadcast_audio/broadAudioScreen.dart';
 import 'package:salondec/widgets/broadcast_video/broadVideoScreen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -75,12 +76,14 @@ class _MainPageState extends State<MainPage> {
               leading: const Icon(
                 Icons.home,
               ),
-              title: const Text('음성채팅방만들기'),
+              title: const Text('채팅만들기'),
               onTap: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => LobbyPage()));
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => Voicechat_making_room(username: _username.text)));
               },
-            ),
+            ), 
             ListTile(
               leading: const Icon(
                 Icons.home,
@@ -134,7 +137,7 @@ class _MainPageState extends State<MainPage> {
               title: const Text('그룹콜'),
               onTap: () {
                 Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => GroupCall()));
+                    MaterialPageRoute(builder: (context) => AgoraGroupCalling()));
               },
             ),
           ],

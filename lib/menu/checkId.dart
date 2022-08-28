@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:salondec/widgets/login/common/custom_form_buttom.dart';
+import 'package:salondec/component/custom_form_buttom.dart';
 
 class CheckIdPage extends StatefulWidget {
   const CheckIdPage({Key? key}) : super(key: key);

@@ -1,32 +1,36 @@
-import 'package:flutter/material.dart';
+import 'dart:async';
+
 import 'package:salondec/data/agora_setting.dart';
 import 'package:agora_rtc_engine/rtc_engine.dart';
+import 'package:agora_rtm/agora_rtm.dart';
+import 'package:flutter/material.dart';
 import 'package:agora_rtc_engine/rtc_local_view.dart' as RtcLocalView;
 import 'package:agora_rtc_engine/rtc_remote_view.dart' as RtcRemoteView;
+import 'package:permission_handler/permission_handler.dart';
 
-class CallPage extends StatefulWidget {
+
+class VoiceChatDetail extends StatefulWidget {
   final String channelName;
-
-  const CallPage({Key? key, required this.channelName}) : super(key: key);
-  
+  final String username;
+  const VoiceChatDetail({Key? key, required this.channelName, required this.username}) : super(key: key);
 
   @override
-  _CallPageState createState() => _CallPageState();
+  _VoiceChatDetailState createState() => _VoiceChatDetailState();
 }
 
-class _CallPageState extends State<CallPage> {
+class _VoiceChatDetailState extends State<VoiceChatDetail> {
   static final _users = <int>[];
   final _infoStrings = <String>[];
   bool muted = false;
-  late RtcEngine _engine;
+  RtcEngine? _engine;
 
   @override
   void dispose() {
     // clear users
     _users.clear();
     // destroy sdk
-    _engine.leaveChannel();
-    _engine.destroy();
+    _engine?.leaveChannel();
+    _engine?.destroy();
     super.dispose();
   }
 
@@ -47,21 +51,22 @@ class _CallPageState extends State<CallPage> {
       });
       return;
     }
+    await [Permission.microphone, Permission.camera].request();
+
     await _initAgoraRtcEngine();
     _addAgoraEventHandlers();
-    // await _engine.enableWebSdkInteroperability(true);
-    await _engine.joinChannel(APP_TOKEN, widget.channelName, null, 0);
+    await _engine?.joinChannel(null, widget.channelName, null, 0);
   }
 
   /// Create agora sdk instance and initialize
   Future<void> _initAgoraRtcEngine() async {
     _engine = await RtcEngine.create(APP_ID);
-    await _engine.enableVideo();
+    await _engine?.enableVideo();
   }
 
   /// Add agora event handlers
   void _addAgoraEventHandlers() {
-    _engine.setEventHandler(RtcEngineEventHandler(
+    _engine?.setEventHandler(RtcEngineEventHandler(
       error: (code) {
         setState(() {
           final info = 'onError: $code';
@@ -170,13 +175,9 @@ class _CallPageState extends State<CallPage> {
   /// Helper function to get list of native views
   List<Widget> _getRenderViews() {
     final List<StatefulWidget> list = [];
-    list.add(const RtcLocalView.SurfaceView());
-
-    for (var uid in _users) {
-      list.add(RtcRemoteView.SurfaceView(
-        channelId: widget.channelName,
-        uid: uid, ));
-    }    return list;
+    list.add(RtcLocalView.SurfaceView());
+    _users.forEach((int uid) => list.add(RtcRemoteView.SurfaceView(channelId: channelName, uid: uid)));
+    return list;
   }
 
   /// Video view wrapper
@@ -240,10 +241,10 @@ class _CallPageState extends State<CallPage> {
     setState(() {
       muted = !muted;
     });
-    _engine.muteLocalAudioStream(muted);
+    _engine?.muteLocalAudioStream(muted);
   }
 
   void _onSwitchCamera() {
-    _engine.switchCamera();
+    _engine?.switchCamera();
   }
 }

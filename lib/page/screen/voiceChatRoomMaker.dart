@@ -1,22 +1,23 @@
-import 'package:salondec/data/agora_setting.dart';
-import 'package:agora_rtm/agora_rtm.dart';
 import 'package:flutter/material.dart';
-import 'package:permission_handler/permission_handler.dart';
+import 'package:salondec/component/custom_input_noValidate.dart';
 import 'package:salondec/component/custom_form_buttom.dart';
-import 'package:salondec/page/screen/voiceChatRoomMaker.dart';
-import 'CallPage.dart';
-//https://github.com/AgoraIO/Agora-Flutter-SDK/tree/master/example
-//https://github.com/Meherdeep/agora-dynamic-video-chat-rooms
-class LobbyList extends StatefulWidget {
+import 'package:salondec/component/page_heading.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:agora_rtm/agora_rtm.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:salondec/menu/CallPage.dart';
+import 'package:salondec/data/agora_setting.dart';
+
+class Voicechat_making_room extends StatefulWidget {
   final String username;
-  const LobbyList({Key? key, required this.username}) : super(key: key);
+  const Voicechat_making_room({Key? key, required this.username}) : super(key: key);
 
   @override
-  _LobbyListState createState() => _LobbyListState();
+  _Voicechat_making_roomState createState() => _Voicechat_making_roomState();
 }
 
-class _LobbyListState extends State<LobbyList> {
-  final TextEditingController _username = TextEditingController();
+class _Voicechat_making_roomState extends State<Voicechat_making_room> {
+  
   final _channelFieldController = TextEditingController();
   String myChannel = '';
 
@@ -36,7 +37,7 @@ class _LobbyListState extends State<LobbyList> {
   AgoraRtmChannel? _subchannel;
 
   @override
-  void dispose() {
+    void dispose() {
     _channel?.leave();
     _client?.logout();
     _client?.destroy();
@@ -55,62 +56,28 @@ class _LobbyListState extends State<LobbyList> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Select a channel'),
+        // Here we take the value from the MyHomePage object that was created by
+        // the App.build method, and use it to set our appbar title.
+        title: Text("음성살롱 만들기"),
       ),
       body: Column(
               children: [
-                     TextFormField(
-                          controller: _channelFieldController,
-                          decoration: InputDecoration(
-                            hintText: 'Channel Name',
-                            border: OutlineInputBorder(
-                              borderSide: BorderSide(color: Colors.blue),
-                              borderRadius: BorderRadius.circular(20),
-                            ),
-                          ),
-                      ),
-                      CustomFormButton(
-                        innerText: "음성살롱 만들기",
-                        onPressed: () {
+                    SizedBox(height: 200),
+                    CustomInputField(
+                      controller: _channelFieldController,
+                      labelText: '제목',
+                      hintText: '무엇을 이야기하고 싶은가요?',
+                      isDense: true,
+                    ),
+                    SizedBox(height: 20),
+                    CustomFormButton(
+                        innerText: '음성살롱 시작하기',
+                        onPressed:(){
                           _createChannels(_channelFieldController.text);
-                        },
+                          }
                       ),
-                    Padding(
-                        padding: const EdgeInsets.all(20.0),
-                        child: Text(
-                          'Join an existing channel or create your own. Call will start when there are at least 2 users in your channel',
-                          textAlign: TextAlign.center,
-                        ),
-                      ),
-                    Expanded(
-
-                        child: ListView.builder(
-                          itemCount: _channelList.length,
-                          itemBuilder: (context, index) {
-                            return Card(
-                              margin: EdgeInsets.fromLTRB(10, 5, 10, 5),elevation: 0.0,
-                              child:ListTile(
-                              leading: const Icon(Icons.call), 
-                              title: Text(_channelList.keys.toList()[index]),
-                              trailing: Text("현재인원 "+
-                                      _channelList.values
-                                      .toList()[index]
-                                      .toString() + 
-                                      ' | ' + "남은자리 " + '4'),
-                              onTap: () {
-                                if (_channelList.values.toList()[index] <= 4) {
-                                  print("입장하기");
-                                  joinCall(_channelList.keys.toList()[index],_channelList.values.toList()[index]);
-                                } else {
-                                  print('방꽉찼따');
-                                }
-                              },
-                              )
-                            );
-                          },
-                        ),
-                      ),
-              ]
+                    SizedBox(height: 200),
+                  ],
                 ),
     );
   }

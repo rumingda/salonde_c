@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 
-import 'textchatScreen.dart';
-import 'voicechatScreen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:salondec/page/screen/voiceChatLobbyScreen.dart';
+import 'package:salondec/page/screen/textChatLobbyScreen.dart';
+
 
 class ChatScreen extends StatefulWidget {
   const ChatScreen({Key? key}) : super(key: key);
@@ -11,12 +13,7 @@ class ChatScreen extends StatefulWidget {
 
 class ChatScreenState extends State<ChatScreen> {
   int pageIndex = 0;
-  final TextEditingController _username = TextEditingController();
-
-  List<Widget> pageList = <Widget>[
-    TextchatScreen(),
-    VoicechatScreen(),
-  ];
+  final user = FirebaseAuth.instance.currentUser!;
 
   @override
   Widget build(BuildContext context) {
@@ -36,8 +33,8 @@ class ChatScreenState extends State<ChatScreen> {
             ],
           ),
           body: TabBarView(children: [
-            TextchatScreen(),
-            VoicechatScreen(),
+            textChatLobbyScreen(),
+            VoiceChatLobbyScreen(username: user.email!),
           ]),
         ),
       ),

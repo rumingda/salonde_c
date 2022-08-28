@@ -45,6 +45,8 @@ dependencies:
   agora_rtc_engine: ^5.1.0
   get: ^4.6.5
   get_storage: ^2.0.3
+  uuid: ^3.0.6
+  share: ^2.0.4
 
 dev_dependencies:
   flutter_test:

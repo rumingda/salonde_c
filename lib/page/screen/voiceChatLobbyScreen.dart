@@ -3,20 +3,27 @@ import 'package:agora_rtm/agora_rtm.dart';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:salondec/component/custom_form_buttom.dart';
+import 'package:salondec/component/custom_input_noValidate.dart';
+import 'package:salondec/page/screen/voiceChatDetail.dart';
+
 import 'package:salondec/page/screen/voiceChatRoomMaker.dart';
-import 'CallPage.dart';
+import 'package:salondec/menu/CallPage.dart';
+
+
 //https://github.com/AgoraIO/Agora-Flutter-SDK/tree/master/example
 //https://github.com/Meherdeep/agora-dynamic-video-chat-rooms
-class LobbyList extends StatefulWidget {
+class VoiceChatLobbyScreen extends StatefulWidget {
   final String username;
-  const LobbyList({Key? key, required this.username}) : super(key: key);
+  const VoiceChatLobbyScreen({Key? key, required this.username}) : super(key: key);
 
   @override
-  _LobbyListState createState() => _LobbyListState();
+  _VoiceChatLobbyScreenState createState() => _VoiceChatLobbyScreenState();
 }
 
-class _LobbyListState extends State<LobbyList> {
+class _VoiceChatLobbyScreenState extends State<VoiceChatLobbyScreen> {
   final TextEditingController _username = TextEditingController();
+
+  bool _isChannelCreated = true;
   final _channelFieldController = TextEditingController();
   String myChannel = '';
 
@@ -54,33 +61,39 @@ class _LobbyListState extends State<LobbyList> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Select a channel'),
-      ),
       body: Column(
               children: [
-                     TextFormField(
-                          controller: _channelFieldController,
-                          decoration: InputDecoration(
-                            hintText: 'Channel Name',
-                            border: OutlineInputBorder(
-                              borderSide: BorderSide(color: Colors.blue),
-                              borderRadius: BorderRadius.circular(20),
-                            ),
-                          ),
-                      ),
-                      CustomFormButton(
-                        innerText: "음성살롱 만들기",
-                        onPressed: () {
-                          _createChannels(_channelFieldController.text);
-                        },
-                      ),
                     Padding(
                         padding: const EdgeInsets.all(20.0),
                         child: Text(
                           'Join an existing channel or create your own. Call will start when there are at least 2 users in your channel',
                           textAlign: TextAlign.center,
                         ),
+                      ),
+                    CustomInputField(
+                      controller: _channelFieldController,
+                      labelText: '제목',
+                      hintText: '무엇을 이야기하고 싶은가요?',
+                      isDense: true,
+                    ),
+                    const SizedBox(
+                        height: 16,
+                      ),
+                      
+                      CustomFormButton(
+                        innerText: "음성살롱 만들기",
+                        onPressed: () {
+                          /*Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    Voicechat_making_room(username: _username.text)
+                              ));*/
+                          _createChannels(_channelFieldController.text);
+                        },
+                      ),
+                    const SizedBox(
+                        height: 16,
                       ),
                     Expanded(
 
@@ -238,12 +251,11 @@ class _LobbyListState extends State<LobbyList> {
         });
         if (int.parse(data[1]) >= 2 && int.parse(data[1]) < 5) {
           await _handleCameraAndMic(Permission.camera);
-          await _handleCameraAndMic(Permission.microphone);
-
+          await _handleCameraAndMic(Permission.microphone); 
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => CallPage(channelName: data[0], username: '',),
+              builder: (context) => VoiceChatDetail(channelName: data[0], username: '',),
             ),
           );
         }
