@@ -3,8 +3,8 @@
 import 'package:flutter/material.dart';
 import 'package:salondec/data/model/person2.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import 'package:salondec/alert/custom_alert_dialog.dart';
-import 'package:salondec/alert/custom_love_letter.dart';
+import 'package:salondec/component/custom_love_letter.dart';
+import 'package:salondec/component/custom_alert_dialog.dart';
 
 class todaydetail extends StatefulWidget {
   final Note note;

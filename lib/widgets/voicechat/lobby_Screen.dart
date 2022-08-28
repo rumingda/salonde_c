@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'dart:async';
 import 'package:salondec/widgets/voicechat/CallPage.dart';
-import 'package:salondec/widgets/login/common/custom_form_buttom.dart';
-import 'package:salondec/widgets/login/common/custom_input_field.dart';
+import 'package:salondec/component/custom_form_buttom.dart';
+import 'package:salondec/component/custom_input_field.dart';
+
 
 //https://github.com/Meherdeep/agora-group-calling
 class LobbyPage extends StatefulWidget {

@@ -1,11 +1,18 @@
 import 'package:flutter/material.dart';
+// myprofile
+import 'package:salondec/component/custom_form_buttom.dart';
+import 'package:salondec/component/custom_input_field.dart';
+import 'package:salondec/component/page_header.dart';
+import 'package:salondec/component/page_heading.dart';
+
 import 'package:get/get.dart';
 import 'package:salondec/page/mainPage.dart';
 import 'package:salondec/page/viewmodel/auth_viewmodel.dart';
-import 'common/custom_form_buttom.dart';
-import 'common/custom_input_field.dart';
-import 'common/page_header.dart';
-import 'common/page_heading.dart';
+//import 'common/custom_form_buttom.dart';
+//import 'common/custom_input_field.dart';
+//import 'common/page_header.dart';
+//import 'common/page_heading.dart';
+//develop
 import 'signup_page.dart';
 import 'package:email_validator/email_validator.dart';
 import 'forget_password_page.dart';
