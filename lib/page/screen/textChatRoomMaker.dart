@@ -3,6 +3,11 @@ import 'package:salondec/component/custom_input_field.dart';
 import 'package:salondec/component/custom_input_field_multi.dart';
 import 'package:salondec/component/custom_form_buttom.dart';
 
+import 'dart:io';
+import 'dart:math';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+
 class Textchat_making_room extends StatefulWidget {
   final String username;
   const Textchat_making_room({Key? key, required this.username}) : super(key: key);
@@ -12,21 +17,49 @@ class Textchat_making_room extends StatefulWidget {
 }
 
 class _Textchat_making_roomState extends State<Textchat_making_room> {
-  final _titleFieldController = TextEditingController();
-  final _contentFieldController = TextEditingController();
+  TextEditingController _titleFieldController = TextEditingController();
+  TextEditingController _contentFieldController = TextEditingController();
+
+  final String _chars = "AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890";
+  final Random _rnd = Random();
+  String getRandomString(int length) => String.fromCharCodes(Iterable.generate(
+    length, (_) => _chars.codeUnitAt(_rnd.nextInt(_chars.length))));
+
+
+  Future uploadTextChat(BuildContext context) async {
+  try {
+
+    // 문서 작성
+    String postKey = getRandomString(16);
+    FirebaseFirestore firestore = FirebaseFirestore.instance;
+
+
+    await firestore.collection('textChat').doc(postKey).set({
+      'title': _titleFieldController.text,
+      'content': _contentFieldController.text,
+    });
+  } catch (e) {
+    print(e);
+  }
+  Navigator.pop(context);
+  print("완료");
+  }
+
+  
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset : false,
       appBar: AppBar(
         // Here we take the value from the MyHomePage object that was created by
         // the App.build method, and use it to set our appbar title.
         title: Text("글쓰기"),
       ),
-      body: SingleChildScrollView(
+      body:  SingleChildScrollView(
         child: Center(
-          child:Column(
-           children: [
+        child: Column(
+        children: <Widget>[  
                     SizedBox(height: 100),
                     CustomInputField(
                       controller: _titleFieldController,
@@ -57,14 +90,13 @@ class _Textchat_making_roomState extends State<Textchat_making_room> {
                     CustomFormButton(
                         innerText: '게시하기',
                         onPressed:(){
-                          
+                          uploadTextChat(context);
                           }
                       ),
                     SizedBox(height: 200),
                   ],
                 ),
-        )
-      )
-    );
+      ))
+        );
   }
 }

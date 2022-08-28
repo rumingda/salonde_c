@@ -61,54 +61,53 @@ class _textChatLobbyScreenState extends State<textChatLobbyScreen> with SingleTi
         theme: new ThemeData(accentColor: Color(0xff365859)),
         debugShowCheckedModeBanner: false,
         home: DefaultTabController(
-            length: 6,
-            child: Scaffold(
-              body: 
-              Column(
-        children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 5),
-            child: TabBar(
-              controller: _tabController,
-              labelColor: Color(0xff365859),
-              isScrollable: true,
-              indicatorColor: Colors.transparent,
-              unselectedLabelColor: Color(0xffD2D2D2),
-              unselectedLabelStyle: TextStyle(
-                fontSize: 16,
-                color: Colors.grey,
-                fontWeight: FontWeight.w400,
+          length: 6,
+          child: Scaffold(
+            body: Column(
+            children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 5),
+                child: TabBar(
+                  controller: _tabController,
+                  labelColor: Color(0xff365859),
+                  isScrollable: true,
+                  indicatorColor: Colors.transparent,
+                  unselectedLabelColor: Color(0xffD2D2D2),
+                  unselectedLabelStyle: TextStyle(
+                    fontSize: 16,
+                    color: Colors.grey,
+                    fontWeight: FontWeight.w400,
+                  ),
+                  labelStyle: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w700,
+                  ),
+                  tabs: <Widget>[
+                    Text('베스트'),
+                    Text('연애'),
+                    Text('자랑'),
+                    Text('재태크'),
+                    Text('유머'),
+                  ],
+                ),
               ),
-              labelStyle: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w700,
-              ),
-              tabs: <Widget>[
-                Text('베스트'),
-                Text('연애'),
-                Text('자랑'),
-                Text('재태크'),
-                Text('유머'),
-              ],
-            ),
-          ),
-          const SizedBox(
-            height: 20,),
-            CustomFormButton(
-              innerText: '글쓰기',
-              onPressed: (){
-                Navigator.push(
-                context,MaterialPageRoute(
-                builder: (context) => Textchat_making_room(username: widget.username),
-                )
-              );
-              }
+              const SizedBox(
+                height: 20,),
+              CustomFormButton(
+                  innerText: '글쓰기',
+                  onPressed: (){
+                    Navigator.push(
+                    context,MaterialPageRoute(
+                    builder: (context) => Textchat_making_room(username: widget.username),
+                    )
+                  );
+                }
               ),
               const SizedBox(
                 height: 18,
-          ),
-          Expanded(
-            child: TabBarView(
+              ),
+            Expanded(
+              child: TabBarView(
               controller: _tabController,
               children: <Widget>[
                 ListView.builder(

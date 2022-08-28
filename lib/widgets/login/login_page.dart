@@ -8,10 +8,7 @@ import 'package:salondec/component/page_heading.dart';
 import 'package:get/get.dart';
 import 'package:salondec/page/mainPage.dart';
 import 'package:salondec/page/viewmodel/auth_viewmodel.dart';
-//import 'common/custom_form_buttom.dart';
-//import 'common/custom_input_field.dart';
-//import 'common/page_header.dart';
-//import 'common/page_heading.dart';
+
 //develop
 import 'signup_page.dart';
 import 'package:email_validator/email_validator.dart';
@@ -41,7 +38,8 @@ class _LoginPageState extends State<LoginPage> {
           child: SingleChildScrollView(
             child: Form(
               key: _loginFormKey,
-              child: Column(children: [
+              child: Column(
+                children: [
                 const PageHeader(),
                 Container(
                   decoration: const BoxDecoration(
