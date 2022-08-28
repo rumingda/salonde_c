@@ -14,7 +14,7 @@ import 'package:salondec/menu/lobby_list.dart';
 import 'package:salondec/widgets/agora-group-calling/GroupCallPage.dart';
 
 import 'package:salondec/page/viewmodel/auth_viewmodel.dart';
-import 'package:salondec/widgets/agora-group-calling/GroupCall_Screen.dart';
+// import 'package:salondec/widgets/agora-group-calling/GroupCall_Screen.dart';
 
 import 'package:salondec/widgets/broadcast_audio/broadAudioScreen.dart';
 import 'package:salondec/widgets/broadcast_video/broadVideoScreen.dart';
@@ -155,11 +155,13 @@ class _MainPageState extends State<MainPage> {
               ),
               title: const Text('그룹콜'),
               onTap: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => AgoraGroupCalling()));
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => AgoraGroupCalling()));
               },
             ),
-             ListTile(
+            ListTile(
               leading: const Icon(
                 Icons.home,
               ),
