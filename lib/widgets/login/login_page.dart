@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:salondec/page/mainPage.dart';
+import 'package:salondec/page/viewmodel/auth_viewmodel.dart';
 import 'common/custom_form_buttom.dart';
 import 'common/custom_input_field.dart';
 import 'common/page_header.dart';
@@ -17,6 +20,7 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   //
+  AuthViewModel _authViewModel = Get.find<AuthViewModel>();
   final _loginFormKey = GlobalKey<FormState>();
   final _email = TextEditingController();
   final _password = TextEditingController();
@@ -153,11 +157,17 @@ class _LoginPageState extends State<LoginPage> {
   Future _handleLoginUser() async {
     if (_loginFormKey.currentState!.validate()) {
       try {
-        await FirebaseAuth.instance.signInWithEmailAndPassword(
+        // await FirebaseAuth.instance.signInWithEmailAndPassword(
+        //     email: _email.text.trim(), password: _password.text.trim());
+        await _authViewModel.signInWithEmail(
             email: _email.text.trim(), password: _password.text.trim());
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('살롱드청담에 오신것을 환영합니다!')),
-        );
+        await _authViewModel.getUserInfo(uid: _authViewModel.user!.uid);
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('살롱드청담에 오신것을 환영합니다!')),
+          );
+        }
+        Get.toNamed(MainPage.routeName);
       } on FirebaseAuthException catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text(e.toString())),

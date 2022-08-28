@@ -6,6 +6,8 @@ import 'package:salondec/widgets/login/login_page.dart';
 //This is related to "https://www.youtube.com/watch?v=4vKiJZNPhss&ab_channel=JohannesMilke"
 
 class LoginScreen extends StatelessWidget {
+  static const routeName = "/";
+
   const LoginScreen({Key? key}) : super(key: key);
 
   // This widget is the root of your application.
@@ -22,7 +24,7 @@ class LoginScreen extends StatelessWidget {
             return Center(child: Text("something went wrong"));
           } else if (snapshot.hasData) {
             print("로그인되어있어용");
-            return MainPage(title: "Home");
+            return MainPage();
           } else {
             print("로그인하러가용");
             return LoginPage();

@@ -7,6 +7,7 @@ import 'package:get_storage/get_storage.dart';
 import 'package:salondec/menu/loginScreen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:salondec/firebase_options.dart';
+import 'package:salondec/page_router.dart';
 
 Future main() async {
   runZonedGuarded<Future<void>>(() async {
@@ -15,7 +16,7 @@ Future main() async {
       options: DefaultFirebaseOptions.currentPlatform,
     );
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: []);
-    await GetStorage.init();
+    // await GetStorage.init();
 
     runApp(MyApp());
   },
@@ -46,8 +47,12 @@ class MyApp extends StatelessWidget {
             ),
             iconTheme: IconThemeData(color: Colors.black),
           )),
-      home: const LoginScreen(),
+      // home: const LoginScreen(),
       //home: MainPage(title: "home",),
+
+      initialRoute: PageRouter.initial,
+      //페이지 라우터
+      getPages: PageRouter.routes,
     );
   }
 }

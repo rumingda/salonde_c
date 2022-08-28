@@ -52,6 +52,7 @@ pubspec.lock*
 # ios file
 /ios/build
 
+
 *.apk
 *.ipa
 *.abb

@@ -1,4 +1,6 @@
+import 'package:dartz/dartz_unsafe.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:salondec/menu/Test.dart';
 import 'package:salondec/menu/lobby.dart';
 import 'package:salondec/menu/myProfile.dart';
@@ -9,6 +11,7 @@ import 'package:salondec/page/screen/discoveryScreen.dart';
 import 'package:salondec/page/screen/favoriteScreen.dart';
 import 'package:salondec/page/screen/loveletterScreen.dart';
 import 'package:salondec/menu/lobby_list.dart';
+import 'package:salondec/page/viewmodel/auth_viewmodel.dart';
 import 'package:salondec/widgets/agora-group-calling/GroupCall_Screen.dart';
 import 'package:salondec/widgets/broadcast_audio/broadAudioScreen.dart';
 import 'package:salondec/widgets/broadcast_video/broadVideoScreen.dart';
@@ -17,13 +20,16 @@ import 'package:firebase_auth/firebase_auth.dart';
 String title_string = "Home";
 
 class MainPage extends StatefulWidget {
-  const MainPage({Key? key, required this.title}) : super(key: key);
-  final String title;
+  static const routeName = "/main_page";
+
+  const MainPage({Key? key}) : super(key: key);
   @override
   _MainPageState createState() => _MainPageState();
 }
 
 class _MainPageState extends State<MainPage> {
+  AuthViewModel _authViewModel = Get.find<AuthViewModel>();
+
   int pageIndex = 0;
   List<Widget> pageList = <Widget>[
     HomeScreen(),
@@ -35,6 +41,28 @@ class _MainPageState extends State<MainPage> {
 
   final TextEditingController _username = TextEditingController();
   final user = FirebaseAuth.instance.currentUser!;
+  Future<void> _init() async {
+    // String? uid = await _authViewModel.storage.read(key: "uid");
+    // await Future.wait([
+    await _authViewModel.getUserInfo(uid: user.uid);
+    await _authViewModel.getMainPageInfo(
+        // uid: _authViewModel.user!.uid,
+        uid: user.uid,
+        gender: _authViewModel.userModel!.gender);
+    if (_authViewModel.genderModelList.value != null) {
+      _authViewModel.genderModelList.value!.forEach((e) {
+        print("object $e");
+      });
+    }
+    // ]);
+  }
+
+  @override
+  void initState() {
+    _init();
+
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +70,7 @@ class _MainPageState extends State<MainPage> {
       appBar: AppBar(
         centerTitle: true,
         toolbarHeight: 60,
-        title: Text((widget.title),
+        title: Text(("Home"),
             style: const TextStyle(
                 fontFamily: 'Abhaya Libre',
                 fontWeight: FontWeight.w700,
