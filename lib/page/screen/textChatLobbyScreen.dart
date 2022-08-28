@@ -2,9 +2,12 @@ import 'package:flutter/material.dart';
 import 'textchat_detail.dart';
 import 'package:salondec/data/model/chat.dart';
 import 'package:salondec/component/custom_form_buttom.dart';
+import 'package:salondec/page/screen/textChatRoomMaker.dart';
 
 class textChatLobbyScreen extends StatefulWidget {
-  textChatLobbyScreen({Key? key}) : super(key: key);
+  final String username;
+  textChatLobbyScreen({Key? key, required this.username}) : super(key: key);
+  
     @override
   _textChatLobbyScreenState createState() => _textChatLobbyScreenState();
 }
@@ -92,8 +95,14 @@ class _textChatLobbyScreenState extends State<textChatLobbyScreen> with SingleTi
           const SizedBox(
             height: 20,),
             CustomFormButton(
-              innerText: '방만들기',
-              onPressed: _handleLoginUser,
+              innerText: '글쓰기',
+              onPressed: (){
+                Navigator.push(
+                context,MaterialPageRoute(
+                builder: (context) => Textchat_making_room(username: widget.username),
+                )
+              );
+              }
               ),
               const SizedBox(
                 height: 18,
@@ -105,13 +114,13 @@ class _textChatLobbyScreenState extends State<textChatLobbyScreen> with SingleTi
                 ListView.builder(
                     itemCount: _chatList.length,
                     itemBuilder: (BuildContext context, int index) =>
-                        GestureDetector(
+                        GestureDetector(              
                             onTap: () => Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) =>
-                                      TextchatDetail(_chatList[index]),
-                                )),
+                                  builder: (context) => TextchatDetail(_chatList[index]),
+                                )
+                            ),
                             child: Card(
                                 margin: EdgeInsets.fromLTRB(10, 5, 10, 5),
                                 elevation: 0.0,
@@ -159,50 +168,4 @@ class _textChatLobbyScreenState extends State<textChatLobbyScreen> with SingleTi
       ),))
     );
   }
-
-  Future _handleLoginUser() async {
-
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('살롱드청담에 오신것을 환영합니다!')),
-          );
-  }
 }
-
-                /*appBar: const TabBar(
-                  labelColor: Color(0xff365859),
-                  unselectedLabelColor: Color(0xffD2D2D2),
-                  isScrollable: true,
-                  tabs: <Widget>[
-                    Tab(text: "전체"),
-                    Tab(text: "베스트"),
-                    Tab(text: "연애"),
-                    Tab(text: "자랑"),
-                    Tab(text: "재태크"),
-                    Tab(text: "유머"),
-                  ],
-                ),
-                body: ListView.builder(
-                    itemCount: _chatList.length,
-                    itemBuilder: (BuildContext context, int index) =>
-                        GestureDetector(
-                            onTap: () => Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) =>
-                                      TextchatDetail(_chatList[index]),
-                                )),
-                            child: Card(
-                                margin: EdgeInsets.fromLTRB(10, 5, 10, 5),
-                                elevation: 0.0,
-                                child: ListTile(
-                                    title: Text(_chatList[index].titles,
-                                        style: TextStyle(
-                                            color: Color(0xff365859),
-                                            fontWeight: FontWeight.w800)),
-                                    subtitle: Text(_chatList[index].subtitles,
-                                        style: TextStyle(
-                                            color: Color(0xffC4C4C4))),
-                                    trailing:
-                                        Text(_chatList[index].times)))))
-                                        */
-                                        

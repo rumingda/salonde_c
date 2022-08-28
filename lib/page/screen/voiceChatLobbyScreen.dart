@@ -3,7 +3,7 @@ import 'package:agora_rtm/agora_rtm.dart';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:salondec/component/custom_form_buttom.dart';
-import 'package:salondec/component/custom_input_noValidate.dart';
+import 'package:salondec/component/custom_input_field.dart';
 import 'package:salondec/page/screen/voiceChatDetail.dart';
 import 'package:salondec/menu/CallPage.dart';
 
@@ -74,6 +74,12 @@ class _VoiceChatLobbyScreenState extends State<VoiceChatLobbyScreen> {
                       labelText: '제목',
                       hintText: '무엇을 이야기하고 싶은가요?',
                       isDense: true,
+                      validator: (textValue) {
+                          if (textValue == null || textValue.isEmpty) {
+                            return '제목을 넣어주세요!';
+                          }
+                          return null;
+                      },
                     ),
                     const SizedBox(
                         height: 16,

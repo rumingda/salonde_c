@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:salondec/component/custom_input_noValidate.dart';
+import 'package:salondec/component/custom_input_field.dart';
 import 'package:salondec/component/custom_form_buttom.dart';
 import 'package:salondec/component/page_heading.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -68,6 +68,12 @@ class _Voicechat_making_roomState extends State<Voicechat_making_room> {
                       labelText: '제목',
                       hintText: '무엇을 이야기하고 싶은가요?',
                       isDense: true,
+                      validator: (textValue) {
+                          if (textValue == null || textValue.isEmpty) {
+                            return '제목을 넣어주세요!';
+                          }
+                          return null;
+                      },
                     ),
                     SizedBox(height: 20),
                     CustomFormButton(

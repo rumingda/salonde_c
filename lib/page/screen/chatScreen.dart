@@ -50,7 +50,7 @@ class ChatScreenState extends State<ChatScreen> with SingleTickerProviderStateMi
             controller: _tabController,
             children: 
             [
-            textChatLobbyScreen(),
+            textChatLobbyScreen(username: user.email!),
             VoiceChatLobbyScreen(username: user.email!),
             ]
           ),

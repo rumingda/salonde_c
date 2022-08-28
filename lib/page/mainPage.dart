@@ -73,7 +73,7 @@ class _MainPageState extends State<MainPage> {
       appBar: AppBar(
         centerTitle: true,
         toolbarHeight: 60,
-        title: Text(("Home"),
+        title: Text((title_string),
             style: const TextStyle(
                 fontFamily: 'Abhaya Libre',
                 fontWeight: FontWeight.w700,
