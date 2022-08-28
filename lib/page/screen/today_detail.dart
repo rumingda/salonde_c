@@ -17,7 +17,7 @@ class todaydetail extends StatefulWidget {
 
 class _todaydetailState extends State<todaydetail> {
   // ignore: non_constant_identifier_names
-  double update_rating = 0.0;
+  int update_rating = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -229,7 +229,7 @@ class _todaydetailState extends State<todaydetail> {
                       padding: EdgeInsets.symmetric(
                           horizontal: 30.0), //adds padding inside the button
                       onPressed: () {
-                        if (update_rating > 0.0) {
+                        if (update_rating > 0) {
                           showDialog(
                             barrierColor: Color(0xff365859).withOpacity(0.5),
                             context: context,
@@ -299,7 +299,7 @@ class _todaydetailState extends State<todaydetail> {
               ),
               onRatingUpdate: (rating) {
                 setState(() {
-                  update_rating = rating;
+                  update_rating = rating as int;
                 });
               },
             ),
