@@ -3,6 +3,7 @@ import 'textchat_detail.dart';
 import 'package:salondec/data/model/chat.dart';
 import 'package:salondec/component/custom_form_buttom.dart';
 import 'package:salondec/page/screen/textChatRoomMaker.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class textChatLobbyScreen extends StatefulWidget {
   final String username;
@@ -63,7 +64,12 @@ class _textChatLobbyScreenState extends State<textChatLobbyScreen> with SingleTi
         home: DefaultTabController(
           length: 6,
           child: Scaffold(
-            body: Column(
+            body:StreamBuilder<QuerySnapshot>(
+                stream:
+                    FirebaseFirestore.instance.collection('textChat').snapshots(),
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    return Column(
             children: <Widget>[
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 5),
@@ -111,9 +117,11 @@ class _textChatLobbyScreenState extends State<textChatLobbyScreen> with SingleTi
               controller: _tabController,
               children: <Widget>[
                 ListView.builder(
-                    itemCount: _chatList.length,
-                    itemBuilder: (BuildContext context, int index) =>
-                        GestureDetector(              
+                    itemCount: snapshot.data!.docs.length,
+                    itemBuilder: (BuildContext context, int index){
+                      DocumentSnapshot doc = snapshot.data!.docs[index];
+                    
+                     return GestureDetector(              
                             onTap: () => Navigator.push(
                                 context,
                                 MaterialPageRoute(
@@ -124,17 +132,13 @@ class _textChatLobbyScreenState extends State<textChatLobbyScreen> with SingleTi
                                 margin: EdgeInsets.fromLTRB(10, 5, 10, 5),
                                 elevation: 0.0,
                                 child: ListTile(
-                                    title: Text(_chatList[index].titles,
-                                        style: TextStyle(
-                                            color: Color(0xff365859),
-                                            fontWeight: FontWeight.w800)),
-                                    subtitle: Text(_chatList[index].subtitles,
-                                        style: TextStyle(
-                                            color: Color(0xffC4C4C4))),
-                                    trailing:Text(_chatList[index].times)
+                                    title: Text(doc['title'],style: TextStyle(color: Color(0xff365859),fontWeight: FontWeight.w800)),
+                                    subtitle: Text("댓글이 없습니다", style: TextStyle(color: Color(0xffC4C4C4))),
+                                    trailing:Text("_chatList[index].times")
                                 )
                             )
-                        )
+                        );
+                    }
                 ),
                 Center(
                   child: Text(
@@ -163,8 +167,11 @@ class _textChatLobbyScreenState extends State<textChatLobbyScreen> with SingleTi
               ],
             ),
           ),
-        ],
-      ),))
+        ]);}
+        return Text(snapshot.error.toString());
+
+        },
+      )))
     );
   }
 }
