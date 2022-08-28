@@ -2,10 +2,21 @@ import 'package:flutter/material.dart';
 import 'textchat_detail.dart';
 import 'package:salondec/data/model/chat.dart';
 import 'package:salondec/component/custom_form_buttom.dart';
+import 'package:salondec/page/screen/textChatRoomMaker.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
-class textChatLobbyScreen extends StatelessWidget {
-  textChatLobbyScreen({Key? key}) : super(key: key);
+class textChatLobbyScreen extends StatefulWidget {
+  final String username;
+  textChatLobbyScreen({Key? key, required this.username}) : super(key: key);
+  
+    @override
+  _textChatLobbyScreenState createState() => _textChatLobbyScreenState();
+}
+
+class _textChatLobbyScreenState extends State<textChatLobbyScreen> with SingleTickerProviderStateMixin {
   final _channelFieldController = TextEditingController();
+  late TabController _tabController;
+
 
   final List<Chat> _chatList = [
     Chat(
@@ -39,65 +50,128 @@ class textChatLobbyScreen extends StatelessWidget {
   ];
 
   @override
+  void initState() {
+    // initialise your tab controller here
+    _tabController = TabController(length: 5, vsync: this);
+    super.initState();
+  }
+  
+  @override
   Widget build(BuildContext context) {
     return MaterialApp(
         theme: new ThemeData(accentColor: Color(0xff365859)),
         debugShowCheckedModeBanner: false,
         home: DefaultTabController(
-            length: 6,
-            child: Scaffold(
-                appBar: const TabBar(
+          length: 6,
+          child: Scaffold(
+            body:StreamBuilder<QuerySnapshot>(
+                stream:
+                    FirebaseFirestore.instance.collection('textChat').snapshots(),
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    return Column(
+            children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 5),
+                child: TabBar(
+                  controller: _tabController,
                   labelColor: Color(0xff365859),
-                  unselectedLabelColor: Color(0xffD2D2D2),
                   isScrollable: true,
+                  indicatorColor: Colors.transparent,
+                  unselectedLabelColor: Color(0xffD2D2D2),
+                  unselectedLabelStyle: TextStyle(
+                    fontSize: 16,
+                    color: Colors.grey,
+                    fontWeight: FontWeight.w400,
+                  ),
+                  labelStyle: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w700,
+                  ),
                   tabs: <Widget>[
-                    Tab(text: "전체"),
-                    Tab(text: "베스트"),
-                    Tab(text: "연애"),
-                    Tab(text: "자랑"),
-                    Tab(text: "재태크"),
-                    Tab(text: "유머"),
+                    Text('베스트'),
+                    Text('연애'),
+                    Text('자랑'),
+                    Text('재태크'),
+                    Text('유머'),
                   ],
                 ),
-                body: 
-                Stack(
-                children: [
-                      CustomFormButton(
-                        innerText: "음성살롱 만들기",
-                        onPressed: () {
-                          /*Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                    Voicechat_making_room(username: _username.text)
-                              ));*/
-                        },
-                      ),
+              ),
+              const SizedBox(
+                height: 20,),
+              CustomFormButton(
+                  innerText: '글쓰기',
+                  onPressed: (){
+                    Navigator.push(
+                    context,MaterialPageRoute(
+                    builder: (context) => Textchat_making_room(username: widget.username),
+                    )
+                  );
+                }
+              ),
+              const SizedBox(
+                height: 18,
+              ),
+            Expanded(
+              child: TabBarView(
+              controller: _tabController,
+              children: <Widget>[
                 ListView.builder(
-                    itemCount: _chatList.length,
-                    itemBuilder: (BuildContext context, int index) =>
-                        GestureDetector(
+                    itemCount: snapshot.data!.docs.length,
+                    itemBuilder: (BuildContext context, int index){
+                      DocumentSnapshot doc = snapshot.data!.docs[index];
+                    
+                     return GestureDetector(              
                             onTap: () => Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) =>
-                                      TextchatDetail(_chatList[index]),
-                                )),
+                                  builder: (context) => TextchatDetail(_chatList[index]),
+                                )
+                            ),
                             child: Card(
                                 margin: EdgeInsets.fromLTRB(10, 5, 10, 5),
                                 elevation: 0.0,
                                 child: ListTile(
-                                    title: Text(_chatList[index].titles,
-                                        style: TextStyle(
-                                            color: Color(0xff365859),
-                                            fontWeight: FontWeight.w800)),
-                                    subtitle: Text(_chatList[index].subtitles,
-                                        style: TextStyle(
-                                            color: Color(0xffC4C4C4))),
-                                    trailing:
-                                        Text(_chatList[index].times)))))
-                ]
-                                        )))
-                                        );
+                                    title: Text(doc['title'],style: TextStyle(color: Color(0xff365859),fontWeight: FontWeight.w800)),
+                                    subtitle: Text("댓글이 없습니다", style: TextStyle(color: Color(0xffC4C4C4))),
+                                    trailing:Text("_chatList[index].times")
+                                )
+                            )
+                        );
+                    }
+                ),
+                Center(
+                  child: Text(
+                    '연애게시판을 준비중입니다',
+                    style: TextStyle(fontSize: 30, fontWeight: FontWeight.w600),
+                  ),
+                ),
+                Center(
+                  child: Text(
+                    '자랑게시판을 준비중입니다',
+                    style: TextStyle(fontSize: 30, fontWeight: FontWeight.w600),
+                  ),
+                ),
+                Center(
+                  child: Text(
+                    '재태크게시판을 준비중입니다',
+                    style: TextStyle(fontSize: 30, fontWeight: FontWeight.w600),
+                  ),
+                ),
+                Center(
+                  child: Text(
+                    '유머게시판을 준비중입니다',
+                    style: TextStyle(fontSize: 30, fontWeight: FontWeight.w600),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ]);}
+        return Text(snapshot.error.toString());
+
+        },
+      )))
+    );
   }
 }
