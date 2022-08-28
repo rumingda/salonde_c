@@ -2,7 +2,6 @@ import 'package:dartz/dartz_unsafe.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:salondec/menu/Test.dart';
-import 'package:salondec/menu/lobby.dart';
 import 'package:salondec/menu/myProfile.dart';
 import 'package:salondec/page/screen/homeScreen.dart';
 import 'package:salondec/page/screen/chatScreen.dart';
