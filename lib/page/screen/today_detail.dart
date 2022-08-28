@@ -290,7 +290,7 @@ class _todaydetailState extends State<todaydetail> {
               initialRating: 0,
               minRating: 1,
               direction: Axis.horizontal,
-              allowHalfRating: true,
+              allowHalfRating: false,
               itemCount: 5,
               itemPadding: EdgeInsets.symmetric(horizontal: 8.0),
               itemBuilder: (context, _) => Icon(
