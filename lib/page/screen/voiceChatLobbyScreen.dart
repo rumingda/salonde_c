@@ -60,6 +60,7 @@ class _VoiceChatLobbyScreenState extends State<VoiceChatLobbyScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset : false,
+      
       body: Column(
               children: [
                     Padding(
@@ -101,7 +102,6 @@ class _VoiceChatLobbyScreenState extends State<VoiceChatLobbyScreen> {
                         height: 16,
                       ),
                     Expanded(
-
                         child: ListView.builder(
                           itemCount: _channelList.length,
                           itemBuilder: (context, index) {
