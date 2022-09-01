@@ -11,8 +11,22 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:salondec/component/custom_form_buttom.dart';
 import 'package:salondec/component/custom_input_field.dart';
+
 import 'package:salondec/data/model/user_model.dart';
 import 'package:salondec/page/viewmodel/auth_viewmodel.dart';
+import 'package:flutter/cupertino.dart';
+
+const double _kItemExtent = 32.0;
+const List<String> _fruitNames = <String>[
+  '155 미만',
+  '155-160',
+  '161-165',
+  '166-170',
+  '171-175',
+  '176-180',
+  '181-185',
+  '186 이상',
+];
 
 class MyProfileScreen extends StatefulWidget {
   const MyProfileScreen({Key? key}) : super(key: key);
@@ -44,11 +58,36 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
   final Random _rnd = Random();
   final user = FirebaseAuth.instance.currentUser!;
 
+  int _selectedFruit = 3;
+
   @override
   void initState() {
     // _authViewModel.currentUser();
     _authViewModel.getUserInfo();
     super.initState();
+    
+  }
+
+
+  // This shows a CupertinoModalPopup with a reasonable fixed height which hosts CupertinoPicker.
+  void _showDialog(Widget child) {
+    showCupertinoModalPopup<void>(
+        context: context,
+        builder: (BuildContext context) => Container(
+              height: 216,
+              padding: const EdgeInsets.only(top: 6.0),
+              // The Bottom margin is provided to align the popup above the system navigation bar.
+              margin: EdgeInsets.only(
+                bottom: MediaQuery.of(context).viewInsets.bottom,
+              ),
+              // Provide a background color for the popup.
+              color: CupertinoColors.systemBackground.resolveFrom(context),
+              // Use a SafeArea widget to avoid system overlaps.
+              child: SafeArea(
+                top: false,
+                child: child,
+              ),
+            ));
   }
 
   @override
@@ -237,6 +276,29 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                             inputFormatters: <TextInputFormatter>[
                               FilteringTextInputFormatter.digitsOnly
                             ],
+                            onTap: () {
+                              _showDialog(
+                              CupertinoPicker(
+                                magnification: 1.22,
+                                squeeze: 1.2,
+                                useMagnifier: true,
+                                itemExtent: _kItemExtent,
+                                // This is called when selected item is changed.
+                                onSelectedItemChanged: (int selectedItem) {
+                                  setState(() {
+                                    _selectedFruit = selectedItem;
+                                  });
+                                },
+                                children:
+                                    List<Widget>.generate(_fruitNames.length, (int index) {
+                                  return Center(
+                                    child: Text(
+                                      _fruitNames[index],
+                                    ),
+                                  );
+                                }),
+                              ),
+                            );}
                           ),
                         ),
                       ],
