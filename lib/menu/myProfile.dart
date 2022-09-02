@@ -51,6 +51,11 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
     super.initState();
   }
 
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
   // String getRandomString(int length) => String.fromCharCodes(Iterable.generate(
   //     length, (_) => _chars.codeUnitAt(_rnd.nextInt(_chars.length))));
 

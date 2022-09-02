@@ -47,20 +47,21 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
+    // Size size = MediaQuery.of(context).size;
     // return
     return Scaffold(body: Obx(() {
       if (_authViewModel.homeViewState is Loading) {
-        return SizedBox(
-          width: size.width,
-          height: size.height,
-          child: Stack(
-            alignment: Alignment.center,
-            children: <Widget>[
-              CircularProgressIndicator(),
-            ],
-          ),
-        );
+        return Container();
+        // return SizedBox(
+        //   width: size.width,
+        //   height: size.height,
+        //   child: Stack(
+        //     alignment: Alignment.center,
+        //     children: <Widget>[
+        //       CircularProgressIndicator(),
+        //     ],
+        //   ),
+        // );
       }
       // StreamBuilder<QuerySnapshot>(
       //     stream: FirebaseFirestore.instance.collection('woman').snapshots(),

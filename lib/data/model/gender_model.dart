@@ -1,9 +1,11 @@
 import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:equatable/equatable.dart';
+
 import 'package:salondec/data/model/user_model.dart';
 
-class GenderModel {
+class GenderModel extends Equatable {
   late String uid;
   late int? age;
   late String? imgUrl1;
@@ -89,18 +91,36 @@ class GenderModel {
     Map<String, dynamic> json = documentSnapshot.data() as Map<String, dynamic>;
     GenderModel genderModel = GenderModel(
       uid: documentSnapshot.id,
-      age: json['age'],
-      imgUrl1: json['imgUrl1'],
-      imgUrl2: json['imgUrl2'],
-      imgUrl3: json['imgUrl3'],
-      name: json['name'],
-      mbti: json['mbti'],
-      job: json['job'],
-      introduction: json['introduction'],
-      character: json['character'],
-      interest: json['interest'],
-      profileImageUrl: json['profileImageUrl'],
+      age: json['age'] ?? 0,
+      imgUrl1: json['imgUrl1'] ?? "",
+      imgUrl2: json['imgUrl2'] ?? "",
+      imgUrl3: json['imgUrl3'] ?? "",
+      name: json['name'] ?? "",
+      mbti: json['mbti'] ?? "",
+      job: json['job'] ?? "",
+      introduction: json['introduction'] ?? "",
+      character: json['character'] ?? "",
+      interest: json['interest'] ?? "",
+      profileImageUrl: json['profileImageUrl'] ?? "",
     );
     return genderModel;
+  }
+
+  @override
+  List<Object> get props {
+    return [
+      uid,
+      age!,
+      imgUrl1!,
+      imgUrl2!,
+      imgUrl3!,
+      name!,
+      mbti!,
+      job!,
+      introduction!,
+      character!,
+      interest!,
+      profileImageUrl!,
+    ];
   }
 }

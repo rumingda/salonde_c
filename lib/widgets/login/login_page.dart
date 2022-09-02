@@ -63,7 +63,8 @@ class _LoginPageState extends State<LoginPage> {
                             if (textValue == null || textValue.isEmpty) {
                               return '이메일이 필요합니다!';
                             }
-                            if (!EmailValidator.validate(textValue)) {
+                            if (!EmailValidator.validate(
+                                textValue.replaceAll(" ", ""))) {
                               return '유효한 이메일을 입력하세요';
                             }
                             return null;
@@ -166,6 +167,7 @@ class _LoginPageState extends State<LoginPage> {
       try {
         // await FirebaseAuth.instance.signInWithEmailAndPassword(
         //     email: _email.text.trim(), password: _password.text.trim());
+        _email.text = _email.text.replaceAll(" ", "");
         await _authViewModel.signInWithEmail(
             email: _email.text.trim(), password: _password.text.trim());
         if (_authViewModel.user != null) {
@@ -176,10 +178,18 @@ class _LoginPageState extends State<LoginPage> {
             );
           }
           Get.toNamed(MainPage.routeName);
+          // } else if() {
         } else {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text("로그인에 실패했습니다.")),
-          );
+          if (_authViewModel.errorState == ErrorState.network) {
+            // 임시방편
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text("인터넷에 연결해주세요.")),
+            );
+          } else {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text("로그인에 실패했습니다.")),
+            );
+          }
         }
       } on FirebaseAuthException catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(

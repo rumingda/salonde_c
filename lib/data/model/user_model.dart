@@ -102,7 +102,7 @@ class UserModel extends Core {
       'name': name ?? "",
       'age': age ?? 0,
       'height': height ?? 0,
-      'rating': rating ?? 0,
+      'rating': rating ?? 0.0,
       'job': job ?? "",
       'religion': religion ?? "",
       'mbti': mbti ?? "",
@@ -133,6 +133,11 @@ class UserModel extends Core {
 
   factory UserModel.fromFirebase(DocumentSnapshot documentSnapshot) {
     Map<String, dynamic> json = documentSnapshot.data() as Map<String, dynamic>;
+    double temp = 0;
+    if (json['rating'] is int) {
+      int rating = json['rating'];
+      temp = rating.toDouble();
+    }
     UserModel userModel = UserModel(
       uid: documentSnapshot.id,
       email: json['email'],
@@ -140,7 +145,7 @@ class UserModel extends Core {
       name: json['name'],
       age: json['age'],
       height: json['height'],
-      rating: json['rating'],
+      rating: json['rating'] is int ? temp : json['rating'],
       job: json['job'],
       religion: json['religion'],
       mbti: json['mbti'],

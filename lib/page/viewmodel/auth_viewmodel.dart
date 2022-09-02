@@ -14,6 +14,8 @@ import 'package:salondec/data/model/gender_model.dart';
 import 'package:salondec/data/model/user_model.dart';
 import 'package:salondec/data/repositories/auth_repository_impl.dart';
 
+enum ErrorState { network, fail, none }
+
 class AuthViewModel extends GetxController {
   late AuthRepositoryImpl _authRepository;
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
@@ -31,6 +33,9 @@ class AuthViewModel extends GetxController {
   ViewState get homeViewState => _homeViewState.value!;
 
   final Rxn<UserModel?> userModel = Rxn(null);
+
+  final Rx<ErrorState> _errorState = ErrorState.none.obs;
+  ErrorState get errorState => _errorState.value;
   // UserModel? get userModel => _userModel.value;
   // set userModel(UserModel? user) => _userModel.value = user;
   // RxList<UserModel> userModelList = <UserModel>[].obs;
@@ -58,10 +63,12 @@ class AuthViewModel extends GetxController {
     referenceMap.clear();
     genderModelList.clear();
     _user.value = null;
+    userModel.value = null;
     _setState(_homeViewState, Initial());
   }
 
   Future<void> init() async {
+    genderModelList.value = [];
     _currentUser();
     await getUserInfo();
     await getMainPageInfo(uid: user!.uid, gender: userModel.value!.gender);
@@ -132,6 +139,9 @@ class AuthViewModel extends GetxController {
       _user.value = userCredential.user;
       // storage.write(key: "uid", value: userCredential.user!.uid);
     } on FirebaseAuthException catch (e) {
+      if (e.code == "network-request-failed") {
+        _errorState.value = ErrorState.network;
+      }
       var logger = Logger();
       logger.d("error code : ${e.toString()}, ${e.stackTrace}");
     } catch (e) {
@@ -304,6 +314,7 @@ class AuthViewModel extends GetxController {
     String genderCollection = _checkGender(userModel.value!);
     genderModelList.clear();
     _setState(_homeViewState, Loading());
+    List<GenderModel> tempList = [];
     try {
       QuerySnapshot<Map<String, dynamic>> querySnapshot =
           // await _firebaseFirestore.collection(collection).doc(uid).get();
@@ -316,10 +327,21 @@ class AuthViewModel extends GetxController {
 
       for (var e in temp) {
         if (e.imgUrl1 != null && e.imgUrl1 != '') {
-          genderModelList.add(e);
+          // genderModelList.add(e);
+          tempList.add(e);
         }
       }
-      // }
+
+      if (genderModelList.isNotEmpty) {
+        for (var i = 0; i < tempList.length; i++) {
+          if (!genderModelList.contains(tempList[i])) {
+            genderModelList.add(tempList[i]);
+          }
+        }
+      } else {
+        genderModelList.addAll(tempList);
+      }
+
       _setState(_homeViewState, Loaded());
     } catch (e) {
       _catchError(e);
