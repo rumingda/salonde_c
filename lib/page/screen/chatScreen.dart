@@ -15,7 +15,7 @@ class ChatScreenState extends State<ChatScreen> with SingleTickerProviderStateMi
   int pageIndex = 0;
   final user = FirebaseAuth.instance.currentUser!;
   late final _tabController;
-  final List<Tab> myTabs = <Tab>[
+  final List<Tab> salonTabs = <Tab>[
     new Tab(text: "문자살롱"),
     new Tab(text: "음성살롱"),
   ];
@@ -23,7 +23,7 @@ class ChatScreenState extends State<ChatScreen> with SingleTickerProviderStateMi
   @override
   void initState() {
     super.initState();
-    _tabController = new TabController(vsync: this, length: myTabs.length);
+    _tabController = new TabController(vsync: this, length: salonTabs.length);
   }
 
   @override
@@ -33,18 +33,13 @@ class ChatScreenState extends State<ChatScreen> with SingleTickerProviderStateMi
   }
 
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: DefaultTabController(
-        length: 2,
-        child: Scaffold(
-          backgroundColor: Colors.white,
+    return Scaffold(
           appBar: TabBar(
             controller: _tabController,
             labelColor: Colors.black,
             unselectedLabelColor: Color(0xffD2D2D2),
             indicatorColor: Colors.transparent,
-            tabs: myTabs,
+            tabs: salonTabs,
           ),
           body: TabBarView(
             controller: _tabController,
@@ -53,9 +48,7 @@ class ChatScreenState extends State<ChatScreen> with SingleTickerProviderStateMi
             textChatLobbyScreen(username: user.email!),
             VoiceChatLobbyScreen(username: user.email!),
             ]
-          ),
-        ),
-      ),
+          ),    
     );
   }
 }

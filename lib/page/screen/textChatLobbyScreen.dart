@@ -61,16 +61,12 @@ class _textChatLobbyScreenState extends State<textChatLobbyScreen> with SingleTi
     return MaterialApp(
         theme: new ThemeData(accentColor: Color(0xff365859)),
         debugShowCheckedModeBanner: false,
-        home: DefaultTabController(
-          length: 6,
-          child: Scaffold(
-            body:StreamBuilder<QuerySnapshot>(
-                stream:
-                    FirebaseFirestore.instance.collection('textChat').snapshots(),
-                builder: (context, snapshot) {
-                  if (snapshot.hasData) {
-                    return Column(
-            children: <Widget>[
+        home: Scaffold(
+          body:StreamBuilder<QuerySnapshot>(stream:FirebaseFirestore.instance.collection('textChat').snapshots(),
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              return Column(
+              children: <Widget>[
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 5),
                 child: TabBar(
@@ -80,12 +76,12 @@ class _textChatLobbyScreenState extends State<textChatLobbyScreen> with SingleTi
                   indicatorColor: Colors.transparent,
                   unselectedLabelColor: Color(0xffD2D2D2),
                   unselectedLabelStyle: TextStyle(
-                    fontSize: 16,
+                    fontSize: 15,
                     color: Colors.grey,
                     fontWeight: FontWeight.w400,
                   ),
                   labelStyle: TextStyle(
-                    fontSize: 16,
+                    fontSize: 15,
                     fontWeight: FontWeight.w700,
                   ),
                   tabs: <Widget>[
@@ -171,7 +167,7 @@ class _textChatLobbyScreenState extends State<textChatLobbyScreen> with SingleTi
         return Text(snapshot.error.toString());
 
         },
-      )))
+      ))
     );
   }
 }

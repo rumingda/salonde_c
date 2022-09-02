@@ -1,269 +1,251 @@
 import 'package:flutter/material.dart';
-import 'package:salondec/component/custom_input_field.dart';
-import 'package:salondec/component/custom_form_buttom.dart';
-import 'package:salondec/component/page_heading.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:agora_rtm/agora_rtm.dart';
-import 'package:permission_handler/permission_handler.dart';
-import 'package:salondec/menu/CallPage.dart';
 import 'package:salondec/data/agora_setting.dart';
+import 'package:agora_rtc_engine/rtc_engine.dart';
+import 'package:agora_rtc_engine/rtc_local_view.dart' as RtcLocalView;
+import 'package:agora_rtc_engine/rtc_remote_view.dart' as RtcRemoteView;
+import 'package:permission_handler/permission_handler.dart';
 
 class Voicechat_making_room extends StatefulWidget {
-  final String username;
-  const Voicechat_making_room({Key? key, required this.username}) : super(key: key);
+  final String channelName;
+
+  const Voicechat_making_room({Key? key, required this.channelName}) : super(key: key);
+  
 
   @override
   _Voicechat_making_roomState createState() => _Voicechat_making_roomState();
 }
 
 class _Voicechat_making_roomState extends State<Voicechat_making_room> {
-  
-  final _channelFieldController = TextEditingController();
-  String myChannel = '';
-
-  final Map<String, List<String>> _seniorMember = {};
-  final Map<String, int> _channelList = {};
-
+  static final _users = <int>[];
+  final _infoStrings = <String>[];
   bool muted = false;
-  bool _isLogin = false;
-  bool _isInChannel = false;
-
-  int count = 1;
-
-  int x = 0;
-
-  AgoraRtmClient? _client ;
-  AgoraRtmChannel? _channel;
-  AgoraRtmChannel? _subchannel;
+  late RtcEngine _engine;
 
   @override
-    void dispose() {
-    _channel?.leave();
-    _client?.logout();
-    _client?.destroy();
-    _seniorMember.clear();
-    _channelList.clear();
+  void dispose() {
+    // clear users
+    _users.clear();
+    // destroy sdk
+    _engine.leaveChannel();
+    _engine.destroy();
     super.dispose();
   }
 
   @override
   void initState() {
     super.initState();
-    _createClient();
+    // initialize agora sdk
+    initialize();
+  }
+
+  Future<void> initialize() async {
+    await [Permission.microphone, Permission.camera].request();
+    _engine = await RtcEngine.create(APP_ID);
+    if (APP_ID.isEmpty) {
+      setState(() {
+        _infoStrings.add(
+          'APP_ID missing, please provide your APP_ID in settings.dart',
+        );
+        _infoStrings.add('Agora Engine is not starting');
+      });
+      return;
+    }
+    await _initAgoraRtcEngine();
+    _addAgoraEventHandlers();
+    // await _engine.enableWebSdkInteroperability(true);
+    await _engine.joinChannel(null, widget.channelName, null, 0);
+  }
+
+  /// Create agora sdk instance and initialize
+  Future<void> _initAgoraRtcEngine() async {
+    _engine = await RtcEngine.create(APP_ID);
+    await _engine.enableVideo();
+  }
+
+  /// Add agora event handlers
+  void _addAgoraEventHandlers() {
+    _engine.setEventHandler(RtcEngineEventHandler(
+      error: (code) {
+        setState(() {
+          final info = 'onError: $code';
+          _infoStrings.add(info);
+        });
+      },
+      joinChannelSuccess: (String channel, int uid, int elapsed) {
+        setState(() {
+          final info = 'onJoinChannel: $channel, uid: $uid';
+          _infoStrings.add(info);
+        });
+      },
+      leaveChannel: (stats) {
+        setState(() {
+          _infoStrings.add('onLeaveChannel');
+          _users.clear();
+        });
+      },
+      userJoined: (int uid, int elapsed) {
+        setState(() {
+          final info = 'userJoined: $uid';
+          _infoStrings.add(info);
+          _users.add(uid);
+        });
+      },
+      userOffline: (int uid, UserOfflineReason reason) {
+        setState(() {
+          final info = 'userOffline: $uid , reason: $reason';
+          _infoStrings.add(info);
+          _users.remove(uid);
+        });
+      },
+      firstRemoteVideoFrame: (uid, width, height, elapsed) {
+        setState(() {
+          final info = 'firstRemoteVideoFrame: $uid';
+          _infoStrings.add(info);
+        });
+      },
+    ));
+  }
+
+  /// Toolbar layout
+  Widget _toolbar() {
+    return Container(
+      alignment: Alignment.bottomCenter,
+      padding: const EdgeInsets.symmetric(vertical: 48),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          RawMaterialButton(
+            onPressed: _onToggleMute,
+            child: Icon(
+              muted ? Icons.mic_off : Icons.mic,
+              color: muted ? Colors.white : Colors.blueAccent,
+              size: 20.0,
+            ),
+            shape: CircleBorder(),
+            elevation: 2.0,
+            fillColor: muted ? Colors.blueAccent : Colors.white,
+            padding: const EdgeInsets.all(12.0),
+          ),
+          RawMaterialButton(
+            onPressed: () => _onCallEnd(context),
+            child: Icon(
+              Icons.call_end,
+              color: Colors.white,
+              size: 35.0,
+            ),
+            shape: CircleBorder(),
+            elevation: 2.0,
+            fillColor: Colors.redAccent,
+            padding: const EdgeInsets.all(15.0),
+          ),
+          RawMaterialButton(
+            onPressed: _onSwitchCamera,
+            child: Icon(
+              Icons.switch_camera,
+              color: Colors.blueAccent,
+              size: 20.0,
+            ),
+            shape: CircleBorder(),
+            elevation: 2.0,
+            fillColor: Colors.white,
+            padding: const EdgeInsets.all(12.0),
+          )
+        ],
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text("음성살롱 만들기"),
+        title: Text('Agora Group Video Calling'),
       ),
-      body: Column(
-              children: [
-                    SizedBox(height: 200),
-                    CustomInputField(
-                      controller: _channelFieldController,
-                      labelText: '제목',
-                      hintText: '무엇을 이야기하고 싶은가요?',
-                      isDense: true,
-                      validator: (textValue) {
-                          if (textValue == null || textValue.isEmpty) {
-                            return '제목을 넣어주세요!';
-                          }
-                          return null;
-                      },
-                    ),
-                    SizedBox(height: 20),
-                    CustomFormButton(
-                        innerText: '음성살롱 시작하기',
-                        onPressed:(){
-                          _createChannels(_channelFieldController.text);
-                          }
-                      ),
-                    SizedBox(height: 200),
-                  ],
-                ),
+      backgroundColor: Colors.black,
+      body: Center(
+        child: Stack(
+          children: <Widget>[
+            _viewRows(),
+            _toolbar(),
+          ],
+        ),
+      ),
     );
   }
 
-  Future<void> _createChannels(String channelName) async {
-    setState(() {
-      _channelList.putIfAbsent(channelName, () => 1);
-      _seniorMember.putIfAbsent(channelName, () => [widget.username]);
-      myChannel = channelName;
-    });
-    await _channel?.sendMessage(AgoraRtmMessage.fromText('$channelName' + ':' + '1'));
-    _channelFieldController.clear();
-    _subchannel = await _client?.createChannel(channelName);
-    await _subchannel?.join();
-
-    print('List of channels : $_channelList');
+  /// Helper function to get list of native views
+  List<Widget> _getRenderViews() {
+    final List<StatefulWidget> list = [];
+    list.add(RtcLocalView.SurfaceView());
+     _users.forEach((int uid) => list.add(RtcRemoteView.SurfaceView(channelId: channelName, uid: uid)));
+    return list;
   }
 
-  void _createClient() async {
-    _client = await AgoraRtmClient.createInstance(APP_ID);
-    _client?.onConnectionStateChanged = (int state, int reason) {
-      if (state == 5) {
-        _client?.logout();
-        print('Logout.');
-        setState(() {
-          _isLogin = false;
-        });
-      }
-    };
-
-    String userId = widget.username;
-    await _client?.login(null, userId);
-    print('Login success: ' + userId);
-    setState(() {
-      _isLogin = true;
-    });
-
-    _client?.onMessageReceived = (AgoraRtmMessage message, String peerId) {
-      print('Client message received : ${message.text}');
-      var data = message.text.split(':');
-      setState(() {
-        _channelList.putIfAbsent(data[0], () => int.parse(data[1]));
-      });
-    };
-
-    _channel = await _createChannel("Lobby");
-    await _channel?.join();
-    print('RTM Join channel success.');
-    setState(() {
-      _isInChannel = true;
-    });
-
-    _client?.onConnectionStateChanged = (int state, int reason) {
-      print('Connection state changed: ' +
-          state.toString() +
-          ', reason: ' +
-          reason.toString());
-      if (state == 5) {
-        _client?.logout();
-        print('Logout.');
-        setState(() {
-          _isLogin = false;
-        });
-      }
-    };
+  /// Video view wrapper
+  Widget _videoView(view) {
+    return Expanded(child: Container(child: view));
   }
 
-  Future<void> _handleCameraAndMic(Permission permission) async {
-    final status = await permission.request();
-    print(status);
+  /// Video view row wrapper
+  Widget _expandedVideoRow(List<Widget> views) {
+    final wrappedViews = views.map<Widget>(_videoView).toList();
+    return Expanded(
+      child: Row(
+        children: wrappedViews,
+      ),
+    );
   }
 
-  Future<void> leaveCall(String channelName, String leftUser) async {
-    setState(() {
-      _channelList.update(channelName, (value) => value - 1);
-    });
-
-    _seniorMember.values.forEach((element) {
-      if (element.first == leftUser) {
-        setState(() {
-          _seniorMember.values.forEach((element) {
-            element.remove(leftUser);
-          });
-        });
-      }
-    });
-  }
-  
-  Future<AgoraRtmChannel?> _createChannel(String name) async {
-    AgoraRtmChannel? channel = await _client?.createChannel(name);
-    if (channel != null) {
-    channel.onMemberJoined = (AgoraRtmMember member) {
-
-      _seniorMember.values.forEach(
-        (element) async {
-          if (element.first == widget.username) {
-            // retrieve the number of users in a channel from the _channelList
-            for (int i = 0; i < _channelList.length; i++) {
-              if (_channelList.keys.toList()[i] == myChannel) {
-                setState(() {
-                  x = _channelList.values.toList()[i];
-                });
-              }
-            }
-
-            String data = myChannel + ':' + x.toString();
-            await _client?.sendMessageToPeer(
-                member.userId, AgoraRtmMessage.fromText(data));
-          }
-        },
-      );
-    };
-
-    channel.onMemberLeft = (AgoraRtmMember member) async {
-      print("Member left: " + member.userId + ', channel: ' + member.channelId);
-      await leaveCall(member.channelId, member.userId);
-    };
-    channel.onMessageReceived =
-      (AgoraRtmMessage message, AgoraRtmMember member) async {
-      print(message.text);
-      var data = message.text.split(':');
-      if (_channelList.keys.contains(data[0])) {
-        setState(() {
-          _channelList.update(data[0], (v) => int.parse(data[1]));
-        });
-        if (int.parse(data[1]) >= 2 && int.parse(data[1]) < 5) {
-          await _handleCameraAndMic(Permission.camera);
-          await _handleCameraAndMic(Permission.microphone);
-
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => CallPage(channelName: data[0], username: '',),
-            ),
-          );
-        }
-        else {
-        setState(() {
-          _channelList.putIfAbsent(data[0], () => int.parse(data[1]));
-        });
-      }
-      }
-      };
+  /// Video layout wrapper
+  Widget _viewRows() {
+    final views = _getRenderViews();
+    switch (views.length) {
+      case 1:
+        return Container(
+            child: Column(
+          children: <Widget>[_videoView(views[0])],
+        ));
+      case 2:
+        return Container(
+            child: Column(
+          children: <Widget>[
+            _expandedVideoRow([views[0]]),
+            _expandedVideoRow([views[1]])
+          ],
+        ));
+      case 3:
+        return Container(
+            child: Column(
+          children: <Widget>[
+            _expandedVideoRow(views.sublist(0, 2)),
+            _expandedVideoRow(views.sublist(2, 3))
+          ],
+        ));
+      case 4:
+        return Container(
+            child: Column(
+          children: <Widget>[
+            _expandedVideoRow(views.sublist(0, 2)),
+            _expandedVideoRow(views.sublist(2, 4))
+          ],
+        ));
+      default:
     }
-    return channel;
+    return Container();
   }
 
-  Future<void> joinCall(String channelName, int numberOfPeopleInThisChannel) async {
-    
-    _subchannel = await _createChannel(channelName);
-    await _subchannel?.join();
+  void _onCallEnd(BuildContext context) {
+    Navigator.pop(context);
+  }
+
+  void _onToggleMute() {
     setState(() {
-      numberOfPeopleInThisChannel = numberOfPeopleInThisChannel + 1;
+      muted = !muted;
     });
+    _engine.muteLocalAudioStream(muted);
+  }
 
-    _subchannel?.getMembers().then(
-          (value) => value.forEach(
-            (element) {
-              setState(() {
-                _seniorMember.update(
-                    channelName, (value) => value + [element.toString()]);
-              });
-            },
-          ),
-        );
-
-    setState(() {
-      _channelList.update(channelName, (value) => numberOfPeopleInThisChannel);
-    });
-
-    _channel?.sendMessage(AgoraRtmMessage.fromText(
-        '$channelName' + ':' + '$numberOfPeopleInThisChannel'));
-
-    if (numberOfPeopleInThisChannel >= 2 && numberOfPeopleInThisChannel < 5) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => CallPage(channelName: channelName, username: widget.username),
-        ),
-      );
-    }
+  void _onSwitchCamera() {
+    _engine.switchCamera();
   }
 }
