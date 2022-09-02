@@ -4,6 +4,12 @@ import 'package:agora_rtc_engine/rtc_engine.dart';
 import 'package:agora_rtc_engine/rtc_local_view.dart' as RtcLocalView;
 import 'package:agora_rtc_engine/rtc_remote_view.dart' as RtcRemoteView;
 import 'package:permission_handler/permission_handler.dart';
+import 'package:agora_uikit/agora_uikit.dart';
+
+
+const appId = APP_ID;
+const token = APP_TOKEN;
+const channel = "mina";
 
 class Voicechat_making_room extends StatefulWidget {
   final String channelName;
@@ -20,12 +26,18 @@ class _Voicechat_making_roomState extends State<Voicechat_making_room> {
   final _infoStrings = <String>[];
   bool muted = false;
   late RtcEngine _engine;
-
+  
+  final AgoraClient client = AgoraClient(
+    agoraConnectionData: AgoraConnectionData(
+      appId: APP_ID,
+      channelName: "mina",
+      username: "user",
+    ),
+  );
+bool _localUserJoined = false;
   @override
   void dispose() {
-    // clear users
     _users.clear();
-    // destroy sdk
     _engine.leaveChannel();
     _engine.destroy();
     super.dispose();
@@ -34,14 +46,19 @@ class _Voicechat_making_roomState extends State<Voicechat_making_room> {
   @override
   void initState() {
     super.initState();
-    // initialize agora sdk
-    initialize();
+    //initialize();
+    initAgora();
+
+  }
+
+ void initAgora() async {
+    await client.initialize();
   }
 
   Future<void> initialize() async {
     await [Permission.microphone, Permission.camera].request();
-    _engine = await RtcEngine.create(APP_ID);
-    if (APP_ID.isEmpty) {
+
+    if (appId.isEmpty) {
       setState(() {
         _infoStrings.add(
           'APP_ID missing, please provide your APP_ID in settings.dart',
@@ -52,13 +69,13 @@ class _Voicechat_making_roomState extends State<Voicechat_making_room> {
     }
     await _initAgoraRtcEngine();
     _addAgoraEventHandlers();
-    // await _engine.enableWebSdkInteroperability(true);
-    await _engine.joinChannel(null, widget.channelName, null, 0);
+    //await _engine.enableWebSdkInteroperability(true);
+    await _engine.joinChannel(token, widget.channelName, null, 0);
   }
 
   /// Create agora sdk instance and initialize
   Future<void> _initAgoraRtcEngine() async {
-    _engine = await RtcEngine.create(APP_ID);
+    _engine = await RtcEngine.create(appId);
     await _engine.enableVideo();
   }
 
@@ -71,12 +88,12 @@ class _Voicechat_making_roomState extends State<Voicechat_making_room> {
           _infoStrings.add(info);
         });
       },
-      joinChannelSuccess: (String channel, int uid, int elapsed) {
-        setState(() {
-          final info = 'onJoinChannel: $channel, uid: $uid';
-          _infoStrings.add(info);
-        });
-      },
+        joinChannelSuccess: (String channel, int uid, int elapsed) {
+          print("local user $uid joined");
+          setState(() {
+            _localUserJoined = true;
+          });
+        },
       leaveChannel: (stats) {
         setState(() {
           _infoStrings.add('onLeaveChannel');
@@ -158,16 +175,21 @@ class _Voicechat_making_roomState extends State<Voicechat_making_room> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Agora Group Video Calling'),
-      ),
       backgroundColor: Colors.black,
       body: Center(
         child: Stack(
-          children: <Widget>[
+          children: [
+              AgoraVideoViewer(
+                client: client,
+                layoutType: Layout.floating,
+                enableHostControls: true, // Add this to enable host controls
+              ),
+              _toolbar(),
+            ],
+          /*children: <Widget>[
             _viewRows(),
             _toolbar(),
-          ],
+          ],*/
         ),
       ),
     );

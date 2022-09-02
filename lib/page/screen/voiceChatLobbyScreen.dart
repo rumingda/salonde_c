@@ -6,6 +6,7 @@ import 'package:salondec/component/custom_input_field.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:salondec/page/screen/voiceChatRoomMaker.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:agora_rtm/agora_rtm.dart';
 
 //https://github.com/AgoraIO/Agora-Flutter-SDK/tree/master/example
 //https://github.com/Meherdeep/agora-dynamic-video-chat-rooms
@@ -25,6 +26,12 @@ class _VoiceChatLobbyScreenState extends State<VoiceChatLobbyScreen> {
   bool _validateError = false;
   final Map<String, int> _channelList = {};
   final user = FirebaseAuth.instance.currentUser!;
+
+  String myChannel = '';
+  AgoraRtmClient? _client;
+  AgoraRtmChannel? _channel;
+  AgoraRtmChannel? _subchannel;
+  final Map<String, List<String>> _seniorMember = {};
 
   Future<void> initialize() async {
   }
@@ -55,7 +62,10 @@ class _VoiceChatLobbyScreenState extends State<VoiceChatLobbyScreen> {
                   const SizedBox(height: 20),
                   CustomFormButton(
                         innerText: "음성살롱 만들기",
-                        onPressed: onJoin),
+                        onPressed: () {
+                            _createChannels(_channelFieldController.text);
+                        },     
+                  ),
                   const SizedBox(height: 20),
                   ])
           ),
@@ -77,7 +87,7 @@ class _VoiceChatLobbyScreenState extends State<VoiceChatLobbyScreen> {
                               onTap: () {
                                 if (_channelList.values.toList()[index] <= 4) {
                                   print("입장하기");
-                                  //joinCall(_channelList.keys.toList()[index],_channelList.values.toList()[index]);
+                                  joinCall(_channelList.keys.toList()[index],_channelList.values.toList()[index]);
                                 } else {
                                   print('방꽉찼따');
                                 }
@@ -91,6 +101,16 @@ class _VoiceChatLobbyScreenState extends State<VoiceChatLobbyScreen> {
     );
   }
 
+  Future<void> _createChannels(String channelName) async {
+    setState(() {
+      _channelList.putIfAbsent(channelName, () => 1);
+      _seniorMember.putIfAbsent(channelName, () => [widget.username]);
+      myChannel = channelName;
+    });
+    _channelFieldController.clear();
+
+    print('List of channels : $_channelList');
+  }
 
   Future<void> onJoin() async {
     setState(() {
@@ -99,9 +119,6 @@ class _VoiceChatLobbyScreenState extends State<VoiceChatLobbyScreen> {
           : _validateError = false;
     });
 
-    await _handleCameraAndMic(Permission.camera);
-    await _handleCameraAndMic(Permission.microphone);
-
     Navigator.push(
         context,
         MaterialPageRoute(
@@ -109,8 +126,39 @@ class _VoiceChatLobbyScreenState extends State<VoiceChatLobbyScreen> {
         ));
   }
 
-  Future<void> _handleCameraAndMic(Permission permission) async {
-    final status = await permission.request();
-    print(status);
+
+  Future<void> joinCall(String channelName, int numberOfPeopleInThisChannel) async {
+
+    setState(() {
+      numberOfPeopleInThisChannel = numberOfPeopleInThisChannel + 1;
+    });
+
+    print(
+        'Number of the people in the created channel : $numberOfPeopleInThisChannel');
+
+    _subchannel?.getMembers().then(
+          (value) => value.forEach(
+            (element) {
+              setState(() {
+                _seniorMember.update(
+                    channelName, (value) => value + [element.toString()]);
+              });
+            },
+          ),
+        );
+
+    setState(() {
+      _channelList.update(channelName, (value) => numberOfPeopleInThisChannel);
+    });
+
+    if (numberOfPeopleInThisChannel >= 2 && numberOfPeopleInThisChannel < 5) {
+
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => Voicechat_making_room(channelName:_channelFieldController.text)
+        ),
+      );
+    }
   }
 }

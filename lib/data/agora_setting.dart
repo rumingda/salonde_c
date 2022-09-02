@@ -1,7 +1,7 @@
 const APP_ID = "d09a8b518c5c4224918cbc9949147f7d";
 const APP_CERTIFICATE = "c0b1d3cbf5c246c9998d06d1131c308a";
-const APP_TOKEN = '007eJxTYHjL2ffyq+ii0OmJnYuPf1IrmF3Df1Iw5e9aFeXl/ipiqxoVGFIMLBMtkkwNLZJNk02MjEwsgaykZEtLIMPEPM08Rfq/YPLsAOFkp5JLTIwMjAwsQAziM4FJZjDJAiVzM/MSGRgAvPYj+w==';
-const channelName = '';
+const APP_TOKEN = "007eJxTYIiVYY2868N340PNPt6svyKdH7ZfffMn19Hj1i/OH445WvsUGFIMLBMtkkwNLZJNk02MjEwsgaykZEtLIMPEPM08JdtcKPl1h3DypWvMLIwMjAwsQAziM4FJZjDJAiVzM/MSGRgAUPInpQ==";
+const channelName = 'mina';
 /// Your int user ID
 const int uid = 0;
 
