@@ -389,9 +389,12 @@ class _TodaydetailState extends State<Todaydetail> {
                         // await _ratingViewmodel.getRatingPersons(
                         //     uid: _authViewModel.userModel.value!.uid);
                         _ratingViewmodel.rating(
-                            uid: _authViewModel.userModel.value!.uid,
-                            targetUid: widget.genderModel.uid,
-                            rating: rating);
+                          uid: _authViewModel.userModel.value!.uid,
+                          targetUid: widget.genderModel.uid,
+                          rating: rating,
+                          user: _authViewModel.userModel.value!,
+                          genderList: _authViewModel.genderModelList,
+                        );
                       },
                     ),
                   ],

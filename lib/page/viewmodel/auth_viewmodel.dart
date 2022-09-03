@@ -49,6 +49,7 @@ class AuthViewModel extends GetxController {
   Map<String, String> downloadUrlMap = {};
   Map<String, Reference> referenceMap = {};
   RxList<GenderModel> genderModelList = <GenderModel>[].obs;
+  RxList<GenderModel> genderModelListUnderFivePeople = <GenderModel>[].obs;
 
   _currentUser() {
     if (_firebaseAuth.currentUser != null) {
@@ -327,11 +328,8 @@ class AuthViewModel extends GetxController {
     List<GenderModel> tempList = [];
     try {
       QuerySnapshot<Map<String, dynamic>> querySnapshot =
-          // await _firebaseFirestore.collection(collection).doc(uid).get();
           await _firebaseFirestore.collection(genderCollection).get();
 
-      // if (querySnapshot != null) {
-      // genderModelList.value =
       var temp =
           querySnapshot.docs.map((e) => GenderModel.fromFirebase(e)).toList();
       if (temp.isNotEmpty) {
@@ -343,13 +341,21 @@ class AuthViewModel extends GetxController {
         }
 
         if (genderModelList.isNotEmpty) {
-          for (var i = 0; i < tempList.length; i++) {
-            if (!genderModelList.contains(tempList[i])) {
-              genderModelList.add(tempList[i]);
+          for (var model in tempList) {
+            if (!genderModelList.contains(model)) {
+              genderModelList.add(model);
+              if (model.ratedPersonsLength! < 5) {
+                genderModelListUnderFivePeople.add(model);
+              }
             }
           }
         } else {
           genderModelList.addAll(tempList);
+          for (var model in tempList) {
+            if (model.ratedPersonsLength! < 5) {
+              genderModelListUnderFivePeople.add(model);
+            }
+          }
         }
       }
 
@@ -391,10 +397,10 @@ class AuthViewModel extends GetxController {
     logger.d("error code : ${e.toString()}");
   }
 
-  String _checkGender(UserModel usermodel) => userModel.value!.gender == "남"
+  String _checkGender(UserModel userModel) => userModel.gender == "남"
       ? FireStoreCollection.womanCollection
       : FireStoreCollection.manCollection;
-  String _checkSelfGender(UserModel usermodel) => userModel.value!.gender == "남"
+  String _checkSelfGender(UserModel userModel) => userModel.gender == "남"
       ? FireStoreCollection.manCollection
       : FireStoreCollection.womanCollection;
 
