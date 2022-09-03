@@ -2,7 +2,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 // import 'package:logger/logger.dart';
+<<<<<<< HEAD
 import 'package:salondec/core/define.dart';
+=======
+import 'package:salondec/data/define.dart';
+>>>>>>> 8239899606af8655f2c3ae272f42ae6154d99f2b
 import 'package:salondec/data/model/user_model.dart';
 
 // 우선은 분리하지말자..

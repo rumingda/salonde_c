@@ -8,14 +8,21 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
 // import 'package:get_storage/get_storage.dart';
 import 'package:logger/logger.dart';
+<<<<<<< HEAD
 import 'package:salondec/core/define.dart';
 import 'package:salondec/core/viewState.dart';
+=======
+import 'package:salondec/data/define.dart';
+>>>>>>> 8239899606af8655f2c3ae272f42ae6154d99f2b
 import 'package:salondec/data/model/gender_model.dart';
 import 'package:salondec/data/model/user_model.dart';
 import 'package:salondec/data/repositories/auth_repository_impl.dart';
 
+<<<<<<< HEAD
 enum ErrorState { network, fail, none }
 
+=======
+>>>>>>> 8239899606af8655f2c3ae272f42ae6154d99f2b
 class AuthViewModel extends GetxController {
   late AuthRepositoryImpl _authRepository;
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
@@ -29,6 +36,7 @@ class AuthViewModel extends GetxController {
   final Rxn<User?> _user = Rxn(null);
   User? get user => _user.value;
 
+<<<<<<< HEAD
   final Rxn<ViewState> _homeViewState = Rxn(Initial());
   ViewState get homeViewState => _homeViewState.value!;
 
@@ -38,6 +46,10 @@ class AuthViewModel extends GetxController {
   ErrorState get errorState => _errorState.value;
   // UserModel? get userModel => _userModel.value;
   // set userModel(UserModel? user) => _userModel.value = user;
+=======
+  final Rxn<UserModel?> _userModel = Rxn(null);
+  UserModel? get userModel => _userModel.value;
+>>>>>>> 8239899606af8655f2c3ae272f42ae6154d99f2b
   // RxList<UserModel> userModelList = <UserModel>[].obs;
   // final Rxn<UserModel> _user = Rxn<UserModel>();
   // UserModel? get user => _user.value;
@@ -45,6 +57,7 @@ class AuthViewModel extends GetxController {
   String imageUrl = '';
   // final GetStorage _storage = GetStorage();
   // final storage = FlutterSecureStorage();
+<<<<<<< HEAD
   Map<String, File> photoMap = {};
   Map<String, String> downloadUrlMap = {};
   Map<String, Reference> referenceMap = {};
@@ -73,6 +86,10 @@ class AuthViewModel extends GetxController {
     await getUserInfo();
     await getMainPageInfo(uid: user!.uid, gender: userModel.value!.gender);
   }
+=======
+
+  Rxn<List<GenderModel>> genderModelList = Rxn(null);
+>>>>>>> 8239899606af8655f2c3ae272f42ae6154d99f2b
 
   // sign up 은 우선 이메일, 비번으로 아디 만들고
   // 성별을 넣어놓기. 나머지 데이터들은 프로필페이지에서 수정누르면 작동하도록. 가입할때 All_users에도 같이 들어가야함.
@@ -86,8 +103,13 @@ class AuthViewModel extends GetxController {
       UserCredential userCredential = await _firebaseAuth
           .createUserWithEmailAndPassword(email: email, password: password);
 
+<<<<<<< HEAD
       UserModel userModelTemp = UserModel(
         uid: userCredential.user?.uid ?? "",
+=======
+      UserModel userModel = UserModel(
+        id: userCredential.user?.uid ?? "",
+>>>>>>> 8239899606af8655f2c3ae272f42ae6154d99f2b
         email: userCredential.user?.email ?? "",
         gender: gender,
       );
@@ -97,20 +119,36 @@ class AuthViewModel extends GetxController {
 
       _firebaseFirestore
           .collection(FireStoreCollection.userCollection)
+<<<<<<< HEAD
           .doc(userModelTemp.uid)
           .set(userModelTemp.toJson());
       if (gender == "남") {
         _firebaseFirestore
             .collection(FireStoreCollection.manCollection)
             .doc(userModelTemp.uid)
+=======
+          .doc(userModel.id)
+          .set(userModel.toJson());
+      if (gender == "남") {
+        _firebaseFirestore
+            .collection(FireStoreCollection.manCollection)
+            .doc(userModel.id)
+>>>>>>> 8239899606af8655f2c3ae272f42ae6154d99f2b
             .set(genderModel.toJson());
       } else {
         _firebaseFirestore
             .collection(FireStoreCollection.womanCollection)
+<<<<<<< HEAD
             .doc(userModelTemp.uid)
             .set(genderModel.toJson());
       }
       userModel.value = userModelTemp;
+=======
+            .doc(userModel.id)
+            .set(genderModel.toJson());
+      }
+      _userModel.value = userModel;
+>>>>>>> 8239899606af8655f2c3ae272f42ae6154d99f2b
       _user.value = userCredential.user;
       // storage.write(key: "uid", value: userCredential.user!.uid);
 
@@ -139,6 +177,7 @@ class AuthViewModel extends GetxController {
       _user.value = userCredential.user;
       // storage.write(key: "uid", value: userCredential.user!.uid);
     } on FirebaseAuthException catch (e) {
+<<<<<<< HEAD
       if (e.code == "network-request-failed") {
         _errorState.value = ErrorState.network;
       }
@@ -306,11 +345,46 @@ class AuthViewModel extends GetxController {
       }
     } catch (e) {
       _catchError(e);
+=======
+      var logger = Logger();
+      logger.d("error code : ${e.toString()}, ${e.stackTrace}");
+    } catch (e) {
+      if (e is Error) {
+        var logger = Logger();
+        logger.d("error code : ${e.toString()}, ${e.stackTrace}");
+      }
+      var logger = Logger();
+      logger.d("error code : ${e.toString()}");
+    }
+  }
+
+  Future<void> getUserInfo({
+    required String uid,
+  }) async {
+    try {
+      DocumentSnapshot documentSnapshot = await _firebaseFirestore
+          .collection(FireStoreCollection.userCollection)
+          .doc(uid)
+          .get();
+
+      if (documentSnapshot.data() != null) {
+        _userModel.value = UserModel.fromFirebase(documentSnapshot);
+        gender = _userModel.value!.gender;
+      }
+    } catch (e) {
+      if (e is Error) {
+        var logger = Logger();
+        logger.d("error code : ${e.toString()}, ${e.stackTrace}");
+      }
+      var logger = Logger();
+      logger.d("error code : ${e.toString()}");
+>>>>>>> 8239899606af8655f2c3ae272f42ae6154d99f2b
     }
   }
 
   Future<void> getMainPageInfo(
       {required String uid, required String gender}) async {
+<<<<<<< HEAD
     String genderCollection = _checkGender(userModel.value!);
     genderModelList.clear();
     _setState(_homeViewState, Loading());
@@ -345,6 +419,29 @@ class AuthViewModel extends GetxController {
       _setState(_homeViewState, Loaded());
     } catch (e) {
       _catchError(e);
+=======
+    // String collection = gender == "남"
+    String collection = _userModel.value?.gender == "남"
+        ? FireStoreCollection.womanCollection
+        : FireStoreCollection.manCollection;
+    print(collection);
+    try {
+      QuerySnapshot<Map<String, dynamic>> querySnapshot =
+          // await _firebaseFirestore.collection(collection).doc(uid).get();
+          await _firebaseFirestore.collection(collection).get();
+
+      // if (querySnapshot != null) {
+      genderModelList.value =
+          querySnapshot.docs.map((e) => GenderModel.fromFirebase(e)).toList();
+      // }
+    } catch (e) {
+      if (e is Error) {
+        var logger = Logger();
+        logger.d("error code : ${e.toString()}, ${e.stackTrace}");
+      }
+      var logger = Logger();
+      logger.d("error code : ${e.toString()}");
+>>>>>>> 8239899606af8655f2c3ae272f42ae6154d99f2b
     }
   }
 
@@ -370,6 +467,7 @@ class AuthViewModel extends GetxController {
       logger.d("error code : ${e.toString()}");
     }
   }
+<<<<<<< HEAD
 
   _catchError(Object e) {
     if (e is Error) {
@@ -389,4 +487,6 @@ class AuthViewModel extends GetxController {
 
   void _setState(Rxn<ViewState> state, ViewState nextState) =>
       state.value = nextState;
+=======
+>>>>>>> 8239899606af8655f2c3ae272f42ae6154d99f2b
 }

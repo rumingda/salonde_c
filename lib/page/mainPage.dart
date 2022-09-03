@@ -1,8 +1,12 @@
 import 'package:dartz/dartz_unsafe.dart';
 import 'package:flutter/material.dart';
+<<<<<<< HEAD
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:salondec/core/viewState.dart';
+=======
+import 'package:get/get.dart';
+>>>>>>> 8239899606af8655f2c3ae272f42ae6154d99f2b
 import 'package:salondec/menu/Test.dart';
 import 'package:salondec/menu/lobby.dart';
 import 'package:salondec/menu/loginScreen.dart';
@@ -47,6 +51,7 @@ class _MainPageState extends State<MainPage> {
   ];
 
   final TextEditingController _username = TextEditingController();
+<<<<<<< HEAD
   // final user = FirebaseAuth.instance.currentUser!;
 
   @override
@@ -94,6 +99,56 @@ class _MainPageState extends State<MainPage> {
               height: 50,
               width: 50,
               child: const CircularProgressIndicator(color: Colors.amber),
+=======
+  final user = FirebaseAuth.instance.currentUser!;
+  Future<void> _init() async {
+    // String? uid = await _authViewModel.storage.read(key: "uid");
+    // await Future.wait([
+    await _authViewModel.getUserInfo(uid: user.uid);
+    await _authViewModel.getMainPageInfo(
+        // uid: _authViewModel.user!.uid,
+        uid: user.uid,
+        gender: _authViewModel.userModel!.gender);
+    if (_authViewModel.genderModelList.value != null) {
+      _authViewModel.genderModelList.value!.forEach((e) {
+        print("object $e");
+      });
+    }
+    // ]);
+  }
+
+  @override
+  void initState() {
+    _init();
+
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        centerTitle: true,
+        toolbarHeight: 60,
+        title: Text(("Home"),
+            style: const TextStyle(
+                fontFamily: 'Abhaya Libre',
+                fontWeight: FontWeight.w700,
+                fontSize: 36.0)),
+        elevation: 0.5,
+        backgroundColor: Colors.white,
+        foregroundColor: Colors.black,
+      ),
+      drawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: [
+            const DrawerHeader(
+              decoration: BoxDecoration(
+                color: Colors.blue,
+              ),
+              child: Text("header"),
+>>>>>>> 8239899606af8655f2c3ae272f42ae6154d99f2b
             ),
           );
         }),
@@ -139,6 +194,7 @@ class _MainPageState extends State<MainPage> {
               icon: Icon(Icons.home),
               label: 'home',
             ),
+<<<<<<< HEAD
             BottomNavigationBarItem(
               icon: Icon(Icons.favorite),
               label: 'favorite',
@@ -146,14 +202,75 @@ class _MainPageState extends State<MainPage> {
             BottomNavigationBarItem(
               icon: Icon(Icons.forum),
               label: 'forum',
+=======
+            ListTile(
+              leading: const Icon(
+                Icons.home,
+              ),
+              title: const Text('음성채팅리스트'),
+              onTap: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) =>
+                            LobbyList(username: _username.text)));
+              },
+>>>>>>> 8239899606af8655f2c3ae272f42ae6154d99f2b
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.reviews),
               label: 'reviews',
             ),
+<<<<<<< HEAD
             BottomNavigationBarItem(
               icon: Icon(Icons.public),
               label: 'public',
+=======
+            ListTile(
+              leading: const Icon(
+                Icons.home,
+              ),
+              title: const Text('브로드캐스트'),
+              onTap: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) =>
+                            BroadcastVideo(username: user.email!)));
+              },
+            ),
+            ListTile(
+              leading: const Icon(
+                Icons.home,
+              ),
+              title: const Text('오디오브로드캐스트'),
+              onTap: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => BroadcastAudio()));
+              },
+            ),
+            ListTile(
+              leading: const Icon(
+                Icons.home,
+              ),
+              title: const Text('그룹콜'),
+              onTap: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => AgoraGroupCalling()));
+              },
+            ),
+            ListTile(
+              leading: const Icon(
+                Icons.home,
+              ),
+              title: const Text('아고라정식그룹콜'),
+              onTap: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => RtmpStreaming()));
+              },
+>>>>>>> 8239899606af8655f2c3ae272f42ae6154d99f2b
             ),
           ],
           selectedItemColor: Colors.amber[200],

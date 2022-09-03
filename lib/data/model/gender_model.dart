@@ -1,11 +1,16 @@
 import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+<<<<<<< HEAD
 import 'package:equatable/equatable.dart';
 
 import 'package:salondec/data/model/user_model.dart';
 
 class GenderModel extends Equatable {
+=======
+
+class GenderModel {
+>>>>>>> 8239899606af8655f2c3ae272f42ae6154d99f2b
   late String uid;
   late int? age;
   late String? imgUrl1;
@@ -14,11 +19,14 @@ class GenderModel extends Equatable {
   late String? name;
   late String? mbti;
   late String? job;
+<<<<<<< HEAD
   late String? introduction;
   late String? character;
   late String? interest;
   late String? profileImageUrl;
 
+=======
+>>>>>>> 8239899606af8655f2c3ae272f42ae6154d99f2b
   GenderModel({
     required this.uid,
     this.age,
@@ -28,6 +36,7 @@ class GenderModel extends Equatable {
     this.name,
     this.mbti,
     this.job,
+<<<<<<< HEAD
     this.introduction,
     this.character,
     this.interest,
@@ -62,6 +71,11 @@ class GenderModel extends Equatable {
             : profileImageUrl,
       };
     }
+=======
+  });
+
+  Map<String, dynamic> toJson() {
+>>>>>>> 8239899606af8655f2c3ae272f42ae6154d99f2b
     return {
       'uid': uid,
       'age': age ?? 0,
@@ -71,6 +85,7 @@ class GenderModel extends Equatable {
       'name': name ?? "",
       'mbti': mbti ?? "",
       'job': job ?? "",
+<<<<<<< HEAD
       'introduction': introduction ?? "",
       'character': character ?? "",
       'interest': interest ?? "",
@@ -87,10 +102,16 @@ class GenderModel extends Equatable {
   //   return result;
   // }
 
+=======
+    };
+  }
+
+>>>>>>> 8239899606af8655f2c3ae272f42ae6154d99f2b
   factory GenderModel.fromFirebase(DocumentSnapshot documentSnapshot) {
     Map<String, dynamic> json = documentSnapshot.data() as Map<String, dynamic>;
     GenderModel genderModel = GenderModel(
       uid: documentSnapshot.id,
+<<<<<<< HEAD
       age: json['age'] ?? 0,
       imgUrl1: json['imgUrl1'] ?? "",
       imgUrl2: json['imgUrl2'] ?? "",
@@ -123,4 +144,16 @@ class GenderModel extends Equatable {
       profileImageUrl!,
     ];
   }
+=======
+      age: json['age'],
+      imgUrl1: json['imgUrl1'],
+      imgUrl2: json['imgUrl2'],
+      imgUrl3: json['imgUrl3'],
+      name: json['name'],
+      mbti: json['mbti'],
+      job: json['job'],
+    );
+    return genderModel;
+  }
+>>>>>>> 8239899606af8655f2c3ae272f42ae6154d99f2b
 }

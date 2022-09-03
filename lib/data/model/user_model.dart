@@ -2,10 +2,17 @@ import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+<<<<<<< HEAD
 import 'package:salondec/core/core.dart';
 
 class UserModel extends Core {
   late String uid;
+=======
+import 'package:salondec/data/model/core.dart';
+
+class UserModel extends Core {
+  late String id;
+>>>>>>> 8239899606af8655f2c3ae272f42ae6154d99f2b
   late String email;
   late String gender;
   late String? name;
@@ -25,7 +32,11 @@ class UserModel extends Core {
   late String? imgUrl3;
 
   UserModel({
+<<<<<<< HEAD
     required this.uid,
+=======
+    required this.id,
+>>>>>>> 8239899606af8655f2c3ae272f42ae6154d99f2b
     required this.email,
     // this.isActivate = true,
     required this.gender,
@@ -55,6 +66,7 @@ class UserModel extends Core {
   //     'profileImageUrl': profileImageUrl,
   //   };
   // }
+<<<<<<< HEAD
   Map<String, dynamic> toJson({UserModel? userModel}) {
     if (userModel != null) {
       return {
@@ -97,6 +109,12 @@ class UserModel extends Core {
     }
     return {
       'id': uid,
+=======
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+>>>>>>> 8239899606af8655f2c3ae272f42ae6154d99f2b
       'email': email,
       'gender': gender,
       'name': name ?? "",
@@ -119,6 +137,7 @@ class UserModel extends Core {
     };
   }
 
+<<<<<<< HEAD
   // Map<String, Object?> toUpdateJson() {
   //   Map<String, Object?> result = toJson();
   //   result.removeWhere((key, value) {
@@ -140,18 +159,32 @@ class UserModel extends Core {
     }
     UserModel userModel = UserModel(
       uid: documentSnapshot.id,
+=======
+  factory UserModel.fromFirebase(DocumentSnapshot documentSnapshot) {
+    Map<String, dynamic> json = documentSnapshot.data() as Map<String, dynamic>;
+    UserModel userModel = UserModel(
+      id: documentSnapshot.id,
+>>>>>>> 8239899606af8655f2c3ae272f42ae6154d99f2b
       email: json['email'],
       gender: json['gender'],
       name: json['name'],
       age: json['age'],
       height: json['height'],
+<<<<<<< HEAD
       rating: json['rating'] is int ? temp : json['rating'],
+=======
+      rating: json['rating'],
+>>>>>>> 8239899606af8655f2c3ae272f42ae6154d99f2b
       job: json['job'],
       religion: json['religion'],
       mbti: json['mbti'],
       bodytype: json['bodytype'],
       introduction: json['introduction'],
+<<<<<<< HEAD
       profileImageUrl: json['profileImageUrl'],
+=======
+      profileImageUrl: json['profile_image_url'],
+>>>>>>> 8239899606af8655f2c3ae272f42ae6154d99f2b
       character: json['character'],
       interest: json['interest'],
       imgUrl1: json['imgUrl1'],

@@ -167,6 +167,7 @@ class _LoginPageState extends State<LoginPage> {
       try {
         // await FirebaseAuth.instance.signInWithEmailAndPassword(
         //     email: _email.text.trim(), password: _password.text.trim());
+<<<<<<< HEAD
         _email.text = _email.text.replaceAll(" ", "");
         await _authViewModel.signInWithEmail(
             email: _email.text.trim(), password: _password.text.trim());
@@ -191,6 +192,17 @@ class _LoginPageState extends State<LoginPage> {
             );
           }
         }
+=======
+        await _authViewModel.signInWithEmail(
+            email: _email.text.trim(), password: _password.text.trim());
+        await _authViewModel.getUserInfo(uid: _authViewModel.user!.uid);
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('살롱드청담에 오신것을 환영합니다!')),
+          );
+        }
+        Get.toNamed(MainPage.routeName);
+>>>>>>> 8239899606af8655f2c3ae272f42ae6154d99f2b
       } on FirebaseAuthException catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text(e.toString())),
