@@ -14,7 +14,7 @@ import 'package:salondec/data/model/gender_model.dart';
 import 'package:salondec/data/model/user_model.dart';
 import 'package:salondec/data/repositories/auth_repository_impl.dart';
 
-enum ErrorState { network, fail, none }
+// enum ErrorState { network, fail, none }
 
 class AuthViewModel extends GetxController {
   late AuthRepositoryImpl _authRepository;
@@ -34,8 +34,8 @@ class AuthViewModel extends GetxController {
 
   final Rxn<UserModel?> userModel = Rxn(null);
 
-  final Rx<ErrorState> _errorState = ErrorState.none.obs;
-  ErrorState get errorState => _errorState.value;
+  ErrorState _errorState = ErrorState.none;
+  ErrorState get errorState => _errorState;
   // UserModel? get userModel => _userModel.value;
   // set userModel(UserModel? user) => _userModel.value = user;
   // RxList<UserModel> userModelList = <UserModel>[].obs;
@@ -65,6 +65,7 @@ class AuthViewModel extends GetxController {
     _user.value = null;
     userModel.value = null;
     _setState(_homeViewState, Initial());
+    _errorState = ErrorState.none;
   }
 
   Future<void> init() async {
@@ -95,17 +96,17 @@ class AuthViewModel extends GetxController {
         uid: userCredential.user?.uid ?? "",
       );
 
-      _firebaseFirestore
+      await _firebaseFirestore
           .collection(FireStoreCollection.userCollection)
           .doc(userModelTemp.uid)
           .set(userModelTemp.toJson());
       if (gender == "남") {
-        _firebaseFirestore
+        await _firebaseFirestore
             .collection(FireStoreCollection.manCollection)
             .doc(userModelTemp.uid)
             .set(genderModel.toJson());
       } else {
-        _firebaseFirestore
+        await _firebaseFirestore
             .collection(FireStoreCollection.womanCollection)
             .doc(userModelTemp.uid)
             .set(genderModel.toJson());
@@ -116,6 +117,9 @@ class AuthViewModel extends GetxController {
 
       return true;
     } on FirebaseAuthException catch (e) {
+      if (e.code == "network-request-failed") {
+        _errorState = ErrorState.network;
+      }
       var logger = Logger();
       logger.d("error code : ${e.code}");
       return false;
@@ -140,7 +144,7 @@ class AuthViewModel extends GetxController {
       // storage.write(key: "uid", value: userCredential.user!.uid);
     } on FirebaseAuthException catch (e) {
       if (e.code == "network-request-failed") {
-        _errorState.value = ErrorState.network;
+        _errorState = ErrorState.network;
       }
       var logger = Logger();
       logger.d("error code : ${e.toString()}, ${e.stackTrace}");
@@ -154,6 +158,9 @@ class AuthViewModel extends GetxController {
       await _firebaseAuth.signOut();
       _deleteAll();
     } on FirebaseAuthException catch (e) {
+      if (e.code == "network-request-failed") {
+        _errorState = ErrorState.network;
+      }
       _catchError(e);
     } catch (e) {
       _catchError(e);
@@ -194,6 +201,9 @@ class AuthViewModel extends GetxController {
         // updateImagesInfo(downloadUrlMap: downloadUrlMap);
       }
     } on FirebaseException catch (e) {
+      if (e.code == "network-request-failed") {
+        _errorState = ErrorState.network;
+      }
       _catchError(e);
     } catch (e) {
       _catchError(e);
@@ -324,22 +334,23 @@ class AuthViewModel extends GetxController {
       // genderModelList.value =
       var temp =
           querySnapshot.docs.map((e) => GenderModel.fromFirebase(e)).toList();
-
-      for (var e in temp) {
-        if (e.imgUrl1 != null && e.imgUrl1 != '') {
-          // genderModelList.add(e);
-          tempList.add(e);
-        }
-      }
-
-      if (genderModelList.isNotEmpty) {
-        for (var i = 0; i < tempList.length; i++) {
-          if (!genderModelList.contains(tempList[i])) {
-            genderModelList.add(tempList[i]);
+      if (temp.isNotEmpty) {
+        for (var e in temp) {
+          if (e.imgUrl1 != null && e.imgUrl1 != '') {
+            // genderModelList.add(e);
+            tempList.add(e);
           }
         }
-      } else {
-        genderModelList.addAll(tempList);
+
+        if (genderModelList.isNotEmpty) {
+          for (var i = 0; i < tempList.length; i++) {
+            if (!genderModelList.contains(tempList[i])) {
+              genderModelList.add(tempList[i]);
+            }
+          }
+        } else {
+          genderModelList.addAll(tempList);
+        }
       }
 
       _setState(_homeViewState, Loaded());
