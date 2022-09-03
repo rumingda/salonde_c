@@ -1,16 +1,18 @@
 import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:equatable/equatable.dart';
 
 import 'package:salondec/core/core.dart';
 
-class UserModel extends Core {
+class UserModel extends Core with EquatableMixin {
   late String uid;
   late String email;
   late String gender;
   late String? name;
   late int? age;
   late int? height;
+  late int? ratedPersonsLength;
   late double? rating;
   late String? job;
   late String? religion;
@@ -32,6 +34,7 @@ class UserModel extends Core {
     this.name,
     this.age,
     this.height,
+    this.ratedPersonsLength,
     this.rating,
     this.job,
     this.religion,
@@ -64,6 +67,10 @@ class UserModel extends Core {
         'name': (name == null || name == '') ? userModel.name : name,
         'age': (age == null || age == 0) ? userModel.age : age,
         'height': (height == null || height == 0) ? userModel.height : height,
+        'ratedPersonsLength':
+            (ratedPersonsLength == null || ratedPersonsLength == 0)
+                ? userModel.ratedPersonsLength
+                : (ratedPersonsLength! + 1),
         'rating': (rating == null || rating == 0) ? userModel.rating : rating,
         'job': (job == null || job == '') ? userModel.job : job,
         'religion': (religion == null || religion == '')
@@ -102,6 +109,7 @@ class UserModel extends Core {
       'name': name ?? "",
       'age': age ?? 0,
       'height': height ?? 0,
+      'ratedPersonsLength': ratedPersonsLength ?? 0,
       'rating': rating ?? 0.0,
       'job': job ?? "",
       'religion': religion ?? "",
@@ -131,6 +139,10 @@ class UserModel extends Core {
   //   return result;
   // }
 
+// rating 계산
+  static double resultRating(double rating, int num) =>
+      num != 0 ? double.parse((rating / num).toStringAsFixed(1)) : rating;
+
   factory UserModel.fromFirebase(DocumentSnapshot documentSnapshot) {
     Map<String, dynamic> json = documentSnapshot.data() as Map<String, dynamic>;
     double temp = 0;
@@ -145,7 +157,10 @@ class UserModel extends Core {
       name: json['name'],
       age: json['age'],
       height: json['height'],
-      rating: json['rating'] is int ? temp : json['rating'],
+      ratedPersonsLength: json['ratedPersonsLength'],
+      // rating: json['rating'] is int ? temp : json['rating'],
+      rating: resultRating(json['rating'] is int ? temp : json['rating'],
+          json['ratedPersonsLength']),
       job: json['job'],
       religion: json['religion'],
       mbti: json['mbti'],
@@ -162,5 +177,30 @@ class UserModel extends Core {
     userModel.updatedAt = (json['updated_at'] as Timestamp).toDate();
 
     return userModel;
+  }
+
+  @override
+  List<Object> get props {
+    return [
+      uid,
+      email,
+      gender,
+      name!,
+      age!,
+      height!,
+      ratedPersonsLength!,
+      rating!,
+      job!,
+      religion!,
+      mbti!,
+      bodytype!,
+      introduction!,
+      profileImageUrl!,
+      character!,
+      interest!,
+      imgUrl1!,
+      imgUrl2!,
+      imgUrl3!,
+    ];
   }
 }

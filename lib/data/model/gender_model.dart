@@ -8,6 +8,8 @@ import 'package:salondec/data/model/user_model.dart';
 class GenderModel extends Equatable {
   late String uid;
   late int? age;
+  late int? ratedPersonsLength;
+  late double? rating;
   late String? imgUrl1;
   late String? imgUrl2;
   late String? imgUrl3;
@@ -22,6 +24,8 @@ class GenderModel extends Equatable {
   GenderModel({
     required this.uid,
     this.age,
+    this.ratedPersonsLength,
+    this.rating,
     this.imgUrl1,
     this.imgUrl2,
     this.imgUrl3,
@@ -39,6 +43,12 @@ class GenderModel extends Equatable {
       return {
         'uid': uid,
         'age': (age == null || age == 0) ? userModel.age : age,
+        'ratedPersonsLength':
+            (ratedPersonsLength == null || ratedPersonsLength == 0)
+                // ? userModel.ratedPersonsLength
+                ? 1
+                : (ratedPersonsLength! + 1),
+        'rating': (rating == null || rating == 0) ? userModel.rating : rating,
         'imgUrl1':
             (imgUrl1 == null || imgUrl1 == '') ? userModel.imgUrl1 : imgUrl1,
         'imgUrl2':
@@ -65,6 +75,8 @@ class GenderModel extends Equatable {
     return {
       'uid': uid,
       'age': age ?? 0,
+      'ratedPersonsLength': ratedPersonsLength ?? 0,
+      'rating': rating ?? 0.0,
       'imgUrl1': imgUrl1 ?? "",
       'imgUrl2': imgUrl2 ?? "",
       'imgUrl3': imgUrl3 ?? "",
@@ -87,11 +99,23 @@ class GenderModel extends Equatable {
   //   return result;
   // }
 
+// rating 계산
+  static double resultRating(double rating, int num) =>
+      num != 0 ? double.parse((rating / num).toStringAsFixed(1)) : rating;
+
   factory GenderModel.fromFirebase(DocumentSnapshot documentSnapshot) {
     Map<String, dynamic> json = documentSnapshot.data() as Map<String, dynamic>;
+    double temp = 0;
+    if (json['rating'] is int) {
+      int rating = json['rating'];
+      temp = rating.toDouble();
+    }
     GenderModel genderModel = GenderModel(
       uid: documentSnapshot.id,
       age: json['age'] ?? 0,
+      ratedPersonsLength: json['ratedPersonsLength'] ?? 0,
+      rating: resultRating(json['rating'] is int ? temp : json['rating'],
+          json['ratedPersonsLength']),
       imgUrl1: json['imgUrl1'] ?? "",
       imgUrl2: json['imgUrl2'] ?? "",
       imgUrl3: json['imgUrl3'] ?? "",
@@ -111,6 +135,8 @@ class GenderModel extends Equatable {
     return [
       uid,
       age!,
+      ratedPersonsLength!,
+      rating!,
       imgUrl1!,
       imgUrl2!,
       imgUrl3!,
