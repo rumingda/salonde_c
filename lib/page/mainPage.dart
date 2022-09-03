@@ -13,6 +13,8 @@ import 'package:salondec/page/screen/discoveryScreen.dart';
 import 'package:salondec/page/screen/favoriteScreen.dart';
 import 'package:salondec/page/screen/loveletterScreen.dart';
 import 'package:salondec/menu/lobby_list.dart';
+import 'package:salondec/page/viewmodel/rating_viewmodel.dart';
+import 'package:salondec/page/widgets/main_drawer.dart';
 
 import 'package:salondec/widgets/agora-group-calling/GroupCallPage.dart';
 
@@ -35,7 +37,8 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
-  AuthViewModel _authViewModel = Get.find<AuthViewModel>();
+  final AuthViewModel _authViewModel = Get.find<AuthViewModel>();
+  final RatingViewModel _ratingViewModel = Get.find<RatingViewModel>();
 
   int pageIndex = 0;
   List<Widget> pageList = <Widget>[
@@ -52,7 +55,8 @@ class _MainPageState extends State<MainPage> {
   @override
   void initState() {
     // _init();
-    _authViewModel.init();
+    // _authViewModel.init();
+    _ratingViewModel.init(uid: _authViewModel.userModel.value!.uid);
     super.initState();
   }
 
@@ -71,19 +75,7 @@ class _MainPageState extends State<MainPage> {
         return false;
       },
       child: Scaffold(
-        appBar: AppBar(
-          centerTitle: true,
-          toolbarHeight: 60,
-          title: const Text(("Home"),
-              style: TextStyle(
-                  fontFamily: 'Abhaya Libre',
-                  fontWeight: FontWeight.w700,
-                  fontSize: 36.0)),
-          elevation: 0.5,
-          backgroundColor: Colors.white,
-          foregroundColor: Colors.black,
-        ),
-        drawer: _drawer(context),
+        drawer: MainDrawer(),
         body: Obx(() {
           Size size = MediaQuery.of(context).size;
           if (_authViewModel.homeViewState is Loaded) {
@@ -162,97 +154,9 @@ class _MainPageState extends State<MainPage> {
     );
   }
 
-  Drawer _drawer(BuildContext context) {
-    return Drawer(
-      child: ListView(
-        padding: EdgeInsets.zero,
-        children: [
-          const DrawerHeader(
-            decoration: BoxDecoration(
-              color: Colors.blue,
-            ),
-            child: Text("header"),
-          ),
-          ListTile(
-            leading: const Icon(
-              Icons.home,
-            ),
-            title: const Text('나의 프로필'),
-            onTap: () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => MyProfileScreen()));
-            },
-          ),
-          ListTile(
-            leading: const Icon(
-              Icons.home,
-            ),
-            title: const Text('음성채팅리스트'),
-            onTap: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) =>
-                          LobbyList(username: _username.text)));
-            },
-          ),
-          ListTile(
-            leading: const Icon(
-              Icons.home,
-            ),
-            title: const Text('테스트'),
-            onTap: () {
-              Navigator.push(
-                  context, MaterialPageRoute(builder: (context) => Test()));
-            },
-          ),
-          ListTile(
-            leading: const Icon(
-              Icons.home,
-            ),
-            title: const Text('브로드캐스트'),
-            onTap: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => BroadcastVideo(
-                          username: _authViewModel.user!.email!)));
-            },
-          ),
-          ListTile(
-            leading: const Icon(
-              Icons.home,
-            ),
-            title: const Text('오디오브로드캐스트'),
-            onTap: () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => BroadcastAudio()));
-            },
-          ),
-          ListTile(
-            leading: const Icon(
-              Icons.home,
-            ),
-            title: const Text('그룹콜'),
-            onTap: () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => AgoraGroupCalling()));
-            },
-          ),
-          ListTile(
-            leading: const Icon(
-              Icons.home,
-            ),
-            title: const Text('아고라정식그룹콜'),
-            onTap: () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => RtmpStreaming()));
-            },
-          ),
-        ],
-      ),
-    );
-  }
+  // Drawer _drawer(BuildContext context) {
+  //   return MainDrawer(username: _username, authViewModel: _authViewModel);
+  // }
 
   Future<void> appExitDialogForAnfroid({required Function? onClose}) async {
     return await showDialog(

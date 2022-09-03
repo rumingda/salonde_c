@@ -1,4 +1,3 @@
-// import 'package:dio/dio.dart';
 import 'package:get/get.dart';
 import 'package:salondec/data/repositories/auth_repository_impl.dart';
 import 'package:salondec/page/viewmodel/auth_viewmodel.dart';

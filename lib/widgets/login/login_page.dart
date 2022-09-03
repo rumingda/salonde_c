@@ -6,6 +6,7 @@ import 'package:salondec/component/page_header.dart';
 import 'package:salondec/component/page_heading.dart';
 
 import 'package:get/get.dart';
+import 'package:salondec/core/define.dart';
 import 'package:salondec/page/mainPage.dart';
 import 'package:salondec/page/viewmodel/auth_viewmodel.dart';
 //import 'common/custom_form_buttom.dart';
