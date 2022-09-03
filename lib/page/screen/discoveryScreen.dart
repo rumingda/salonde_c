@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:salondec/page/viewmodel/auth_viewmodel.dart';
+import 'package:salondec/page/viewmodel/rating_viewmodel.dart';
 
 class DiscoveryScreen extends StatefulWidget {
   @override
@@ -23,6 +26,10 @@ class TwoCardPageView extends StatefulWidget {
 }
 
 class _TwoCardPageViewState extends State<TwoCardPageView> {
+  //? _authViewModel.genderModelListUnderFivePeople -> 5명 미만에게 평가받은 이성 사람들.
+  final AuthViewModel _authViewModel = Get.find<AuthViewModel>();
+  final RatingViewModel _ratingViewModel = Get.find<RatingViewModel>();
+
   final List<String> _images = [
     "assets/image/discovery1.png",
     "assets/image/discovery2.png",

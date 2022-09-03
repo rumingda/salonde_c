@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:salondec/bindings/init_binding.dart';
 import 'package:salondec/menu/loginScreen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:salondec/firebase_options.dart';
@@ -32,8 +33,9 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetMaterialApp(
       title: "Salon de Chungdam",
+      initialBinding: InitialBinding(),
       theme: ThemeData(
-          primarySwatch: Colors.blue,
+          primaryColor: const Color(0xff365859),
           scaffoldBackgroundColor: Colors.white,
           appBarTheme: const AppBarTheme(
             color: Colors.white,
