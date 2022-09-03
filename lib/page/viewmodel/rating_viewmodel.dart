@@ -37,6 +37,8 @@ class RatingViewModel extends GetxController {
 
   Future<void> init({required String uid}) async {
     await getRatingPersons(uid: uid);
+    //test
+    // await requestRerating(uid: uid);
   }
 
   delete() {
@@ -44,6 +46,52 @@ class RatingViewModel extends GetxController {
     _setState(_detailViewState, Initial());
     targetDetail = Rxn(null);
     _errorState = ErrorState.none;
+  }
+
+  // 재심사
+  // 우선 재심사할 대상의 rated_persons 에 아이디들을 받아와서 all_users에서 해당 uid에서 내 uid 문서 지우기
+  // 마지막으로 내 rated_persons 날리기
+  Future<void> requestRerating({required String uid}) async {
+    List<RatedModel> tempList = [];
+    try {
+      QuerySnapshot<Map<String, dynamic>> querySnapshot =
+          await _firebaseFirestore
+              .collection(FireStoreCollection.userCollection)
+              .doc(uid)
+              .collection(FireStoreCollection.userRatedMeSubCollection)
+              .get();
+      var temp =
+          querySnapshot.docs.map((e) => RatedModel.fromFirebase(e)).toList();
+      if (temp.isNotEmpty) {
+        for (var e in temp) {
+          tempList.add(e);
+        }
+      }
+      if (tempList.isNotEmpty) {
+        for (var model in tempList) {
+          await _firebaseFirestore
+              .collection(FireStoreCollection.userCollection)
+              .doc(model.uid)
+              .collection(FireStoreCollection.userRatingSubCollection)
+              .doc(uid)
+              .delete();
+          await _firebaseFirestore
+              .collection(FireStoreCollection.userCollection)
+              .doc(uid)
+              .collection(FireStoreCollection.userRatedMeSubCollection)
+              .doc(model.uid)
+              .delete();
+        }
+      }
+    } on FirebaseException catch (e) {
+      if (e.code == "network-request-failed") {
+        _errorState = ErrorState.network;
+      }
+      var logger = Logger();
+      logger.d("error code : ${e.toString()}, ${e.stackTrace}");
+    } catch (e) {
+      _catchError(e);
+    }
   }
 
   // 디테일 페이지 진입할때 비교
@@ -107,8 +155,7 @@ class RatingViewModel extends GetxController {
       required String targetUid,
       required double rating}) async {
     RatingModel ratingModel = RatingModel(targetUid: targetUid, rating: rating);
-    RatedModel ratedModel =
-        RatedModel(uid: uid, rating: rating, ratingYn: true);
+    RatedModel ratedModel = RatedModel(uid: uid, rating: rating);
     try {
       // user sub collection1
       await _firebaseFirestore
