@@ -12,7 +12,10 @@ import 'package:permission_handler/permission_handler.dart';
 class CallPage extends StatefulWidget {
   final String channelName;
   final String username;
+
   const CallPage({Key? key, required this.channelName, required this.username}) : super(key: key);
+
+  static const routeName = '/callPage';
 
   @override
   _CallPageState createState() => _CallPageState();
@@ -21,7 +24,9 @@ class CallPage extends StatefulWidget {
 class _CallPageState extends State<CallPage> {
   static final _users = <int>[];
   final _infoStrings = <String>[];
+
   bool muted = false;
+
   RtcEngine? _engine;
 
   @override
@@ -160,6 +165,9 @@ class _CallPageState extends State<CallPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text('Agora Group Video Calling'),
+      ),
       backgroundColor: Colors.black,
       body: Center(
         child: Stack(

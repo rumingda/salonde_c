@@ -3,7 +3,6 @@ import 'package:agora_rtm/agora_rtm.dart';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:salondec/component/custom_form_buttom.dart';
-import 'package:salondec/page/screen/voiceChatRoomMaker.dart';
 import 'CallPage.dart';
 //https://github.com/AgoraIO/Agora-Flutter-SDK/tree/master/example
 //https://github.com/Meherdeep/agora-dynamic-video-chat-rooms
@@ -16,7 +15,7 @@ class LobbyList extends StatefulWidget {
 }
 
 class _LobbyListState extends State<LobbyList> {
-  final TextEditingController _username = TextEditingController();
+  bool _isChannelCreated = true;
   final _channelFieldController = TextEditingController();
   String myChannel = '';
 
@@ -57,8 +56,46 @@ class _LobbyListState extends State<LobbyList> {
       appBar: AppBar(
         title: Text('Select a channel'),
       ),
-      body: Column(
+      body: SingleChildScrollView(
+          child: Container(
+            child: Column(
               children: [
+                _isChannelCreated
+                    ? Padding(
+                        padding: const EdgeInsets.all(20.0),
+                        child: Text(
+                          'Join an existing channel or create your own. Call will start when there are at least 2 users in your channel',
+                          textAlign: TextAlign.center,
+                        ),
+                      )
+                    : Container(),
+                _isChannelCreated
+                    ? Container(
+                        height: MediaQuery.of(context).size.height * 0.5,
+                        width: MediaQuery.of(context).size.width,
+                        child: ListView.builder(
+                          itemBuilder: (context, index) {
+                            return ListTile(
+                              title: Text(_channelList.keys.toList()[index] +
+                                  '    -    ' +
+                                  _channelList.values
+                                      .toList()[index]
+                                      .toString() +
+                                  '/ 4'),
+                              onTap: () {
+                                if (_channelList.values.toList()[index] <= 4) {
+                                  print("입장하기");
+                                  joinCall(_channelList.keys.toList()[index],_channelList.values.toList()[index]);
+                                } else {
+                                  print('방꽉찼따');
+                                }
+                              },
+                            );
+                          },
+                          itemCount: _channelList.length,
+                        ),
+                      )
+                    : Center(child: Text('Please create a channel first')),
                      TextFormField(
                           controller: _channelFieldController,
                           decoration: InputDecoration(
@@ -70,48 +107,15 @@ class _LobbyListState extends State<LobbyList> {
                           ),
                       ),
                       CustomFormButton(
-                        innerText: "음성살롱 만들기",
+                        innerText: "방만들기",
                         onPressed: () {
                           _createChannels(_channelFieldController.text);
                         },
                       ),
-                    Padding(
-                        padding: const EdgeInsets.all(20.0),
-                        child: Text(
-                          'Join an existing channel or create your own. Call will start when there are at least 2 users in your channel',
-                          textAlign: TextAlign.center,
-                        ),
-                      ),
-                    Expanded(
-
-                        child: ListView.builder(
-                          itemCount: _channelList.length,
-                          itemBuilder: (context, index) {
-                            return Card(
-                              margin: EdgeInsets.fromLTRB(10, 5, 10, 5),elevation: 0.0,
-                              child:ListTile(
-                              leading: const Icon(Icons.call), 
-                              title: Text(_channelList.keys.toList()[index]),
-                              trailing: Text("현재인원 "+
-                                      _channelList.values
-                                      .toList()[index]
-                                      .toString() + 
-                                      ' | ' + "남은자리 " + '4'),
-                              onTap: () {
-                                if (_channelList.values.toList()[index] <= 4) {
-                                  print("입장하기");
-                                  joinCall(_channelList.keys.toList()[index],_channelList.values.toList()[index]);
-                                } else {
-                                  print('방꽉찼따');
-                                }
-                              },
-                              )
-                            );
-                          },
-                        ),
-                      ),
               ]
                 ),
+            ),
+          ),
     );
   }
 
@@ -259,9 +263,11 @@ class _LobbyListState extends State<LobbyList> {
   }
 
   Future<void> joinCall(String channelName, int numberOfPeopleInThisChannel) async {
-    
+
+    print("왔다");
     _subchannel = await _createChannel(channelName);
     await _subchannel?.join();
+    print("왔다2");
     setState(() {
       numberOfPeopleInThisChannel = numberOfPeopleInThisChannel + 1;
     });

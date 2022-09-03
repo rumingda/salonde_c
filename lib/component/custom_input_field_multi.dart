@@ -1,18 +1,20 @@
 import 'package:flutter/material.dart';
 
-class CustomInputField extends StatefulWidget {
+class CustomInputField_multi extends StatefulWidget {
   final String labelText;
   final String hintText;
+  final String? Function(String?) validator;
   final bool suffixIcon;
   final bool? isDense;
   final bool obscureText;
   final TextEditingController controller;
 
 
-  const CustomInputField({
+  const CustomInputField_multi({
     Key? key,
     required this.labelText,
     required this.hintText,
+    required this.validator,
     required this.controller,
     this.suffixIcon = false,
     this.isDense,
@@ -20,10 +22,10 @@ class CustomInputField extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<CustomInputField> createState() => _CustomInputFieldState();
+  State<CustomInputField_multi> createState() => _CustomInputField_multiState();
 }
 
-class _CustomInputFieldState extends State<CustomInputField> {
+class _CustomInputField_multiState extends State<CustomInputField_multi> {
   //
   bool _obscureText = true;
 
@@ -42,7 +44,10 @@ class _CustomInputFieldState extends State<CustomInputField> {
           TextFormField(
             obscureText: (widget.obscureText && _obscureText),
             controller: widget.controller,
+            keyboardType: TextInputType.multiline,
+            maxLines: 3,
             decoration: InputDecoration(
+              contentPadding: EdgeInsets.only(top: 10, bottom: 10), // Set new height here
               isDense: (widget.isDense != null) ? widget.isDense : false,
               hintText: widget.hintText,
               suffixIcon: widget.suffixIcon ? IconButton(
@@ -57,10 +62,10 @@ class _CustomInputFieldState extends State<CustomInputField> {
                 },
               ): null,
               suffixIconConstraints: (widget.isDense != null) ? const BoxConstraints(
-                  maxHeight: 33
               ): null,
             ),
             autovalidateMode: AutovalidateMode.onUserInteraction,
+            validator: widget.validator,
           ),
         ],
       ),

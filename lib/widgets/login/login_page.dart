@@ -1,8 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:salondec/component/custom_input_field.dart';
+// myprofile
 import 'package:salondec/component/custom_form_buttom.dart';
+import 'package:salondec/component/custom_input_field.dart';
 import 'package:salondec/component/page_header.dart';
 import 'package:salondec/component/page_heading.dart';
+
+import 'package:get/get.dart';
+import 'package:salondec/page/mainPage.dart';
+import 'package:salondec/page/viewmodel/auth_viewmodel.dart';
+//import 'common/custom_form_buttom.dart';
+//import 'common/custom_input_field.dart';
+//import 'common/page_header.dart';
+//import 'common/page_heading.dart';
+//develop
 import 'signup_page.dart';
 import 'package:email_validator/email_validator.dart';
 import 'forget_password_page.dart';
@@ -17,6 +27,7 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   //
+  AuthViewModel _authViewModel = Get.find<AuthViewModel>();
   final _loginFormKey = GlobalKey<FormState>();
   final _email = TextEditingController();
   final _password = TextEditingController();
@@ -52,7 +63,8 @@ class _LoginPageState extends State<LoginPage> {
                             if (textValue == null || textValue.isEmpty) {
                               return '이메일이 필요합니다!';
                             }
-                            if (!EmailValidator.validate(textValue)) {
+                            if (!EmailValidator.validate(
+                                textValue.replaceAll(" ", ""))) {
                               return '유효한 이메일을 입력하세요';
                             }
                             return null;
@@ -153,11 +165,32 @@ class _LoginPageState extends State<LoginPage> {
   Future _handleLoginUser() async {
     if (_loginFormKey.currentState!.validate()) {
       try {
-        await FirebaseAuth.instance.signInWithEmailAndPassword(
+        // await FirebaseAuth.instance.signInWithEmailAndPassword(
+        //     email: _email.text.trim(), password: _password.text.trim());
+        _email.text = _email.text.replaceAll(" ", "");
+        await _authViewModel.signInWithEmail(
             email: _email.text.trim(), password: _password.text.trim());
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('살롱드청담에 오신것을 환영합니다!')),
-        );
+        if (_authViewModel.user != null) {
+          await _authViewModel.getUserInfo();
+          if (mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('살롱드청담에 오신것을 환영합니다!')),
+            );
+          }
+          Get.toNamed(MainPage.routeName);
+          // } else if() {
+        } else {
+          if (_authViewModel.errorState == ErrorState.network) {
+            // 임시방편
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text("인터넷에 연결해주세요.")),
+            );
+          } else {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text("로그인에 실패했습니다.")),
+            );
+          }
+        }
       } on FirebaseAuthException catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text(e.toString())),
