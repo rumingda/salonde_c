@@ -33,7 +33,7 @@ class MyApp extends StatelessWidget {
     return GetMaterialApp(
       title: "Salon de Chungdam",
       theme: ThemeData(
-          primarySwatch: Colors.blue,
+          primaryColor: const Color(0xff365859),
           scaffoldBackgroundColor: Colors.white,
           appBarTheme: const AppBarTheme(
             color: Colors.white,

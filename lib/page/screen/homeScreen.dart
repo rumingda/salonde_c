@@ -48,8 +48,11 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     // Size size = MediaQuery.of(context).size;
-    // return
-    return Scaffold(body: Obx(() {
+    // return 
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: Scaffold(
+      body: Obx(() {
       if (_authViewModel.homeViewState is Loading) {
         return Container();
         // return SizedBox(
@@ -144,7 +147,7 @@ class _HomeScreenState extends State<HomeScreen> {
       //   }
       //   return Text(snapshot.error.toString());
       // }),
-    }));
+    })));
   }
 
   _eachText(int index, String text) {
