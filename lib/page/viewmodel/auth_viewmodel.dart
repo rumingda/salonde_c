@@ -32,6 +32,9 @@ class AuthViewModel extends GetxController {
   final Rxn<ViewState> _homeViewState = Rxn(Initial());
   ViewState get homeViewState => _homeViewState.value!;
 
+  final Rxn<ViewState> _discoveryViewState = Rxn(Initial());
+  ViewState get discoveryViewState => _discoveryViewState.value!;
+
   final Rxn<UserModel?> userModel = Rxn(null);
 
   ErrorState _errorState = ErrorState.none;
@@ -50,6 +53,8 @@ class AuthViewModel extends GetxController {
   Map<String, Reference> referenceMap = {};
   RxList<GenderModel> genderModelList = <GenderModel>[].obs;
   RxList<GenderModel> genderModelListUnderFivePeople = <GenderModel>[].obs;
+  // RxList<UserModel> userModelListUnderFivePeople = <UserModel>[].obs;
+  Rxn<UserModel> userModelUnderFivePeople = Rxn(null);
 
   _currentUser() {
     if (_firebaseAuth.currentUser != null) {
@@ -296,6 +301,26 @@ class AuthViewModel extends GetxController {
       // .update(genderModel.toUpdateJson());
       downloadUrlMap.clear();
       photoMap.clear();
+    } catch (e) {
+      _catchError(e);
+    }
+  }
+
+  Future<void> getDiscoveryUserInfo({
+    required String uid,
+  }) async {
+    try {
+      _setState(_discoveryViewState, Loading());
+      DocumentSnapshot documentSnapshot = await _firebaseFirestore
+          .collection(FireStoreCollection.userCollection)
+          .doc(uid)
+          .get();
+
+      if (documentSnapshot.data() != null) {
+        userModelUnderFivePeople.value =
+            UserModel.fromFirebase(documentSnapshot);
+        _setState(_discoveryViewState, Loaded());
+      }
     } catch (e) {
       _catchError(e);
     }

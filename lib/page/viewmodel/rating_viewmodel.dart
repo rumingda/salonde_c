@@ -27,6 +27,7 @@ class RatingViewModel extends GetxController {
 
   Rxn<RatingModel> targetDetail = Rxn(null);
   RxInt currentRating = 0.obs;
+
   final Rxn<ViewState> _detailViewState = Rxn(Initial());
   ViewState get detailViewState => _detailViewState.value!;
 
