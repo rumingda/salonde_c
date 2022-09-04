@@ -41,73 +41,75 @@ class MainDrawer extends StatelessWidget {
                   MaterialPageRoute(builder: (context) => MyProfileScreen()));
             },
           ),
-          ListTile(
-            leading: const Icon(
-              Icons.home,
-            ),
-            title: const Text('음성채팅리스트'),
-            onTap: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) =>
-                          // LobbyList(username: _username.text ?? "")));
-                          LobbyList(username: _username ?? "")));
-            },
-          ),
-          ListTile(
-            leading: const Icon(
-              Icons.home,
-            ),
-            title: const Text('테스트'),
-            onTap: () {
-              Navigator.push(
-                  context, MaterialPageRoute(builder: (context) => Test()));
-            },
-          ),
-          ListTile(
-            leading: const Icon(
-              Icons.home,
-            ),
-            title: const Text('브로드캐스트'),
-            onTap: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => BroadcastVideo(
-                          username: _authViewModel.user!.email!)));
-            },
-          ),
-          ListTile(
-            leading: const Icon(
-              Icons.home,
-            ),
-            title: const Text('오디오브로드캐스트'),
-            onTap: () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => BroadcastAudio()));
-            },
-          ),
-          ListTile(
-            leading: const Icon(
-              Icons.home,
-            ),
-            title: const Text('그룹콜'),
-            onTap: () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => AgoraGroupCalling()));
-            },
-          ),
-          ListTile(
-            leading: const Icon(
-              Icons.home,
-            ),
-            title: const Text('아고라정식그룹콜'),
-            onTap: () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => RtmpStreaming()));
-            },
-          ),
+
+          // ListTile(
+          //   leading: const Icon(
+          //     Icons.home,
+          //   ),
+          //   title: const Text('음성채팅리스트'),
+          //   onTap: () {
+          //     Navigator.push(
+          //         context,
+          //         MaterialPageRoute(
+          //             builder: (context) =>
+          //                 // LobbyList(username: _username.text ?? "")));
+          //                 LobbyList(username: _username ?? "")));
+          //   },
+          // ),
+          // ListTile(
+          //   leading: const Icon(
+          //     Icons.home,
+          //   ),
+          //   title: const Text('테스트'),
+          //   onTap: () {
+          //     Navigator.push(
+          //         context, MaterialPageRoute(builder: (context) => Test()));
+          //   },
+          // ),
+          // ListTile(
+          //   leading: const Icon(
+          //     Icons.home,
+          //   ),
+          //   title: const Text('브로드캐스트'),
+          //   onTap: () {
+          //     Navigator.push(
+          //         context,
+          //         MaterialPageRoute(
+          //             builder: (context) => BroadcastVideo(
+          //                 username: _authViewModel.user!.email!)));
+          //   },
+          // ),
+          // ListTile(
+          //   leading: const Icon(
+          //     Icons.home,
+          //   ),
+          //   title: const Text('오디오브로드캐스트'),
+          //   onTap: () {
+          //     Navigator.push(context,
+          //         MaterialPageRoute(builder: (context) => BroadcastAudio()));
+          //   },
+          // ),
+          // ListTile(
+          //   leading: const Icon(
+          //     Icons.home,
+          //   ),
+          //   title: const Text('그룹콜'),
+          //   onTap: () {
+          //     Navigator.push(context,
+          //         MaterialPageRoute(builder: (context) => AgoraGroupCalling()));
+          //   },
+          // ),
+          // ListTile(
+          //   leading: const Icon(
+          //     Icons.home,
+          //   ),
+          //   title: const Text('아고라정식그룹콜'),
+          //   onTap: () {
+          //     Navigator.push(context,
+          //         MaterialPageRoute(builder: (context) => RtmpStreaming()));
+          //   },
+          // ),
+
         ],
       ),
     );
