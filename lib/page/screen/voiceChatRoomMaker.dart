@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:salondec/data/agora_setting.dart';
 import 'package:agora_rtc_engine/rtc_engine.dart';
 import 'package:agora_rtc_engine/rtc_local_view.dart' as RtcLocalView;
 import 'package:agora_rtc_engine/rtc_remote_view.dart' as RtcRemoteView;
 import 'package:permission_handler/permission_handler.dart';
 import 'package:agora_uikit/agora_uikit.dart';
-
+import 'package:salondec/menu/loginScreen.dart';
 
 const appId = APP_ID;
 const token = APP_TOKEN;
@@ -14,8 +15,8 @@ const channel = "mina";
 class Voicechat_making_room extends StatefulWidget {
   final String channelName;
 
-  const Voicechat_making_room({Key? key, required this.channelName}) : super(key: key);
-  
+  const Voicechat_making_room({Key? key, required this.channelName})
+      : super(key: key);
 
   @override
   _Voicechat_making_roomState createState() => _Voicechat_making_roomState();
@@ -26,33 +27,91 @@ class _Voicechat_making_roomState extends State<Voicechat_making_room> {
   final _infoStrings = <String>[];
   bool muted = false;
   late RtcEngine _engine;
-  
-  final AgoraClient client = AgoraClient(
+  var check = true;
+  AgoraClient client = AgoraClient(
     agoraConnectionData: AgoraConnectionData(
       appId: APP_ID,
-      channelName: "mina",
-      username: "user",
+      // appId: "ced9c5cc4cbc40d8a82e15b0eadb7b54",
+      channelName: "test",
+      username: DateTime.now().millisecondsSinceEpoch.toString(),
     ),
+    enabledPermission: [Permission.camera, Permission.microphone],
   );
-bool _localUserJoined = false;
+  bool _localUserJoined = false;
   @override
   void dispose() {
-    _users.clear();
-    _engine.leaveChannel();
-    _engine.destroy();
     super.dispose();
+    _users.clear();
+    // _engine.leaveChannel();
+    // _engine.destroy();
+    // if (client.isInitialized) {
+    //   // Get.until((route) => Get.currentRoute == LoginScreen.routeName);
+    //   Get.toNamed(LoginScreen.routeName);
+    // }
   }
 
   @override
   void initState() {
     super.initState();
     //initialize();
+    // client = AgoraClient(
+    //   agoraConnectionData: AgoraConnectionData(
+    //     appId: APP_ID, channelName: "salondec",
+    //     //  username: "user",
+    //     // tempToken: SalondecTempToken,
+    //   ),
+    //   enabledPermission: [Permission.camera, Permission.microphone],
+    // );
     initAgora();
-
   }
 
- void initAgora() async {
+  void initAgora() async {
+    // client.engine.leaveChannel();
+    // if (check) {
+    //   check = false;
     await client.initialize();
+    // }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.black,
+      body: Center(
+        child: Stack(
+          children: [
+            AgoraVideoViewer(
+              client: client,
+              // layoutType: Layout.floating,
+              // enableHostControls: true, // Add this to enable host controls
+            ),
+            // _toolbar(),
+            AgoraVideoButtons(
+              client: client,
+              // extraButtons: [
+              //   RawMaterialButton(
+              //     onPressed: () => Get.until(
+              //         (route) => Get.currentRoute == LoginScreen.routeName),
+              //     child: Icon(
+              //       Icons.call_end,
+              //       color: Colors.white,
+              //       size: 35.0,
+              //     ),
+              //     shape: CircleBorder(),
+              //     elevation: 2.0,
+              //     fillColor: Colors.redAccent,
+              //     padding: const EdgeInsets.all(15.0),
+              //   ),
+              // ],
+            ),
+          ],
+          /*children: <Widget>[
+            _viewRows(),
+            _toolbar(),
+          ],*/
+        ),
+      ),
+    );
   }
 
   Future<void> initialize() async {
@@ -88,12 +147,12 @@ bool _localUserJoined = false;
           _infoStrings.add(info);
         });
       },
-        joinChannelSuccess: (String channel, int uid, int elapsed) {
-          print("local user $uid joined");
-          setState(() {
-            _localUserJoined = true;
-          });
-        },
+      joinChannelSuccess: (String channel, int uid, int elapsed) {
+        print("local user $uid joined");
+        setState(() {
+          _localUserJoined = true;
+        });
+      },
       leaveChannel: (stats) {
         setState(() {
           _infoStrings.add('onLeaveChannel');
@@ -172,34 +231,12 @@ bool _localUserJoined = false;
     );
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.black,
-      body: Center(
-        child: Stack(
-          children: [
-              AgoraVideoViewer(
-                client: client,
-                layoutType: Layout.floating,
-                enableHostControls: true, // Add this to enable host controls
-              ),
-              _toolbar(),
-            ],
-          /*children: <Widget>[
-            _viewRows(),
-            _toolbar(),
-          ],*/
-        ),
-      ),
-    );
-  }
-
   /// Helper function to get list of native views
   List<Widget> _getRenderViews() {
     final List<StatefulWidget> list = [];
     list.add(RtcLocalView.SurfaceView());
-     _users.forEach((int uid) => list.add(RtcRemoteView.SurfaceView(channelId: channelName, uid: uid)));
+    _users.forEach((int uid) =>
+        list.add(RtcRemoteView.SurfaceView(channelId: channelName, uid: uid)));
     return list;
   }
 
