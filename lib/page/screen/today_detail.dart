@@ -3,7 +3,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:salondec/data/model/gender_model.dart';
-import 'package:salondec/data/model/person2.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:salondec/component/custom_love_letter.dart';
 import 'package:salondec/component/custom_alert_dialog.dart';
@@ -24,14 +23,7 @@ class _TodaydetailState extends State<Todaydetail> {
   final AuthViewModel _authViewModel = Get.find<AuthViewModel>();
   final RatingViewModel _ratingViewmodel = Get.find<RatingViewModel>();
 
-  // ignore: non_constant_identifier_names
   double update_rating = 0.0;
-
-  // @override
-  // void initState() {
-  //   widget.genderModel.uid);
-  //   super.initState();
-  // }
 
   @override
   void dispose() {
@@ -95,7 +87,7 @@ class _TodaydetailState extends State<Todaydetail> {
                       ),
                       Text(
                         widget.genderModel.name ?? "",
-                        style: TextStyle(
+                        style: const TextStyle(
                             fontSize: 16.0, fontWeight: FontWeight.w800),
                       ),
                       const Padding(
@@ -169,126 +161,80 @@ class _TodaydetailState extends State<Todaydetail> {
 
           SliverList(
             delegate: SliverChildListDelegate([
-              Container(
-                color: Color(0xffF1F1F1),
-                height: 250.0,
-                child: Stack(
-                  children: <Widget>[
+              Column(
+                children: <Widget>[
                     (widget.genderModel.imgUrl1 != null &&
                             widget.genderModel.imgUrl1 != '')
-                        ? Positioned.fill(
-                            //   child: Image.asset(
-                            // "assets/image/profile_detail1.png",
+                        ? Container(
                             child: Image.network(
                             widget.genderModel.imgUrl1!,
+                            height: 400,
                             fit: BoxFit.fitHeight,
                           ))
                         : Container(
-                            decoration: BoxDecoration(
-                                color: Colors.grey[200],
-                                borderRadius: BorderRadius.circular(50)),
-                            width: 100,
-                            height: 100,
-                            child: Icon(
-                              Icons.camera_alt,
-                              color: Colors.grey[800],
-                            ),
+                            height: 10,
                           ),
                   ],
                 ),
-              ),
               Container(
-                child: ListTile(
-                    contentPadding:
-                        EdgeInsets.symmetric(horizontal: 30.0, vertical: 15.0),
-                    title: Padding(
-                        padding: const EdgeInsets.only(bottom: 15.0),
-                        child: Text('Q 자기소개 ?')),
-                    subtitle: Text(widget.genderModel.introduction ?? "")
-                    // : Text(
-                    // '반갑습니다. 진지한 만남을 하고 싶어요. 티키타카가 잘 맞는 만남을 가지고 싶습니다 :) ')),
-                    ),
+                child: (widget.genderModel.introduction != null && widget.genderModel.introduction != '')
+                ? ListTile(
+                  contentPadding:
+                  EdgeInsets.symmetric(horizontal: 30.0, vertical: 15.0),
+                  title: Padding(
+                    padding: const EdgeInsets.only(bottom: 15.0),
+                    child: Text('Q 자기소개')),
+                    subtitle: Text(widget.genderModel.introduction ?? "")): null,
               ),
-              Container(
-                color: Color(0xffF1F1F1),
-                height: 250.0,
-                child: Stack(
-                  children: <Widget>[
+              Column(
+                children: <Widget>[
                     (widget.genderModel.imgUrl2 != null &&
                             widget.genderModel.imgUrl2 != '')
-                        ? Positioned.fill(
+                        ? Container(
                             child: Image.network(
                             widget.genderModel.imgUrl2!,
+                            height: 400,
                             fit: BoxFit.fitHeight,
                           ))
                         : Container(
-                            decoration: BoxDecoration(
-                                color: Colors.grey[200],
-                                borderRadius: BorderRadius.circular(50)),
-                            width: 100,
-                            height: 100,
-                            child: Icon(
-                              Icons.camera_alt,
-                              color: Colors.grey[800],
-                            ),
+                            height: 10,
                           ),
                   ],
                 ),
-              ),
               Container(
-                child: ListTile(
-                    contentPadding:
-                        EdgeInsets.symmetric(horizontal: 30.0, vertical: 15.0),
-                    title: Padding(
-                        padding: const EdgeInsets.only(bottom: 15.0),
-                        child: Text('Q 제 성격은 ?')),
-                    subtitle: Text(widget.genderModel.character ?? "")),
-                // :Text('#상냥한 #유머있는 #지적인')),
+                child: (widget.genderModel.character != null && widget.genderModel.character != '')
+                ? ListTile(
+                  contentPadding:
+                  EdgeInsets.symmetric(horizontal: 30.0, vertical: 15.0),
+                  title: Padding(
+                    padding: const EdgeInsets.only(bottom: 15.0),
+                    child: Text('Q 당신은 어떤 성격인가요?')),
+                    subtitle: Text(widget.genderModel.character ?? "")): null,
               ),
-              Container(
-                child: ListTile(
-                    contentPadding:
-                        EdgeInsets.symmetric(horizontal: 30.0, vertical: 15.0),
-                    title: Padding(
-                        padding: const EdgeInsets.only(bottom: 15.0),
-                        child: Text('Q 평소에 가고 싶던 여행지는?')),
-                    subtitle: Text('휴양지로 떠나고 싶어요. 일상의 휴식이 필요해요.')),
-              ),
-              Container(
-                color: Color(0xffF1F1F1),
-                height: 250.0,
-                child: Stack(
-                  children: <Widget>[
+              Column(
+                children: <Widget>[
                     (widget.genderModel.imgUrl3 != null &&
                             widget.genderModel.imgUrl3 != '')
-                        ? Positioned.fill(
+                        ? Container(
                             child: Image.network(
                             widget.genderModel.imgUrl3!,
+                            height: 400,
                             fit: BoxFit.fitHeight,
                           ))
                         : Container(
-                            decoration: BoxDecoration(
-                                color: Colors.grey[200],
-                                borderRadius: BorderRadius.circular(50)),
-                            width: 100,
-                            height: 100,
-                            child: Icon(
-                              Icons.camera_alt,
-                              color: Colors.grey[800],
-                            ),
+                            height: 10,
                           ),
                   ],
                 ),
-              ),
               Container(
-                child: ListTile(
-                    contentPadding:
-                        EdgeInsets.symmetric(horizontal: 30.0, vertical: 15.0),
-                    title: Padding(
-                        padding: const EdgeInsets.only(bottom: 15.0),
-                        child: Text('Q 요즘 어떤 것에 관심이 있나요?')),
-                    subtitle: Text(widget.genderModel.interest ?? "")),
-                // :Text('일찍 결혼하고 싶어요. 결혼에 관심이 있습니다.')),
+                child: (widget.genderModel.interest != null && widget.genderModel.interest != '')
+                ? ListTile(
+                  contentPadding:
+                  EdgeInsets.symmetric(horizontal: 30.0, vertical: 15.0),
+                  title: Padding(
+                    padding: const EdgeInsets.only(bottom: 15.0),
+                    child: Text('Q 요즘 어떤 것에 관심이 있나요?')),
+                    subtitle: Text(widget.genderModel.interest ?? "")): null,
               ),
             ]),
           ),
@@ -381,13 +327,6 @@ class _TodaydetailState extends State<Todaydetail> {
                         setState(() {
                           update_rating = rating;
                         });
-                        //func
-                        // await _ratingViewmodel.giveRating(
-                        //     uid: _authViewModel.userModel.value!.uid,
-                        //     targetUid: widget.genderModel.uid,
-                        //     rating: rating);
-                        // await _ratingViewmodel.getRatingPersons(
-                        //     uid: _authViewModel.userModel.value!.uid);
                         _ratingViewmodel.rating(
                           uid: _authViewModel.userModel.value!.uid,
                           targetUid: widget.genderModel.uid,

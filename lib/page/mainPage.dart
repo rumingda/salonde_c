@@ -1,30 +1,19 @@
-import 'package:dartz/dartz_unsafe.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:salondec/core/viewState.dart';
-import 'package:salondec/menu/Test.dart';
-import 'package:salondec/menu/lobby.dart';
 import 'package:salondec/menu/loginScreen.dart';
-import 'package:salondec/menu/myProfile.dart';
 import 'package:salondec/page/screen/homeScreen.dart';
 import 'package:salondec/page/screen/chatScreen.dart';
 import 'package:salondec/page/screen/discoveryScreen.dart';
 import 'package:salondec/page/screen/favoriteScreen.dart';
 import 'package:salondec/page/screen/loveletterScreen.dart';
-import 'package:salondec/menu/lobby_list.dart';
 import 'package:salondec/page/viewmodel/rating_viewmodel.dart';
 import 'package:salondec/page/widgets/main_drawer.dart';
 
-import 'package:salondec/widgets/agora-group-calling/GroupCallPage.dart';
 
 import 'package:salondec/page/viewmodel/auth_viewmodel.dart';
-// import 'package:salondec/widgets/agora-group-calling/GroupCall_Screen.dart';
-
-import 'package:salondec/widgets/broadcast_audio/broadAudioScreen.dart';
-import 'package:salondec/widgets/broadcast_video/broadVideoScreen.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:salondec/widgets/join_channel_video.dart';
+ 
 
 String title_string = "Home";
 
@@ -54,9 +43,7 @@ class _MainPageState extends State<MainPage> {
 
   @override
   void initState() {
-    // _init();
-    // _authViewModel.init();
-    _ratingViewModel.init(uid: _authViewModel.userModel.value!.uid);
+ _ratingViewModel.init(uid: _authViewModel.userModel.value!.uid);
     super.initState();
   }
 
@@ -75,6 +62,18 @@ class _MainPageState extends State<MainPage> {
         return false;
       },
       child: Scaffold(
+        appBar: AppBar(
+          centerTitle: true,
+          toolbarHeight: 60,
+          title: Text(title_string,
+              style: TextStyle(
+                  fontFamily: 'Abhaya Libre',
+                  fontWeight: FontWeight.w700,
+                  fontSize: 36.0)),
+          elevation: 0.5,
+          backgroundColor: Colors.white,
+          foregroundColor: Colors.black,
+        ),
         drawer: MainDrawer(),
         body: Obx(() {
           Size size = MediaQuery.of(context).size;

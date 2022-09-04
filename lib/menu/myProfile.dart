@@ -1,5 +1,7 @@
 import 'dart:io';
 import 'dart:math';
+import 'package:intl/intl.dart';
+
 import 'package:flutter/material.dart';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -27,6 +29,7 @@ const List<String> _fruitNames = <String>[
   '181-185',
   '186 이상',
 ];
+
 
 class MyProfileScreen extends StatefulWidget {
   const MyProfileScreen({Key? key}) : super(key: key);
@@ -58,6 +61,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
   final Random _rnd = Random();
   final user = FirebaseAuth.instance.currentUser!;
 
+
   int _selectedFruit = 3;
 
   @override
@@ -69,6 +73,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
   }
 
 
+  
   // This shows a CupertinoModalPopup with a reasonable fixed height which hosts CupertinoPicker.
   void _showDialog(Widget child) {
     showCupertinoModalPopup<void>(
@@ -168,11 +173,13 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(),
+        appBar: AppBar(
+          title: Text("My Profile"),
+        ),
         body: Obx(() {
           return SingleChildScrollView(
-              child: Column(children: [
-            const SizedBox(height: 32),
+            child: Column(children: [
+            const SizedBox(height: 5),
             Center(
               child: GestureDetector(
                 onTap: () {
@@ -192,7 +199,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                             _authViewModel.userModel.value!.profileImageUrl!,
                             width: 100,
                             height: 100,
-                            fit: BoxFit.fitHeight,
+                            fit: BoxFit.cover,
                           ),
                         )
                       : _authViewModel.photoMap["profileImageUrl"] != null
@@ -202,7 +209,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                                 _authViewModel.photoMap["profileImageUrl"]!,
                                 width: 100,
                                 height: 100,
-                                fit: BoxFit.fitHeight,
+                                fit: BoxFit.cover,
                               ))
                           : Container(
                               decoration: BoxDecoration(
