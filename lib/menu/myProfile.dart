@@ -30,7 +30,6 @@ const List<String> _fruitNames = <String>[
   '186 이상',
 ];
 
-
 class MyProfileScreen extends StatefulWidget {
   const MyProfileScreen({Key? key}) : super(key: key);
 
@@ -61,7 +60,6 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
   final Random _rnd = Random();
   final user = FirebaseAuth.instance.currentUser!;
 
-
   int _selectedFruit = 3;
 
   @override
@@ -69,11 +67,8 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
     // _authViewModel.currentUser();
     _authViewModel.getUserInfo();
     super.initState();
-    
   }
 
-
-  
   // This shows a CupertinoModalPopup with a reasonable fixed height which hosts CupertinoPicker.
   void _showDialog(Widget child) {
     showCupertinoModalPopup<void>(
@@ -178,7 +173,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
         ),
         body: Obx(() {
           return SingleChildScrollView(
-            child: Column(children: [
+              child: Column(children: [
             const SizedBox(height: 5),
             Center(
               child: GestureDetector(
@@ -232,7 +227,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                 controller: _nameController,
                 labelText: '이름',
                 hintText: _hintText(
-                    _authViewModel.userModel.value?.name!, '이름을 넣어주세요!'),
+                    _authViewModel.userModel.value?.name! ?? "", '이름을 넣어주세요!'),
                 validator: (textValue) {
                   if (textValue == null || textValue.isEmpty) {
                     return '이름을 넣어주세요!';
@@ -270,43 +265,43 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                         ),
                         Expanded(
                           child: TextField(
-                            controller: _heightController,
-                            decoration: InputDecoration(
-                              hintText: _hintText(
-                                  _authViewModel.userModel.value?.height
-                                          .toString() ??
-                                      "",
-                                  '키'),
-                              contentPadding: EdgeInsets.all(10),
-                            ),
-                            keyboardType: TextInputType.number,
-                            inputFormatters: <TextInputFormatter>[
-                              FilteringTextInputFormatter.digitsOnly
-                            ],
-                            onTap: () {
-                              _showDialog(
-                              CupertinoPicker(
-                                magnification: 1.22,
-                                squeeze: 1.2,
-                                useMagnifier: true,
-                                itemExtent: _kItemExtent,
-                                // This is called when selected item is changed.
-                                onSelectedItemChanged: (int selectedItem) {
-                                  setState(() {
-                                    _selectedFruit = selectedItem;
-                                  });
-                                },
-                                children:
-                                    List<Widget>.generate(_fruitNames.length, (int index) {
-                                  return Center(
-                                    child: Text(
-                                      _fruitNames[index],
-                                    ),
-                                  );
-                                }),
+                              controller: _heightController,
+                              decoration: InputDecoration(
+                                hintText: _hintText(
+                                    _authViewModel.userModel.value?.height
+                                            .toString() ??
+                                        "",
+                                    '키'),
+                                contentPadding: EdgeInsets.all(10),
                               ),
-                            );}
-                          ),
+                              keyboardType: TextInputType.number,
+                              inputFormatters: <TextInputFormatter>[
+                                FilteringTextInputFormatter.digitsOnly
+                              ],
+                              onTap: () {
+                                _showDialog(
+                                  CupertinoPicker(
+                                    magnification: 1.22,
+                                    squeeze: 1.2,
+                                    useMagnifier: true,
+                                    itemExtent: _kItemExtent,
+                                    // This is called when selected item is changed.
+                                    onSelectedItemChanged: (int selectedItem) {
+                                      setState(() {
+                                        _selectedFruit = selectedItem;
+                                      });
+                                    },
+                                    children: List<Widget>.generate(
+                                        _fruitNames.length, (int index) {
+                                      return Center(
+                                        child: Text(
+                                          _fruitNames[index],
+                                        ),
+                                      );
+                                    }),
+                                  ),
+                                );
+                              }),
                         ),
                       ],
                     ),
