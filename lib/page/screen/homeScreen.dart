@@ -8,28 +8,6 @@ import 'package:salondec/page/widgets/main_drawer.dart';
 import 'today_detail.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-final List<Note> _noteList = [
-  Note(
-    title: '강살롱',
-    content: '24살 | 배우 | ESFJ',
-    image: 'assets/image/image1.png',
-  ),
-  Note(
-    title: '이살롱',
-    content: '24살 | 배우 | ESFJ',
-    image: 'assets/image/image2.png',
-  ),
-  Note(
-    title: '강살롱',
-    content: '24살 | 배우 | ESFJ',
-    image: 'assets/image/image1.png',
-  ),
-  Note(
-    title: '이살롱',
-    content: '24살 | 배우 | ESFJ',
-    image: 'assets/image/image2.png',
-  ),
-];
 
 class HomeScreen extends StatefulWidget {
   HomeScreen({Key? key}) : super(key: key);
@@ -51,21 +29,9 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     final RatingViewModel _ratingViewModel = Get.find<RatingViewModel>();
 
-    // Size size = MediaQuery.of(context).size;
-    // return
-    return Scaffold(
-        appBar: AppBar(
-          centerTitle: true,
-          toolbarHeight: 60,
-          title: const Text(("Home"),
-              style: TextStyle(
-                  fontFamily: 'Abhaya Libre',
-                  fontWeight: FontWeight.w700,
-                  fontSize: 36.0)),
-          elevation: 0.5,
-          backgroundColor: Colors.white,
-          foregroundColor: Colors.black,
-        ),
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: Scaffold(
         drawer: MainDrawer(),
         body: Obx(() {
           if (_authViewModel.homeViewState is Loading) {
@@ -167,7 +133,7 @@ class _HomeScreenState extends State<HomeScreen> {
           //   }
           //   return Text(snapshot.error.toString());
           // }),
-        }));
+        })));
   }
 
   _eachText(int index, String text) {

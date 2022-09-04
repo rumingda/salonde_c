@@ -35,7 +35,7 @@ class MyApp extends StatelessWidget {
       title: "Salon de Chungdam",
       initialBinding: InitialBinding(),
       theme: ThemeData(
-          primarySwatch: Colors.blue,
+          primaryColor: const Color(0xff365859),
           scaffoldBackgroundColor: Colors.white,
           appBarTheme: const AppBarTheme(
             color: Colors.white,
