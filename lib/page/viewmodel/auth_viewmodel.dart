@@ -317,8 +317,10 @@ class AuthViewModel extends GetxController {
           .get();
 
       if (documentSnapshot.data() != null) {
-        userModelUnderFivePeople.value =
-            UserModel.fromFirebase(documentSnapshot);
+        UserModel temp = UserModel.fromFirebase(documentSnapshot);
+        if (checkImgUrlNum(userModel: temp) > 1) {
+          userModelUnderFivePeople.value = temp;
+        }
         _setState(_discoveryViewState, Loaded());
       }
     } catch (e) {
@@ -359,12 +361,12 @@ class AuthViewModel extends GetxController {
           querySnapshot.docs.map((e) => GenderModel.fromFirebase(e)).toList();
       if (temp.isNotEmpty) {
         for (var e in temp) {
-          if (e.imgUrl1 != null && e.imgUrl1 != '') {
+          // if (e.imgUrl1 != null && e.imgUrl1 != '') {
+          if (checkImgUrlNum(genderModel: e) > 1) {
             // genderModelList.add(e);
             tempList.add(e);
           }
         }
-
         if (genderModelList.isNotEmpty) {
           for (var model in tempList) {
             if (!genderModelList.contains(model)) {
@@ -431,4 +433,33 @@ class AuthViewModel extends GetxController {
 
   void _setState(Rxn<ViewState> state, ViewState nextState) =>
       state.value = nextState;
+
+  bool checkImgUrl(String? url) {
+    return (url != null && url != '') ? true : false;
+  }
+
+  int checkImgUrlNum({GenderModel? genderModel, UserModel? userModel}) {
+    var model;
+
+    if (genderModel != null) {
+      model = genderModel;
+    } else {
+      model = userModel;
+    }
+
+    var num = 0;
+    if (checkImgUrl(model.profileImageUrl)) {
+      num += 1;
+    }
+    if (checkImgUrl(model.imgUrl1)) {
+      num += 1;
+    }
+    if (checkImgUrl(model.imgUrl2)) {
+      num += 1;
+    }
+    if (checkImgUrl(model.imgUrl3)) {
+      num += 1;
+    }
+    return num;
+  }
 }
