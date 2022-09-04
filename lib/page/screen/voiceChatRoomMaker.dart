@@ -7,36 +7,32 @@ import 'package:agora_rtc_engine/rtc_remote_view.dart' as RtcRemoteView;
 import 'package:permission_handler/permission_handler.dart';
 import 'package:agora_uikit/agora_uikit.dart';
 import 'package:salondec/menu/loginScreen.dart';
+import 'package:salondec/page/viewmodel/auth_viewmodel.dart';
 
 const appId = APP_ID;
 const token = APP_TOKEN;
 const channel = "mina";
 
-class Voicechat_making_room extends StatefulWidget {
+class VoicechatMakingRoom extends StatefulWidget {
   final String channelName;
 
-  const Voicechat_making_room({Key? key, required this.channelName})
+  const VoicechatMakingRoom({Key? key, required this.channelName})
       : super(key: key);
 
   @override
-  _Voicechat_making_roomState createState() => _Voicechat_making_roomState();
+  _VoicechatMakingRoomState createState() => _VoicechatMakingRoomState();
 }
 
-class _Voicechat_making_roomState extends State<Voicechat_making_room> {
+class _VoicechatMakingRoomState extends State<VoicechatMakingRoom> {
+  AuthViewModel _authViewModel = Get.find<AuthViewModel>();
+
   static final _users = <int>[];
   final _infoStrings = <String>[];
   bool muted = false;
   late RtcEngine _engine;
   var check = true;
-  AgoraClient client = AgoraClient(
-    agoraConnectionData: AgoraConnectionData(
-      appId: APP_ID,
-      // appId: "ced9c5cc4cbc40d8a82e15b0eadb7b54",
-      channelName: "test",
-      username: DateTime.now().millisecondsSinceEpoch.toString(),
-    ),
-    enabledPermission: [Permission.camera, Permission.microphone],
-  );
+  // 다른 사람 폰에도 채널이름이 뜨는건 나중에
+  AgoraClient? client;
   bool _localUserJoined = false;
   @override
   void dispose() {
@@ -54,14 +50,7 @@ class _Voicechat_making_roomState extends State<Voicechat_making_room> {
   void initState() {
     super.initState();
     //initialize();
-    // client = AgoraClient(
-    //   agoraConnectionData: AgoraConnectionData(
-    //     appId: APP_ID, channelName: "salondec",
-    //     //  username: "user",
-    //     // tempToken: SalondecTempToken,
-    //   ),
-    //   enabledPermission: [Permission.camera, Permission.microphone],
-    // );
+
     initAgora();
   }
 
@@ -69,7 +58,18 @@ class _Voicechat_making_roomState extends State<Voicechat_making_room> {
     // client.engine.leaveChannel();
     // if (check) {
     //   check = false;
-    await client.initialize();
+    client = AgoraClient(
+      agoraConnectionData: AgoraConnectionData(
+        appId: APP_ID,
+        // appId: "ced9c5cc4cbc40d8a82e15b0eadb7b54",
+        channelName: channelName,
+        // username: DateTime.now().millisecondsSinceEpoch.toString(),
+        username: _authViewModel.userModel.value!.email,
+      ),
+      enabledPermission: [Permission.camera, Permission.microphone],
+    );
+
+    await client!.initialize();
     // }
   }
 
@@ -81,13 +81,13 @@ class _Voicechat_making_roomState extends State<Voicechat_making_room> {
         child: Stack(
           children: [
             AgoraVideoViewer(
-              client: client,
+              client: client!,
               // layoutType: Layout.floating,
               // enableHostControls: true, // Add this to enable host controls
             ),
             // _toolbar(),
             AgoraVideoButtons(
-              client: client,
+              client: client!,
               // extraButtons: [
               //   RawMaterialButton(
               //     onPressed: () => Get.until(

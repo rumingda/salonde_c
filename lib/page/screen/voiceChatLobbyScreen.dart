@@ -78,11 +78,13 @@ class _VoiceChatLobbyScreenState extends State<VoiceChatLobbyScreen> {
             return Card(
                 margin: EdgeInsets.fromLTRB(10, 5, 10, 5),
                 elevation: 0.0,
+                // 현재 인원 등 제대로 나오게 하려면 결국 서버통신 해야함
+                //
                 child: ListTile(
                   leading: const Icon(Icons.call),
                   title: Text(_channelList.keys.toList()[index]),
                   trailing: Text("현재인원 " +
-                      _channelList.values.toList()[index].toString() +
+                      (_channelList.values.toList()[index] - 1).toString() +
                       ' | ' +
                       "남은자리 " +
                       '4'),
@@ -123,15 +125,15 @@ class _VoiceChatLobbyScreenState extends State<VoiceChatLobbyScreen> {
     Navigator.push(
         context,
         MaterialPageRoute(
-            builder: (context) => Voicechat_making_room(
+            builder: (context) => VoicechatMakingRoom(
                 channelName: _channelFieldController.text)));
   }
 
   Future<void> joinCall(
       String channelName, int numberOfPeopleInThisChannel) async {
-    setState(() {
-      numberOfPeopleInThisChannel = numberOfPeopleInThisChannel + 1;
-    });
+    // setState(() {
+    numberOfPeopleInThisChannel = numberOfPeopleInThisChannel + 1;
+    // });
 
     print(
         'Number of the people in the created channel : $numberOfPeopleInThisChannel');
@@ -155,10 +157,14 @@ class _VoiceChatLobbyScreenState extends State<VoiceChatLobbyScreen> {
       Navigator.push(
         context,
         MaterialPageRoute(
-            builder: (context) => Voicechat_making_room(
+            builder: (context) => VoicechatMakingRoom(
                 // channelName: _channelFieldController.text)),
                 channelName: channelName)),
-      );
+      ).whenComplete(() => setState(() {
+            numberOfPeopleInThisChannel -= 1;
+            _channelList.update(
+                channelName, (value) => numberOfPeopleInThisChannel);
+          }));
     }
   }
 }
