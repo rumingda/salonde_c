@@ -83,6 +83,8 @@ class _TwoCardPageViewState extends State<TwoCardPageView> {
     if (index < _authViewModel.genderModelListUnderFivePeople.length) {
       await _authViewModel.getDiscoveryUserInfo(
           uid: _authViewModel.genderModelListUnderFivePeople[index].uid);
+    } else {
+      _authViewModel.userModelUnderFivePeople.value = null;
     }
   }
 
@@ -218,21 +220,21 @@ class _TwoCardPageViewState extends State<TwoCardPageView> {
                     color: Color(0xffFAE291),
                   ),
                   onRatingUpdate: (rating) {
-                    if (rating == 0) {
-                      setState(() {
-                        update_rating = rating;
-                      });
-                      _ratingViewModel.rating(
-                        uid: _authViewModel.userModel.value!.uid,
-                        targetUid:
-                            _authViewModel.userModelUnderFivePeople.value!.uid,
-                        rating: rating,
-                        user: _authViewModel.userModel.value!,
-                        genderList: _authViewModel.genderModelList,
-                      );
-                      index += 1;
-                      checkRatingAgain(index);
-                    }
+                    // if (rating == 0) {
+                    setState(() {
+                      update_rating = rating;
+                    });
+                    _ratingViewModel.rating(
+                      uid: _authViewModel.userModel.value!.uid,
+                      targetUid:
+                          _authViewModel.userModelUnderFivePeople.value!.uid,
+                      rating: rating,
+                      user: _authViewModel.userModel.value!,
+                      genderList: _authViewModel.genderModelList,
+                    );
+                    index += 1;
+                    checkRatingAgain(index);
+                    // }
                   },
                 ),
               ),
