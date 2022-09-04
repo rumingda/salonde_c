@@ -29,13 +29,21 @@ class AuthViewModel extends GetxController {
   final Rxn<User?> _user = Rxn(null);
   User? get user => _user.value;
 
+  RxBool userSignUpState = false.obs;
+
   final Rxn<ViewState> _homeViewState = Rxn(Initial());
   ViewState get homeViewState => _homeViewState.value!;
+
+//test 후 삭제
+  final Rxn<ViewState> _signUpViewState = Rxn(Initial());
+  ViewState get signUpViewState => _signUpViewState.value!;
+  final Rxn<ViewState> _signInViewState = Rxn(Initial());
+  ViewState get signInViewState => _signInViewState.value!;
 
   final Rxn<ViewState> _discoveryViewState = Rxn(Initial());
   ViewState get discoveryViewState => _discoveryViewState.value!;
 
-  final Rxn<UserModel?> userModel = Rxn(null);
+  Rxn<UserModel> userModel = Rxn();
 
   ErrorState _errorState = ErrorState.none;
   ErrorState get errorState => _errorState;
@@ -56,6 +64,9 @@ class AuthViewModel extends GetxController {
   // RxList<UserModel> userModelListUnderFivePeople = <UserModel>[].obs;
   Rxn<UserModel> userModelUnderFivePeople = Rxn(null);
 
+  RxInt _initNum = 0.obs;
+  int get initNum => _initNum.value;
+
   _currentUser() {
     if (_firebaseAuth.currentUser != null) {
       _user.value = _firebaseAuth.currentUser!;
@@ -69,13 +80,17 @@ class AuthViewModel extends GetxController {
     referenceMap.clear();
     genderModelList.clear();
     _user.value = null;
-    userModel.value = null;
+    // userModel.value = null;
+    userModel = Rxn();
     _setState(_homeViewState, Initial());
     _errorState = ErrorState.none;
   }
 
   Future<void> init() async {
+    _initNum.value = 1;
     genderModelList.value = [];
+    userSignUpState.value = false;
+    print(userModel);
     _currentUser();
     await getUserInfo();
     await getMainPageInfo(uid: user!.uid, gender: userModel.value!.gender);
@@ -90,6 +105,8 @@ class AuthViewModel extends GetxController {
     required String gender,
   }) async {
     try {
+      _setState(_signUpViewState, Loading());
+
       UserCredential userCredential = await _firebaseAuth
           .createUserWithEmailAndPassword(email: email, password: password);
 
@@ -120,6 +137,7 @@ class AuthViewModel extends GetxController {
       userModel.value = userModelTemp;
       _user.value = userCredential.user;
       // storage.write(key: "uid", value: userCredential.user!.uid);
+      _setState(_signUpViewState, Loaded());
 
       return true;
     } on FirebaseAuthException catch (e) {
@@ -144,10 +162,13 @@ class AuthViewModel extends GetxController {
   Future<void> signInWithEmail(
       {required String email, required String password}) async {
     try {
+      _setState(_signInViewState, Loading());
+
       UserCredential userCredential = await _firebaseAuth
           .signInWithEmailAndPassword(email: email, password: password);
       _user.value = userCredential.user;
       // storage.write(key: "uid", value: userCredential.user!.uid);
+      _setState(_signInViewState, Loaded());
     } on FirebaseAuthException catch (e) {
       if (e.code == "network-request-failed") {
         _errorState = ErrorState.network;
@@ -339,8 +360,10 @@ class AuthViewModel extends GetxController {
           .get();
 
       if (documentSnapshot.data() != null) {
-        userModel.value = UserModel.fromFirebase(documentSnapshot);
-        gender = userModel.value!.gender;
+        UserModel tempModel = UserModel.fromFirebase(documentSnapshot);
+        _setModel(userModel, tempModel);
+        // userModel.value = tempModel;
+        gender = userModel.value?.gender ?? "";
       }
     } catch (e) {
       _catchError(e);
@@ -387,6 +410,7 @@ class AuthViewModel extends GetxController {
       }
 
       _setState(_homeViewState, Loaded());
+      _initNum.value = 0;
     } catch (e) {
       _catchError(e);
     }
@@ -431,6 +455,8 @@ class AuthViewModel extends GetxController {
       ? FireStoreCollection.manCollection
       : FireStoreCollection.womanCollection;
 
+  void _setModel(Rxn<UserModel> userModel, UserModel model) =>
+      userModel.value = model;
   void _setState(Rxn<ViewState> state, ViewState nextState) =>
       state.value = nextState;
 

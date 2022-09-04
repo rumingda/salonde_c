@@ -31,6 +31,9 @@ class RatingViewModel extends GetxController {
   final Rxn<ViewState> _detailViewState = Rxn(Initial());
   ViewState get detailViewState => _detailViewState.value!;
 
+  RxInt _initNum = 0.obs;
+  int get initNum => _initNum.value;
+
   Future<void> rating({
     required String uid,
     required String targetUid,
@@ -192,6 +195,7 @@ class RatingViewModel extends GetxController {
   Future<void> getRatingPersons({
     required String uid,
   }) async {
+    _initNum.value = 1;
     List<RatingModel> tempList = [];
     try {
       QuerySnapshot<Map<String, dynamic>> querySnapshot =
@@ -216,6 +220,7 @@ class RatingViewModel extends GetxController {
       } else {
         ratingPersons.addAll(tempList);
       }
+      _initNum.value = 0;
     } on FirebaseException catch (e) {
       if (e.code == "network-request-failed") {
         _errorState = ErrorState.network;

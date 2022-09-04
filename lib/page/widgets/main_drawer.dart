@@ -7,14 +7,13 @@ import 'package:salondec/widgets/agora-group-calling/GroupCallPage.dart';
 import 'package:salondec/widgets/broadcast_audio/broadAudioScreen.dart';
 import 'package:salondec/widgets/broadcast_video/broadVideoScreen.dart';
 import 'package:salondec/widgets/join_channel_video.dart';
-import 'package:salondec/menu/myPage.dart';
+import 'package:salondec/menu/myPageScreen.dart';
 
 class MainDrawer extends StatelessWidget {
   MainDrawer({
     Key? key,
     // required TextEditingController username,
   }) : super(key: key);
-
 
   // final TextEditingController _username;
   final AuthViewModel _authViewModel = Get.find<AuthViewModel>();
@@ -110,7 +109,6 @@ class MainDrawer extends StatelessWidget {
           //         MaterialPageRoute(builder: (context) => RtmpStreaming()));
           //   },
           // ),
-
         ],
       ),
     );

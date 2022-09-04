@@ -227,7 +227,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                 controller: _nameController,
                 labelText: '이름',
                 hintText: _hintText(
-                    _authViewModel.userModel.value?.name! ?? "", '이름을 넣어주세요!'),
+                    _authViewModel.userModel.value?.name ?? "", '이름을 넣어주세요!'),
                 validator: (textValue) {
                   if (textValue == null || textValue.isEmpty) {
                     return '이름을 넣어주세요!';
@@ -250,7 +250,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                             controller: _ageController,
                             decoration: InputDecoration(
                               // hintText: '나이',
-                              hintText: _hintText(
+                              hintText: _hintTextInNumber(
                                   _authViewModel.userModel.value?.age
                                           .toString() ??
                                       "",
@@ -267,7 +267,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                           child: TextField(
                               controller: _heightController,
                               decoration: InputDecoration(
-                                hintText: _hintText(
+                                hintText: _hintTextInNumber(
                                     _authViewModel.userModel.value?.height
                                             .toString() ??
                                         "",
@@ -665,6 +665,13 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
 
   String _hintText(String? text, String hintText) {
     if (_authViewModel.userModel.value != null && text != '') {
+      return text!;
+    }
+    return hintText;
+  }
+
+  String _hintTextInNumber(String? text, String hintText) {
+    if (_authViewModel.userModel.value != null && text != '' && text != '0') {
       return text!;
     }
     return hintText;
