@@ -13,6 +13,8 @@ import 'package:salondec/page/widgets/main_drawer.dart';
 
 import 'package:salondec/page/viewmodel/auth_viewmodel.dart';
 
+import '../menu/myPageScreen.dart';
+
 String title_string = "Home";
 
 class MainPage extends StatefulWidget {
@@ -80,8 +82,20 @@ class _MainPageState extends State<MainPage> {
           elevation: 0.5,
           backgroundColor: Colors.white,
           foregroundColor: Colors.black,
+          actions: <Widget>[
+            IconButton(
+              icon: Icon(
+                Icons.person,
+              ),
+              onPressed: () {
+                Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => MyPageScreen()));
+              },
+            )
+          ],
         ),
         drawer: MainDrawer(),
+        
         body: Obx(() {
           Size size = MediaQuery.of(context).size;
           if (_authViewModel.homeViewState is Loaded) {
