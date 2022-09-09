@@ -160,10 +160,6 @@ class _MainPageState extends State<MainPage> {
     );
   }
 
-  // Drawer _drawer(BuildContext context) {
-  //   return MainDrawer(username: _username, authViewModel: _authViewModel);
-  // }
-
   Future<void> appExitDialogForAnfroid({required Function? onClose}) async {
     return await showDialog(
       context: context,
