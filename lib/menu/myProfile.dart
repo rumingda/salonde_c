@@ -57,6 +57,7 @@ List<String> jobItem = [
     "사회복지사","일반사무직","학부","네일아티스트","프리랜서","기타"
 ];
 
+
 class MyProfileScreen extends StatefulWidget {
   const MyProfileScreen({Key? key}) : super(key: key);
 
@@ -87,7 +88,12 @@ class _MyProfileScreenState extends State<MyProfileScreen> with SingleTickerProv
   final Random _rnd = Random();
   final user = FirebaseAuth.instance.currentUser!;
 
+<<<<<<< Updated upstream
   int _selectedheight = 3;
+=======
+
+  int _selectedFruit = 3;
+>>>>>>> Stashed changes
 
   int age = 0;
   @override
@@ -97,6 +103,11 @@ class _MyProfileScreenState extends State<MyProfileScreen> with SingleTickerProv
     super.initState();
   }
 
+<<<<<<< Updated upstream
+=======
+
+  
+>>>>>>> Stashed changes
   // This shows a CupertinoModalPopup with a reasonable fixed height which hosts CupertinoPicker.
   void _showDialog(Widget child) {
     showCupertinoModalPopup<void>(
