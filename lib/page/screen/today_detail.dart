@@ -333,11 +333,7 @@ class _TodaydetailState extends State<Todaydetail> {
                         setState(() {
                           update_rating = rating;
                         });
-<<<<<<< Updated upstream
                         _ratingViewModel.rating(
-=======
-                        _ratingViewmodel.rating(
->>>>>>> Stashed changes
                           uid: _authViewModel.userModel.value!.uid,
                           targetUid: widget.genderModel.uid,
                           rating: rating,

@@ -1,11 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-<<<<<<< Updated upstream
 import 'package:salondec/component/custom_picker.dart';
-=======
-import 'package:salondec/menu/Test.dart';
-import 'package:salondec/menu/lobby_list.dart';
->>>>>>> Stashed changes
 import 'package:salondec/page/viewmodel/auth_viewmodel.dart';
 import 'package:salondec/menu/myPageScreen.dart';
 
