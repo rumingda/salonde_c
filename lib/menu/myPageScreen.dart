@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'myProfile.dart';
-
+import 'package:salondec/page/viewmodel/auth_viewmodel.dart';
+import 'package:get/get.dart';
 
 const double _kItemExtent = 32.0;
-List<String> imgArray = [
-  "assets/image1.png"
-];
+
 const title = 'Floating App Bar';
 
 class MyPageScreen extends StatefulWidget {
@@ -15,6 +14,7 @@ class MyPageScreen extends StatefulWidget {
 }
 
 class _MyPageScreenState extends State<MyPageScreen> {
+  AuthViewModel _authViewModel = Get.find<AuthViewModel>();
 
   @override
   void initState() {
@@ -95,10 +95,48 @@ class _MyPageScreenState extends State<MyPageScreen> {
             background: Stack(
               fit: StackFit.expand,
               children: [
-                Image.asset(
+                Container(
+                  child: (_authViewModel.userModel.value != null &&
+                          _authViewModel.userModel.value?.profileImageUrl !=
+                              null &&
+                          _authViewModel.userModel.value?.profileImageUrl !=
+                              '' &&
+                          _authViewModel.photoMap["profileImageUrl"] == null)
+                      ? ClipRRect(
+                          borderRadius: BorderRadius.circular(50),
+                          child: Image.network(
+                            _authViewModel.userModel.value!.profileImageUrl!,
+                            width: 100,
+                            height: 100,
+                            fit: BoxFit.cover,
+                          ),
+                        )
+                      : _authViewModel.photoMap["profileImageUrl"] != null
+                          ? ClipRRect(
+                              borderRadius: BorderRadius.circular(50),
+                              child: Image.file(
+                                _authViewModel.photoMap["profileImageUrl"]!,
+                                width: 100,
+                                height: 100,
+                                fit: BoxFit.cover,
+                              ))
+                          : Container(
+                              decoration: BoxDecoration(
+                                  color: Colors.grey[200],
+                                  borderRadius: BorderRadius.circular(50)),
+                              width: 100,
+                              height: 100,
+                              child: Icon(
+                                Icons.camera_alt,
+                                color: Colors.grey[800],
+                              ),
+                            ),
+                ),
+                
+                /*Image.asset(
                   "assets/image/image8.png",
                   fit: BoxFit.cover,
-                  ),
+                  ),*/
                   const DecoratedBox(
                     decoration: BoxDecoration(
                       gradient: LinearGradient(

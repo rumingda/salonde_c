@@ -20,14 +20,14 @@ import 'package:flutter/cupertino.dart';
 import 'package:salondec/component/custom_alert_dialog.dart';
 
 List<String> heightItem = [
-    "150cm","151cm","152cm","153cm","154cm",
-    "155cm","156cm","157cm","158cm","159cm",
-    "160cm","161cm","162cm","163cm","164cm",
-    "165cm","166cm","167cm","168cm","169cm",
-    "170cm","171cm","172cm","173cm","174cm",
-    "175cm","176cm","177cm","178cm","179cm",
-    "180cm","181cm","182cm","183cm","184cm",
-    "185cm","186cm","187cm","188cm","189cm",
+    "150","151","152","153","154",
+    "155","156","157","158","159",
+    "160","161","162","163","164",
+    "165","166","167","168","169",
+    "170","171","172","173","174",
+    "175","176","177","178","179",
+    "180","181","182","183","184",
+    "185","186","187","188","189",
 ];
 
 List<String> bodyTypeItem = [
@@ -293,10 +293,6 @@ class _MyProfileScreenState extends State<MyProfileScreen> with SingleTickerProv
                                   '나이'),
                               contentPadding: EdgeInsets.all(10),
                             ),
-                            keyboardType: TextInputType.number,
-                            inputFormatters: <TextInputFormatter>[
-                              FilteringTextInputFormatter.digitsOnly
-                            ],
                             onTap: () async {
                               DateTime? pickedDate = await showDatePicker(
                                   context: context, initialDate: DateTime.now(),
@@ -323,9 +319,11 @@ class _MyProfileScreenState extends State<MyProfileScreen> with SingleTickerProv
                         ),
                         Expanded(
                           child: TextField(
-                              controller: _heightController,
-                              decoration: InputDecoration(
-                                hintText: _hintTextInNumber(
+                            showCursor: true,
+                            readOnly: true,
+                            controller: _heightController,
+                            decoration: InputDecoration(
+                              hintText: _hintTextInNumber(
                                     _authViewModel.userModel.value?.height
                                             .toString() ??
                                         "",
@@ -346,7 +344,8 @@ class _MyProfileScreenState extends State<MyProfileScreen> with SingleTickerProv
                                         diameterRatio:1,
                                         onSelectedItemChanged: (i) {
                                           setState(() {
-                                            _heightController.text = heightItem[i];
+                                            print(heightItem[i].toString());
+                                            _heightController.text = heightItem[i].toString();
                                           });
                                         },
                                         children: [
@@ -369,6 +368,8 @@ class _MyProfileScreenState extends State<MyProfileScreen> with SingleTickerProv
                       children: <Widget>[
                         Expanded(
                           child: TextField(
+                            showCursor: true,
+                            readOnly: true,
                             controller: _jobController,
                             decoration: InputDecoration(
                               // hintText: '직업',
@@ -409,6 +410,8 @@ class _MyProfileScreenState extends State<MyProfileScreen> with SingleTickerProv
                         Expanded(
                           child: TextField(
                             controller: _bodyTypeController,
+                            showCursor: true,
+                            readOnly: true,
                             decoration: InputDecoration(
                               // hintText: '체형',
                               hintText: _hintText(
@@ -454,6 +457,8 @@ class _MyProfileScreenState extends State<MyProfileScreen> with SingleTickerProv
                       children: <Widget>[
                         Expanded(
                           child: TextField(
+                            showCursor: true,
+                            readOnly: true,
                             controller: _religionController,
                             decoration: InputDecoration(
                               // hintText: '종교',
@@ -494,6 +499,8 @@ class _MyProfileScreenState extends State<MyProfileScreen> with SingleTickerProv
                         ),
                         Expanded(
                           child: TextField(
+                            showCursor: true,
+                            readOnly: true,
                             controller: _mbtiController,
                             decoration: InputDecoration(
                               hintText: _hintText(
@@ -762,8 +769,14 @@ class _MyProfileScreenState extends State<MyProfileScreen> with SingleTickerProv
             CustomFormButton(
               innerText: '저장하기',
               onPressed: () {
-                if(_authViewModel.photoMap["profileImageUrl"] != null){
+                if(_authViewModel.userModel.value != null ||
+                          _authViewModel.userModel.value?.profileImageUrl != null ||
+                          _authViewModel.userModel.value?.profileImageUrl != '' ||
+                          _authViewModel.photoMap["profileImageUrl"] == null){
                   uploadFile(context);
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text("저장중입니다. 잠시만 기다려주세요!")),
+                  );
                 }
                 else{
                   showDialog(
